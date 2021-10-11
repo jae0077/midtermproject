@@ -19,11 +19,11 @@ import lombok.ToString;
 @Getter
 @ToString
 
-@SequenceGenerator(name="no_seq", sequenceName="user_no_seq", initialValue=1, allocationSize=1)
+//@SequenceGenerator(name="no_seq", sequenceName="user_no_seq", initialValue=1, allocationSize=1)
 @Entity(name="users")
 public class Users {
 	@Id
-	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="no_seq")
+//	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="no_seq")
 	private Long id;	//pk
 //	private int seat;
 	@Column(name="user_id", length=10, nullable=false, unique=true)
