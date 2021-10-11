@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=UTF-8>
+<title>index.html</title>
+
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+<div id="nav">
+
+    <!-- 네이게이션 바 -->
+    <a> Logo </a>
+    
+    <a href="01_seat.html"> 좌석선택 </a> 
+    <a href="02_ticket.html"> 이용권구매 </a> 
+    <a href="03_community.html"> 커뮤니티 </a> 
+    <a href="04_info.html"> 이용안내 </a> 
+    <a href="05_myPage.html"> 마이페이지 </a> 
+    <a href="05_signUp.html"> 회원가입 </a> 
+    <a href="06_logIn.html"> 로그인 </a> 
+    <a href="06_logOut.html"> 로그아웃 </a> 
+    
+</div>
+
+    
+</head>
+<!-- =============================Body======================================== -->
+<body>
+
+ <br> <br>
+
+<div id="main">
+
+        <div>
+        메인페이지 - 플레이독서실 
+
+        </div>
+        <br> <br>
+
+        <div>
+            <div>
+            <a href="WEB-INF/views/03_community/01_notice.html"> 공지사항 </a>
+            </div>
+            
+            <br> <br>
+            
+            <div>
+            <a href="WEB-INF/views/03_community/02_board.html"> 자유게시판 </a>
+            </div>
+        </div>
+</div>
+
+ <br> <br>
+
+<footer>
+
+<div>
+푸터
+</div>
+
+</footer>
+
+<script>
+
+	new Vue({
+		el: "#nav",
+        data: {
+            navigation : ""
+        },
+
+        created: function() {
+        			axios({
+        				method: "get",
+        				url: "http://localhost/nav.html"
+        			}).then(resData => {
+
+                        this.navigation = resData.data
+        				
+        			}).catch(errorData => {
+        				alert(errorData);
+        			});
+            }
+	})
+
+</script>
+
+
+</body>
+</html>
