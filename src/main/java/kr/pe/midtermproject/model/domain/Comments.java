@@ -1,16 +1,15 @@
 package kr.pe.midtermproject.model.domain;
 
 import java.util.Date;
-import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -31,29 +30,27 @@ import lombok.ToString;
 @ToString
 
 @Entity
-@SequenceGenerator(name = "COMMENT_SEQ_GEN", sequenceName = "COMMENT_SEQ", initialValue = 1, allocationSize = 1)
+@SequenceGenerator(name="comment_idx_seq", sequenceName="comment_idx_seq", initialValue=1, allocationSize=1)
 public class Comments {
 	@Id
-	@Column(name="comment_id")
-	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "COMMENT_SEQ_GEN")
-	private Long id;
+	@Column(name="comment_idx")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="comment_idx_seq")
+	private Long commentIdx;
 	
-	@ManyToOne
-	@JoinColumn(name="board_id")
-	@Column(nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="board_idx")
 	private Board board;
 	
-	@ManyToOne
-	@JoinColumn(name="user_id")
-	@Column(nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="user_idx")  
 	private Users writer;
 	
-	@Column(nullable = false)
+	@Column(nullable=false)
 	private String content;
 	
 	@Temporal(TemporalType.DATE)
 	@CreationTimestamp
-	@Column(nullable = false)
+	@Column(nullable=false)
 	private Date created;
 	
 	@Temporal(TemporalType.DATE)
