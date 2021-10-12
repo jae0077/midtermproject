@@ -1,5 +1,9 @@
 package kr.pe.midtermproject.controller;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,8 +33,8 @@ public class Controller {
   
 	//회원가입
 	@PostMapping("addUsers")
-	public void addUsers(Long seq, String userId, String pw, String name, String phone) {
-		boolean result = ser.addUsers(seq, userId, pw, name, phone);
+	public void addUsers(HttpServletRequest request, HttpServletResponse response) {
+		boolean result = ser.addUsers(request.getParameter("id"), request.getParameter("pw"), request.getParameter("name"), request.getParameter("phone"));
 		System.out.println(result);
 	}
 	
@@ -40,10 +44,11 @@ public class Controller {
 		return result;
 	}
 	
+
 	//로그인
-	@GetMapping("login")
-	public void login(String userId, String pw) {
-		boolean result = ser.login(userId, pw);
+	@PostMapping("login")
+	public void login(HttpServletRequest request, HttpServletResponse response) {
+		boolean result = ser.login(request.getParameter("id"), request.getParameter("pw"));
 		System.out.println(result);
 	}
 	

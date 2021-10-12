@@ -14,12 +14,18 @@ public class Service2 {
 
 	// 회원가입
 	
-	public boolean addUsers(Long seq, String userId, String pw, String name, String phone) {
+	public boolean addUsers(String userId, String pw, String name, String phone) {
 		boolean result = false;
 		Users user = dao.findUsersByUserId(userId);
 
 		if (user == null) {
-			dao.save(new Users(seq, userId, pw, name, phone, "0"));
+			Users u = new Users();
+			u.setUserId(userId);
+			u.setUserPw(pw);
+			u.setName(name);
+			u.setPhone(phone);
+			u.setIsAdmin("0");
+			dao.save(u);
 			result = true;
 		}
 

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+	
+	<div>
+		<h1>회원가입</h1>
+		<form action="./addUsers" method="post">
+			<!-- <input type="hidden" name="command" value="signinUser"> --> 
+				<div class="container">
+					<input type="text" placeholder="아이디를 입력하세요" name="id" required> 
+					<button>확인</button> <br>
+					<input type="password" placeholder="비밀번호를 입력하세요" name="pw" required> <br>
+					<input type="text" placeholder="이름을 입력하세요" name="name" required> <br>
+					<input type="text" placeholder="-를 제외하고 입력하세요" name="phone" required> <br>
+					
+					<button type="submit" value="submit">회원가입</button>
+				</div>
+		</form>
+	</div>
+	
+</body>
+</html>
