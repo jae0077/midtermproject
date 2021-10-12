@@ -26,7 +26,7 @@ import lombok.ToString;
 @ToString
 
 @Entity
-@SequenceGenerator(name = "NOTICE_SEQ_GEN", sequenceName = "BOARD_SEQ", initialValue = 1, allocationSize = 1)
+@SequenceGenerator(name = "NOTICE_SEQ_GEN", sequenceName = "NOTICE_SEQ", initialValue = 1, allocationSize = 1)
 public class Notice {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTICE_SEQ_GEN")

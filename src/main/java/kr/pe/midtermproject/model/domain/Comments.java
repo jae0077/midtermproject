@@ -27,10 +27,10 @@ import lombok.ToString;
 @ToString
 
 @Entity
-@SequenceGenerator(name = "COMMENT_SEQ_GEN", sequenceName = "BOARD_SEQ", initialValue = 1, allocationSize = 1)
+@SequenceGenerator(name = "COMMENT_SEQ_GEN", sequenceName = "COMMENT_SEQ", initialValue = 1, allocationSize = 1)
 public class Comments {
 	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "COMMENT_SEQ_GEN")
+	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "COMMENT_SEQ_GEN")
 	private Long id;
 	
 	@Column(nullable = false)
