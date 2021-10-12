@@ -1,12 +1,16 @@
 package kr.pe.midtermproject.model.domain;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -30,14 +34,19 @@ import lombok.ToString;
 @SequenceGenerator(name = "COMMENT_SEQ_GEN", sequenceName = "COMMENT_SEQ", initialValue = 1, allocationSize = 1)
 public class Comments {
 	@Id
+	@Column(name="comment_id")
 	@GeneratedValue(strategy = GenerationType.IDENTITY, generator = "COMMENT_SEQ_GEN")
 	private Long id;
 	
+	@ManyToOne
+	@JoinColumn(name="board_id")
 	@Column(nullable = false)
-	private Long board;
+	private Board board;
 	
+	@ManyToOne
+	@JoinColumn(name="user_id")
 	@Column(nullable = false)
-	private Long writer;
+	private Users writer;
 	
 	@Column(nullable = false)
 	private String content;

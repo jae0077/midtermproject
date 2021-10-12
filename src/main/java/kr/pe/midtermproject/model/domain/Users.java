@@ -1,11 +1,11 @@
 package kr.pe.midtermproject.model.domain;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
+import javax.persistence.OneToMany;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,4 +40,10 @@ public class Users {
 	
 	@Column(length=1, nullable=false, unique=false)
 	private String isAdmin;
+	
+	@OneToMany(mappedBy = "users")
+	private List<Board> boardList;
+	
+	@OneToMany(mappedBy="users")
+	private List<Comments> commentList;
 }
