@@ -26,21 +26,21 @@ import lombok.ToString;
 @ToString
 
 @Entity
-@SequenceGenerator(name = "NOTICE_SEQ_GEN", sequenceName = "NOTICE_SEQ", initialValue = 1, allocationSize = 1)
+@SequenceGenerator(name="notice_idx_seq", sequenceName="notice_idx_seq", initialValue=1, allocationSize=1)
 public class Notice {
 	@Id
-	@Column(name="notice_id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "NOTICE_SEQ_GEN")
-	private Long id;
+	@Column(name="notice_idx")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="notice_idx_seq")
+	private Long noticeIdx;
 	
-	@Column(nullable = false)
+	@Column(nullable=false)
 	private String title;
 	
-	@Column(nullable = false)
+	@Column(nullable=false)
 	private String content;
 	
 	@Temporal(TemporalType.DATE)
 	@CreationTimestamp
-	@Column(nullable = false)
+	@Column(nullable=false)
 	private Date created;
 }

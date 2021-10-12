@@ -3,11 +3,15 @@ package kr.pe.midtermproject.model.domain;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
@@ -29,31 +33,34 @@ import lombok.ToString;
 @ToString
 
 @Entity
-@SequenceGenerator(name = "BOARD_SEQ_GEN", sequenceName = "BOARD_SEQ", initialValue = 1, allocationSize = 1)
+@SequenceGenerator(name="board_idx_seq", sequenceName="board_idx_seq", initialValue=1, allocationSize=1)
 public class Board {
 	@Id
-	@Column(name="board_id")
-	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "BOARD_SEQ_GEN")
-	private Long id;
+	@Column(name="board_idx")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="board_idx_seq")
+	private Long boardIdx;
 	
-	@Column(nullable = false)
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name="user_idx")  
 	private Users writer;
 	
-	@Column(nullable = false)
+	@Column(nullable=false)
 	private String title;
 	
-	@Column(nullable = false)
+	@Column(nullable=false)
 	private String content;
 	
 	@Temporal(TemporalType.DATE)
 	@CreationTimestamp
-	@Column(nullable = false)
+	@Column(nullable=false)
 	private Date created;
 	
 	@Temporal(TemporalType.DATE)
 	@UpdateTimestamp
 	private Date updated;
 	
-	@OneToMany(mappedBy="board")
+	@OneToMany(mappedBy="board",
+			fetch=FetchType.LAZY,
+			cascade=CascadeType.ALL)
 	private List<Comments> commentList;
 }
