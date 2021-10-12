@@ -7,44 +7,29 @@ import kr.pe.midtermproject.dao.UserRepository;
 import kr.pe.midtermproject.model.domain.Users;
 
 @Service
-public class Service2 {
+public class UsersService {
 
 	@Autowired
 	private UserRepository dao;
 
 	// 회원가입
-	
-	public boolean addUsers(Long seq, String userId, String pw, String name, String phone) {
+	public boolean addUsers(Users user) {
 		boolean result = false;
-		Users user = dao.findUsersByUserId(userId);
-
-		if (user == null) {
-			dao.save(new Users(seq, userId, pw, name, phone, "0"));
-			result = true;
-		}
-
-		return result;
-	}
-	
-	
-	public boolean addUsers2() {
-		boolean result = false;
-		Long i = (long) 2;
-		Users user = new Users(i, "userId", "userPw", "name", "phone", "0");
 		System.out.println(user);
-
-		if(dao == null) {
-			System.out.println("null");
-		}else {
-			
-			dao.save(user);
+		try {
+			if (user.getIsAdmin() == null) {
+				user.setIsAdmin("0");
+				dao.save(user);
+			}
+			result = true;
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
-		
+
 		return result;
 	}
-
-	// 로그인
 	
+	// 로그인
 	public boolean login(String userId, String pw) {
 		boolean result = false;
 		Users user = dao.findUsersByUserId(userId);
