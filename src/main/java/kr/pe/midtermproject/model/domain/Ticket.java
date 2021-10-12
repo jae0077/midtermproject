@@ -22,7 +22,7 @@ import lombok.ToString;
 public class Ticket {
 	@Id
 	@Column(name = "ticket_id", nullable = false, unique = true)
-	private int ticketId;
+	private Long ticketId;
 	
 //	@Column(name = "user", length = 10, nullable = false, unique = false)  
 //	private int user;

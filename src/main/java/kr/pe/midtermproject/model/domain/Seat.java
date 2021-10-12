@@ -20,7 +20,7 @@ import lombok.ToString;
 public class Seat {
 	@Id
 	@Column(name = "seat_id", length = 10, nullable = false, unique = true)
-	private int seatId;
+	private Long seatId;
 	
 	@Column(name = "is_used", length = 1, nullable = false, unique = false)
 	private String isUsed;

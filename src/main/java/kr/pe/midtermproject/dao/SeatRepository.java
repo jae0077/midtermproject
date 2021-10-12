@@ -1,13 +1,15 @@
 package kr.pe.midtermproject.dao;
 
 import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
+
 import kr.pe.midtermproject.model.domain.Seat;
 
-public interface SeatRepository extends CrudRepository<Seat, Integer>{
+public interface SeatRepository extends CrudRepository<Seat, Long>{
 	
-	//select * from seat where title=?
+	//select * from Seat where IsUsed=isUsed
 	//동일한 메소드명 fildByTitle
-	List<Seat> findSeatByTitle(String isUsed);
-
+	List<Seat> findSeatByIsUsed(String isUsed);
+	
 }
