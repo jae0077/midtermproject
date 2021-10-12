@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.pe.midtermproject.model.Service2;
+import kr.pe.midtermproject.dao.SeatRepository;
+import kr.pe.midtermproject.dao.TicketRepository;
 
 /* html -> Controller -> Service -> DAO ...
  * 
@@ -23,6 +25,12 @@ public class Controller {
 	@Autowired
 	private Service2 ser;
 	
+	@Autowired
+	private SeatRepository seatDao;
+
+	@Autowired
+	private TicketRepository ticketDao;
+  
 	//회원가입
 	@PostMapping("addUsers")
 	public void addUsers(HttpServletRequest request, HttpServletResponse response) {
@@ -36,6 +44,7 @@ public class Controller {
 		return result;
 	}
 	
+
 	//로그인
 	@PostMapping("login")
 	public void login(HttpServletRequest request, HttpServletResponse response) {
@@ -56,4 +65,5 @@ public class Controller {
 		boolean result = ser.delete(userId);
 		System.out.println(result);
 	}
+
 }
