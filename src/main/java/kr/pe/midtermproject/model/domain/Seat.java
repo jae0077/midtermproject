@@ -32,8 +32,4 @@ public class Seat {
 	//좌석 true = 1, false = 0. 기본값은 true, 1
 	@Column(name="is_used", length=1, nullable=false, unique=false)
 	private String isUsed;
-	
-	@OneToOne(mappedBy="seat",
-			fetch=FetchType.LAZY)
-	private Users user;
 }
