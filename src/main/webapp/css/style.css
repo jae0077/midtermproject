@@ -1,5 +1,5 @@
 .main-container{
-	margin-top: 150px;
+	margin-top: 0px;
 	text-align: center
 }
 
@@ -17,9 +17,10 @@
 
 .nav-bar{
 	top: 0px;
-	overflow: hidden;
-	height: 80px;
+	overflow:visible;
+	height: 150px;
   font-size: 25px;
+  z-index: 1;    /* 하운도움 - z축의 개념 - 디폴트는 0.- 맨 앞으로 꺼내거나 뒤로 밀어내거나  */
 }
 
 .navbar a {
@@ -29,6 +30,7 @@
 	text-align: center;
 	text-decoration: nodlne;
   }
+  
 .dropdown-content {
 	display: none;
 	position: absolute;
@@ -52,10 +54,10 @@
 .dropdown-content a:hover {
 	background-color: #ddd;
   }
-
+/* ================================================ */
 .footer{
 	bottom: 0px;
-	height: 170px;
+	height: 100px;
 	width: 100%;
 	background-color: #54cbe0;
 	z-index: 1;
@@ -71,17 +73,48 @@
 	position: fixed !important
 }
 
-
 input{
 	height: 40px;
 	width: 100%;
+  text-decoration:none;
 }
 
+ul{
+  list-style:none;
+}
+a{
+  text-decoration:none;
+}
+textarea{
+  text-decoration:none;
+  resize: none;
+  
+}
+/* =========================================================== */
 .square{
 	width: 80px;
 	height: 80px;
 	background: rgb(57, 196, 103);
 }
+
+.sign-up{
+  padding-top: 0%;
+}
+
+.comment{
+  padding-left: 1%; 
+  padding-right: 1%; 
+  padding-bottom: 1%;
+  text-align: left; 
+  border-style: groove;
+  display: block;
+  margin-top: 7%;
+}
+
+
+
+
+
 /* ===========================모달================================== */
 
      /* Full-width input fields */
