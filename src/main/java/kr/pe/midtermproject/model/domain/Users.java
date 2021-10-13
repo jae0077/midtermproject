@@ -24,11 +24,11 @@ import lombok.ToString;
 @AllArgsConstructor
 @Setter
 @Getter
-@ToString
 
 @SequenceGenerator(name="users_idx_seq", sequenceName="users_idx_seq", initialValue=1, allocationSize=1)
 @Entity(name="users")
 public class Users {
+
 	@Id
 	@Column(name="user_idx")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="users_idx_seq")
@@ -62,13 +62,14 @@ public class Users {
 //			cascade=CascadeType.ALL)
 //	private List<Ticket> ticketList;
 	
-	@OneToMany(mappedBy="writer",
-			fetch=FetchType.LAZY,
-			cascade=CascadeType.ALL)
-	private List<Board> boardList;
+//	@OneToMany(mappedBy="writer",
+//			fetch=FetchType.LAZY,
+//			cascade=CascadeType.ALL)
+//	private List<Board> boardList;
 	
-	@OneToMany(mappedBy="writer",
-			fetch=FetchType.LAZY,
-			cascade=CascadeType.ALL)
-	private List<Comments> commentList;
+//	@OneToMany(mappedBy="writer",
+//			fetch=FetchType.LAZY,
+//			cascade=CascadeType.ALL)
+//	private List<Comments> commentList;
+	
 }
