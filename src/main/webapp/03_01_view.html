@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="./script.js"></script>
+<title>Community-write</title>
+</head>
+<body class="body">
+    <div id="body-div">
+        <nav-bar></nav-bar>
+
+        <!-- 메인 -->
+        <div class="main-container">
+
+            <div class="sub-container" style="margin-bottom: 100px; width: 70%;">
+                <div style="padding: 3%; text-align: left; border-style: groove;">
+                    <div><a href='03_board.html'>자유게시판</a></div>
+                    <div><h3>이거보여주려고 어그로끌었다</h3></div>
+                    <div>작성자 : <a>Jill</a></div>
+                    <hr>
+                    <div>
+                        내용입니다 <br>
+                        내용입니다 <br>
+                        내용입니다 <br>
+                        내용입니다 <br>
+                        내용입니다 <br>
+                        내용입니다 <br>
+                        내용입니다 <br>
+                        내용입니다 <br>
+                        내용입니다 <br>
+                        내용입니다 <br>
+                        내용입니다 <br>
+                    </div>
+                </div>
+                <div style="padding-top: 1%;">
+                    <div style="display: inline; float:left;">
+                        <button class="w3-button w3-card-4" onclick="location.href='03_board.html'" style="background-color: #ecdbdb; width: 100px;">목록</button> <br><br>
+                    </div>
+                    <div style="display:flex; float:right;">
+                        <button class="w3-button w3-card-4" onclick="location.href='#'" style="background-color: #ecdbdb; width: 100px; margin-right: 10%;">수정하기</button> <br><br>
+                        <button class="w3-button w3-card-4" onclick="location.href='03_02_write.html'" style="background-color: #ecdbdb; width: 100px;">글쓰기</button> <br><br>
+                    </div>
+                </div>
+            </div>
+                    
+                <foot></foot>
+        </div>
+    </div>
+
+<script>
+    navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
+    footer();    
+
+    Vue.component('nav-bar', {
+        template: navBarScript,
+        data: function() {
+                return {
+                    login,
+                    logout,
+                }
+            },
+        methods: {
+            ClickLogout: function(){
+                sessionStorage.setItem("session", null);
+                alert("로그아웃 했습니다");
+                location.href="00_index.html";
+            }
+        }
+    })
+    Vue.component('foot', {
+        template: footerScript,
+    })
+
+    new Vue({
+        el: "#body-div",
+        data: {
+            model: {
+                showIndex: true,
+                showLogin: false
+            }
+        }
+    })
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="./script.js"></script>
+<title>Ticket</title>
+</head>
+<body class="body">
+    <div id="body-div">
+        <nav-bar></nav-bar>
+
+        <!-- 메인 -->
+        <div class="main-container">
+            <buy-ticket></buy-ticket>
+
+
+            <foot></foot>
+        </div>
+    </div>
+
+    <template id="ticketTemp">
+        <div class="sub-container" style="height: 80%; margin-bottom: 5%;">
+            <h1>이용권 구매</h1><hr>
+            <p>모든 이용권의 일수는 당일을 포함하여 계산됩니다</p> <br>
+            <p>1일권의 경우 당일 23시59분에 만료됩니다</p> <br>
+            <div class="w3-row">
+                <div class="w3-col s4 w3-green w3-center" style="width:30%;">
+                    <img src="./img/ticket.jpg" @click="click1day">
+                </div>
+
+                <div class="w3-col w3-container" style="width:5%;"></div>
+
+                <div class="w3-col s4 w3-dark-grey w3-center" style="width:30%;">
+                    <img src="./img/ticket.jpg" @click="click7day">
+                </div>
+
+                <div class="w3-col w3-container" style="width:5%;"></div>
+                
+                <div class="w3-col s4 w3-dark-grey w3-center" style="width:30%;">
+                    <img src="./img/ticket.jpg" @click="click30day">
+                </div>
+            </div>
+<!-- ================================모달================================= -->
+        <div id="modal01" class="modal">
+            <form class="modal-content">
+                <div class="container">
+                    <h1>1일권</h1>
+                    <p>예정종료일 : </p>
+                    <p>해당 이용권을 구매하시겠습니까?</p>
+                    <div class="clearfix">
+                        <button @click="buy1day" type="button" class="signup" style="width:50%">1일권 구매</button>
+                        <button @click="modalClose" type="button" class="cancelbtn">취소</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="modal02" class="modal">
+            <form class="modal-content">
+                <div class="container">
+                    <h1>7일권</h1>
+                    <p>예정종료일 : </p>
+                    <p>해당 이용권을 구매하시겠습니까?</p>
+                    <div class="clearfix">
+                        <button @click="buy7day" type="button" class="signup" style="width:50%">7일권 구매</button>
+                        <button @click="modalClose" type="button" class="cancelbtn">취소</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div id="modal03" class="modal">
+            <form class="modal-content">
+                <div class="container">
+                    <h1>30일권</h1>
+                    <p>예정종료일 : </p>
+                    <p>해당 이용권을 구매하시겠습니까?</p>
+                    <div class="clearfix">
+                        <button @click="buy30day" type="button" class="signup" style="width:50%">30일권 구매</button>
+                        <button @click="modalClose" type="button" class="cancelbtn">취소</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    </template>
+
+<script>
+    Vue.component('buy-ticket', {
+        template: "#ticketTemp",
+        data: function() {
+            return{
+            }
+        },
+        methods: {
+            click1day: function(){
+                document.getElementById('modal01').style.display='block'
+            },
+            click7day: function(){
+                document.getElementById('modal02').style.display='block'
+            },
+            click30day: function(){
+                document.getElementById('modal03').style.display='block'
+            },
+            modalClose: function(){
+                document.getElementById('modal01').style.display='none'
+                document.getElementById('modal02').style.display='none'
+                document.getElementById('modal03').style.display='none'
+            },
+            buy1day: function(){
+                document.getElementById('modal01').style.display='none'
+            },
+            buy7day: function(){
+                document.getElementById('modal02').style.display='none'
+            },
+            buy30day: function(){
+                document.getElementById('modal03').style.display='none'
+            },
+        }
+    })
+
+    navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
+    footer();    
+
+    Vue.component('nav-bar', {
+        template: navBarScript,
+        data: function() {
+                return {
+                    login,
+                    logout,
+                }
+            },
+        methods: {
+            ClickLogout: function(){
+                sessionStorage.setItem("session", null);
+                alert("로그아웃 했습니다");
+                location.href="00_index.html";
+            }
+        }
+    })
+    Vue.component('foot', {
+        template: footerScript,
+    })
+
+    new Vue({
+        el: "#body-div",
+    })
+
+</script>
+</body>
+</html>

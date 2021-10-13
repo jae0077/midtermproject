@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="./script.js"></script>
+<title>Seat</title>
+</head>
+<body class="body">
+    <div id="body-div">
+        <nav-bar></nav-bar>
+        
+        <!-- 메인 -->
+        <div class="main-container">
+            <seat-select></seat-select>
+
+
+            <foot></foot>
+        </div>
+    </div>
+
+<template id="seatSelect">
+    <div class="sub-container">
+        <h1>좌석 선택</h1><hr>
+        <div>
+            전체 : 
+            /잔여 : 
+            선택 가능한 좌석은 초록색으로 표시됩니다.
+        </div>
+        <div style="border-style: groove; width: 90%; height: 90%; margin-top: 2%; margin-left: 5%;">
+            <div style="padding: 1%; display: flex; width: 100%;">
+                <div style="padding: 10px;">
+                    <div id="seat00" class="square" @click="selectSeat('seat01')"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div> 
+                
+                <div style="width: 50%; background-color: rgb(255, 255, 255);"></div>
+
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div> 
+            </div>
+
+            <div style="padding: 1%; display: flex; width: 100%;">
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div> 
+                
+                <div style="width: 50%; background-color: rgb(255, 255, 255);"></div>
+                
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div>
+                <div style="padding: 10px;">
+                    <div id="seat01" class="square"></div>
+                </div> 
+            </div>
+        </div>
+    </div>
+</template>
+<script>
+    navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
+    footer();    
+    Vue.component('seat-select', {
+        template: "#seatSelect",
+        data: function(){
+            return{
+                seat : "",
+                using : false
+            }
+        },
+        methods:{
+            selectSeat: function(v){
+                this.using = false; // DB에서 좌석이 사용중인지 불린값을 가져와서 비교
+                if(this.using == false){
+                    this.seat = v; //시트값을 저장하고 
+                    using = true; //사용중으로 불린값 변경 후 DB에 전송
+                    document.getElementById('seat00').style.backgroundColor='rgb(221, 61, 61)';
+                }
+
+            }
+        }
+
+    })
+
+    Vue.component('nav-bar', {
+        template: navBarScript,
+        data: function() {
+                return {
+                    login,
+                    logout,
+                }
+            },
+        methods: {
+            ClickLogout: function(){
+                sessionStorage.setItem("session", null);
+                alert("로그아웃 했습니다");
+                location.href="00_index.html";
+            }
+        }
+    })
+    Vue.component('foot', {
+        template: footerScript,
+    })
+
+    new Vue({
+        el: "#body-div",
+        data: {
+            model: {
+                showIndex: true,
+                showLogin: false
+            }
+        }
+    })
+
+</script>
+</body>
+</html>
