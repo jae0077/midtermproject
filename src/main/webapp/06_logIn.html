@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="./script.js"></script>
+<title>LogIn</title>
+</head>
+<body class="body">
+    <div id="body-div">
+        <nav-bar></nav-bar>
+
+        <!-- 메인 -->
+        <div class="main-container">
+            <login></login>
+
+
+            <foot></foot>
+        </div>
+    </div>
+
+    <template id="logInTemp">
+        <div class="sub-container">
+            <h1> 로그인 </h1> <hr>
+            <div style="width: 30%; margin-top: 5%;  margin-left: 35%;">
+                <input v-model="frontId" required placeholder="아이디"> <br><br>
+                <input v-model="frontPw" required placeholder="비밀번호"> <br><br>
+                <button @click=logInButton> 로그인 </button> <br><br>
+                {{message}}
+            </div>
+        </div>
+    </template>
+
+<script>
+    Vue.component('login', {
+    template: "#logInTemp",
+    data: function() {
+            return {
+                frontId : "",
+                frontPw : "",
+                message : "",
+            }
+        },
+    methods: {
+        // logInButton: function(){
+        //     console.log("전송버튼 클릭")
+        //     axios({
+        // 			method: "post",
+        // 			url: "http://localhost/Test.html", //백엔드 컨트롤러 주소로 변경하기
+        //             data: {
+        //                 Id: this.frontId,
+        //                 Pw: this.frontPw
+        //             }
+        // 		}).then(resData => {
+                    
+
+        // 		}).catch(errorData => {
+        // 			alert(errorData);
+        // 		});
+
+        // }
+        logInButton: function(){
+            axios({
+                    method: "get",
+                    url: "./test.html", //백엔드 컨트롤러 주소로 변경하기
+                }).then(resData => {  //백엔드에서 ID, PW받아오기
+                    // const id = resData.id;
+                    // const pw = resData.pw;
+                    const id = "test"; 
+                    const pw = "test";
+                    if(id == this.frontId && pw == this.frontPw){
+                        const data = {"sessionId" : id, "sessionPw" : pw};
+
+                        sessionStorage.setItem("session", JSON.stringify(data));
+                        getSession = sessionStorage.getItem("session");
+                        getSession = JSON.parse(getSession);
+
+                        location.href="./00_index.html";
+                    }else{
+                        alert("아이디나 비밀번호를 확인하세요");
+                        this.message = "아이디나 비밀번호를 확인하세요";
+                    }
+                }).catch(errorData => {
+                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요")
+                });
+
+            }
+        }
+    })
+
+    navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
+    footer();     
+    
+    Vue.component('nav-bar', {
+        template: navBarScript,
+        data: function() {
+                return {
+                    login,
+                    logout,
+                }
+            },
+        methods: {
+            ClickLogout: function(){
+                sessionStorage.setItem("session", null);
+                alert("로그아웃 했습니다");
+                location.href="00_index.html";
+            }
+        }
+    })
+    Vue.component('foot', {
+        template: footerScript,
+    })
+
+    new Vue({
+        el: "#body-div"
+    })
+</script>
+
+</body>
+</html>

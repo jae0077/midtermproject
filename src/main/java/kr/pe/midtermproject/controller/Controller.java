@@ -11,11 +11,16 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.pe.midtermproject.model.BoardService;
+import kr.pe.midtermproject.model.JWT;
 import kr.pe.midtermproject.model.SeatService;
 import kr.pe.midtermproject.model.TicketService;
 import kr.pe.midtermproject.model.UsersService;
+import kr.pe.midtermproject.model.domain.Board;
 import kr.pe.midtermproject.model.domain.Seat;
 import kr.pe.midtermproject.model.domain.Users;
+import kr.pe.midtermproject.model.dto.BoardDTO;
+import kr.pe.midtermproject.model.dto.BoardResDTO;
 
 @RestController
 public class Controller {
@@ -27,7 +32,10 @@ public class Controller {
 	private TicketService ticketService;
 	
 	@Autowired
-	private SeatService seatService;
+  private SeatService seatService;
+  
+  @Autowired
+	private BoardService boardService;
 
 	//회원가입
 	@PostMapping("user/join")
@@ -45,23 +53,25 @@ public class Controller {
 	}
 
 	//로그인
-	@PostMapping("user/login")
-	public Users login(@RequestBody Users user) {
-		boolean result = userService.login(user.getUserId(), user.getUserPw());
-		System.out.println(result);
-		Users u = null;
-		
-		if(result == true) {
-			u = userService.findById(user.getUserId());
+	@PostMapping("login")
+	public String login(@RequestBody Users reqUser) {
+		Users user = userService.login(reqUser.getUserId(), reqUser.getUserPw());
+		System.out.println(user);
+		String token = null; 
+		if (user != null) {
+			JWT jwt = new JWT();
+			token = jwt.createToken(user);
+	        System.out.println(token);
 		}
 		
-		return u;
+		return token;
 	}
-	
-	//?
-	@GetMapping("user/{user_idx}")
-	public Users userInfo(int user_idx) {
-		return null;
+  
+	@GetMapping("user/{userIdx}")
+	public Users userInfo(@PathVariable Long userIdx) {
+		Users result = null;
+		result = userService.getUser(userIdx);
+		return result;
 	}
 	
 	// userId중복확인
@@ -135,5 +145,46 @@ public class Controller {
 	public void addSeat() {
 		boolean result = seatService.addSeat();
 		System.out.println(result);
+	}
+	
+	//post 작성
+	@PostMapping("board")
+	public Board createPost(@RequestBody BoardDTO board) {		
+		
+		return boardService.createBoard(board);
+	}
+	
+	//post 수정
+	@PutMapping("board/{id}")
+	public Long updatePost(@PathVariable Long id, @RequestBody BoardDTO board) {
+		
+		return boardService.updateBoard(id, board);
+	}
+	
+	 //개별 조회
+    @GetMapping("board/{id}")
+    public BoardResDTO searchByPostId(@PathVariable Long id) {
+    	    	
+        return boardService.searchByPostId(id);
+    }
+    
+    //전체 조회(목록)
+    @GetMapping("board")
+    public List<BoardResDTO> searchAllDesc() {
+        return boardService.searchAllDesc();
+    }
+    
+    @DeleteMapping("board/{id}")
+    public void deletePost(@PathVariable Long id){
+        boardService.deletePost(id);
+    }
+
+	@PostMapping("ticket")
+	public boolean createTicket(@RequestBody Long userIdx, int limit) {
+		boolean result = false;
+
+		result = ticketService.createTicket(userIdx, limit);
+		
+		return result;
 	}
 }

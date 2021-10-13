@@ -30,14 +30,17 @@ public class UsersService {
 	}
 	
 	// 로그인
-	public boolean login(String userId, String pw) {
-		boolean result = false;
-		Users user = userDao.findUsersByUserId(userId);
+	public Users login(String userId, String userPw) {
+		Users user = userDao.findUsersByUserIdAndUserPw(userId, userPw);
 
-		if (user != null && user.getUserPw().equals(pw)) {
-			result = true;
-		}
-
+		return user;
+	}
+	
+	// idx 테스트
+	public Users getUser(Long userIdx) {
+		Users result = null;
+		result = userDao.findById(userIdx).get();
+		
 		return result;
 	}
 
@@ -64,6 +67,7 @@ public class UsersService {
 	// userId로 정보수정하기
 	public boolean updateUser(Long user_idx, Users reqUser) {
 		boolean result = false;
+
 		Users user = userDao.findById(user_idx).get();
 
 		try {

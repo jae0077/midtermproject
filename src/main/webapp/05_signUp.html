@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="./script.js"></script>
+<title>SignUp</title>
+</head>
+<body class="body">
+    <body class="body">
+        <div id="body-div">
+            <nav-bar></nav-bar>
+
+        <!-- 메인 -->
+            <div class="main-container">
+                <sign-up></sign-up>
+                
+
+
+
+                <foot></foot>
+            </div>
+        </div>
+
+    <template id="signUpTemp">
+            <div class="sub-container" style="text-align: left;">
+                <h1 style="text-align: center;"> 회원가입 </h1> <hr>
+                <div style="width: 30%; margin-left: 35%;">
+                    <div style="padding-top: 2%;">
+                        <input style="width: 64%;" autofocus required placeholder="아이디, 최소 3글자">
+                        <button style="width: 34%; padding: 4px; height: 40px;">중복확인</button>
+                    </div>
+                    <div style="color: brown;">{{messageId}}</div>
+                    <div style="padding-top: 2%;"><input style="width: 100%;" required placeholder="비밀번호, 최소 4글자"></div>
+                    <div style="color: brown;">{{messagePw}}</div>
+                    <div style="padding-top: 2%;"><input style="width: 100%;" required placeholder="비밀번호 확인"></div>
+                    <div style="color: brown;">{{messagePw2}}</div>
+                    <div style="padding-top: 2%;"><input style="width: 100%;" required placeholder="이름, 최소 2글자"></div>
+                    <div style="color: brown;">{{messageName}}</div>
+                    <div style="padding-top: 2%;"><input style="width: 100%;" required placeholder="010-1234-5678"></div>
+                    <div style="color: brown;">{{messagePhone}}</div>
+                    <button> 가입하기 </button>
+                </div>
+            </div>
+    </template>
+    
+<script>
+    Vue.component('sign-up',{
+        template: "#signUpTemp",
+        data: function() {
+            return {
+                messageId : "※ 아이디를 입력해주세요",
+                messagePw : "※ 비밀번호를 입력해주세요",
+                messagePw2 : "※ 비밀번호를 한 번 더 입력해주세요",
+                messageName : "※ 이름을 입력해주세요",
+                messagePhone : "※ 전화번호를 입력해주세요"
+            }
+        }
+
+    })
+    navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
+    footer();    
+
+    Vue.component('nav-bar', {
+        template: navBarScript,
+        data: function() {
+                return {
+                    login,
+                    logout,
+                }
+            },
+        methods: {
+            ClickLogout: function(){
+                sessionStorage.setItem("session", null);
+                alert("로그아웃 했습니다");
+                location.href="00_index.html";
+            }
+        }
+    })
+    Vue.component('foot', {
+        template: footerScript,
+    })
+
+    new Vue({
+        el: "#body-div",
+        data: {
+            model: {
+                showIndex: true,
+                showLogin: false
+            }
+        }
+    })
+
+</script>
+</body>
+</html>
