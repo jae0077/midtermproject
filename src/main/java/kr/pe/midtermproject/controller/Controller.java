@@ -1,5 +1,7 @@
 package kr.pe.midtermproject.controller;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -12,9 +14,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.pe.midtermproject.model.BoardService;
 import kr.pe.midtermproject.model.TicketService;
 import kr.pe.midtermproject.model.UsersService;
+import kr.pe.midtermproject.model.domain.Board;
 import kr.pe.midtermproject.model.domain.Users;
+
+import kr.pe.midtermproject.model.dto.BoardDTO;
 import kr.pe.midtermproject.model.domain.UsersDTO;
 
 @RestController
@@ -25,6 +31,9 @@ public class Controller {
 	
 	@Autowired
 	private TicketService ticketService;
+	
+	@Autowired
+	private BoardService boardService;
 
 	//회원가입
 	@PostMapping("join")
@@ -83,5 +92,29 @@ public class Controller {
 		boolean result = userService.deleteUser(user_idx);
 		System.out.println(result);
 	}
+	
+	//post 작성
+	@PostMapping("board")
+	public Board createPost(@RequestBody BoardDTO board) {		
+		
+		return boardService.createBoard(board);
+	}
+	
+	@PutMapping("board/{id}")
+	public Long updatePost(@PathVariable Long id, @RequestBody BoardDTO board) {
+		return boardService.updateBoard(id, board);
+	}
+	
+//	 //개별 조회
+//    @GetMapping("/board/{id}")
+//    public BoardDTO searchById(@PathVariable Long id) {
+//        return boardService.searchById(id);
+//    }
+//    
+//    //전체 조회(목록)
+//    @GetMapping("/board")
+//    public List<BoardDTO> searchAllDesc() {
+//        return boardService.searchAllDesc();
+//    }
 
 }

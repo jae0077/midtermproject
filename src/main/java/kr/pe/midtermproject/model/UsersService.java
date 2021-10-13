@@ -40,6 +40,14 @@ public class UsersService {
 
 		return result;
 	}
+	
+	// idx 테스트
+	public Users getUser(Long userIdx) {
+		Users result = null;
+		result = userDao.findById(userIdx).get();
+		
+		return result;
+	}
 
 	// idx 테스트
 	public Users getUser(Long userIdx) {
@@ -51,7 +59,7 @@ public class UsersService {
 	// userId로 users정보 가져오기
 	public Users findById(String userId) {
 		Users user = userDao.findUsersByUserId(userId);
-	
+
 		return user;
 	}
 	
@@ -71,6 +79,7 @@ public class UsersService {
 	// userId로 정보수정하기
 	public boolean updateUser(Long user_idx, Users reqUser) {
 		boolean result = false;
+
 		Users user = userDao.findById(user_idx).get();
 
 		try {
