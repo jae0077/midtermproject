@@ -10,7 +10,7 @@ import kr.pe.midtermproject.model.domain.Users;
 public class UsersService {
 
 	@Autowired
-	private UserRepository dao;
+	private UserRepository userDao;
 
 	// 회원가입
 	public boolean addUsers(Users user) {
@@ -19,7 +19,7 @@ public class UsersService {
 		try {
 			if (user.getIsAdmin() == null) {
 				user.setIsAdmin("0");
-				dao.save(user);
+				userDao.save(user);
 			}
 			result = true;
 		}catch (Exception e) {
@@ -32,7 +32,7 @@ public class UsersService {
 	// 로그인
 	public boolean login(String userId, String pw) {
 		boolean result = false;
-		Users user = dao.findUsersByUserId(userId);
+		Users user = userDao.findUsersByUserId(userId);
 
 		if (user != null && user.getUserPw().equals(pw)) {
 			result = true;
@@ -40,40 +40,45 @@ public class UsersService {
 
 		return result;
 	}
-
-	// userId로 users정보 가져오기
+	// idx 테스트
+	public Users getUser(Long userIdx) {
+		Users result = null;
+		result = userDao.findById(userIdx).get();
+		return result;
+	}
 	
+	// userId로 users정보 가져오기
 	public Users findById(String userId) {
-		Users user = dao.findUsersByUserId(userId);
-
+		Users user = userDao.findUsersByUserId(userId);
+		
 		return user;
 	}
 
 	
 	// userId로 정보수정하기
-	public boolean update(String userId, String pw, String pw2, String name, String phone) {
-		boolean result = false;
-		Users user = dao.findUsersByUserId(userId);
-
-		if (user.getUserPw().equals(pw)) {
-			user.setUserPw(pw2);
-			user.setName(name);
-			user.setPhone(phone);
-			dao.save(user);
-			result = true;
-		}
-
-		return result;
-	}
+//	public boolean update(Long userIdx, Users reqUser) {
+//		boolean result = false;
+//		Users user = userDao.findById(userIdx).get();
+//
+//		if (user.getUserPw().equals(pw)) {
+//			user.setUserPw(pw2);
+//			user.setName(name);
+//			user.setPhone(phone);
+//			userDao.save(user);
+//			result = true;
+//		}
+//
+//		return result;
+//	}
 
 	// userId로 삭제하기
 	
 	public boolean delete(String userId) {
 		boolean result = false;
-		Users user = dao.findUsersByUserId(userId);
+		Users user = userDao.findUsersByUserId(userId);
 
 		if (user != null) {
-			dao.delete(user);
+			userDao.delete(user);
 			result = true;
 		}
 

@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,18 +42,20 @@ public class Controller {
 		
 //		return token
 	}
-	
-	@GetMapping("user/{user_idx}")
-	public Users userInfo(int user_idx) {
-		return null;
+
+	@GetMapping("user/{userIdx}")
+	public Users userInfo(@PathVariable Long userIdx) {
+		Users result = null;
+		result = userService.getUser(userIdx);
+		return result;
 	}
 	
 	//userId로 정보수정
-	@PutMapping("user/{user_idx}")
-	public void updateUser(String userId, String pw, String pw2, String name, String phone) {
-		boolean result = userService.update(userId, pw, pw2, name, phone);
-		System.out.println(result);
-	}
+//	@PutMapping("user/{user_idx}")
+//	public void updateUser(@PathVariable Long userIdx, @RequestBody String pw, String name, String phone) {
+//		boolean result = userService.update(pw, name, phone);
+//		System.out.println(result);
+//	}
 	
 	//userId로 삭제하기
 	@DeleteMapping("user/{user_idx}")
