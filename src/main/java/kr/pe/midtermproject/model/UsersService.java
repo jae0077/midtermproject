@@ -43,7 +43,7 @@ public class UsersService {
 		
 		return result;
 	}
-	
+
 	// userId로 users정보 가져오기
 	public Users findById(String userId) {
 		Users user = userDao.findUsersByUserId(userId);

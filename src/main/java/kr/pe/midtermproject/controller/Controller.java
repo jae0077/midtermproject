@@ -20,7 +20,6 @@ import kr.pe.midtermproject.model.domain.Users;
 import kr.pe.midtermproject.model.dto.BoardDTO;
 import kr.pe.midtermproject.model.dto.BoardResDTO;
 
-
 @RestController
 public class Controller {
 	
@@ -124,4 +123,12 @@ public class Controller {
         boardService.deletePost(id);
     }
 
+	@PostMapping("ticket")
+	public boolean createTicket(@RequestBody Long userIdx, int limit) {
+		boolean result = false;
+
+		result = ticketService.createTicket(userIdx, limit);
+		
+		return result;
+	}
 }

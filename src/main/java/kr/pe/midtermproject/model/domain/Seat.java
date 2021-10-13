@@ -29,6 +29,7 @@ public class Seat {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seat_idx_seq")
 	private Long seatId;
 	
+	//좌석 true = 1, false = 0. 기본값은 true, 1
 	@Column(name="is_used", length=1, nullable=false, unique=false)
 	private String isUsed;
 	
