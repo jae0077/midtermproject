@@ -11,4 +11,7 @@ public interface UserRepository extends CrudRepository<Users, Long>{
 	Users findUsersByUserId(String userId);
 	
 	List<Users> findAllUsersByUserId(String userId);
+	
+	// 로그인용 id pw 확인
+	Users findUsersByUserIdAndUserPw(String userId, String userPw);
 }

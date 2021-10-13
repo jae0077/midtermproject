@@ -30,15 +30,10 @@ public class UsersService {
 	}
 	
 	// 로그인
-	public boolean login(String userId, String pw) {
-		boolean result = false;
-		Users user = userDao.findUsersByUserId(userId);
+	public Users login(String userId, String userPw) {
+		Users user = userDao.findUsersByUserIdAndUserPw(userId, userPw);
 
-		if (user != null && user.getUserPw().equals(pw)) {
-			result = true;
-		}
-
-		return result;
+		return user;
 	}
 
 	// idx 테스트
