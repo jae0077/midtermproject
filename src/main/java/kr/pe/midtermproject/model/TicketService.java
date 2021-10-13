@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 
 import kr.pe.midtermproject.dao.SeatRepository;
 import kr.pe.midtermproject.dao.TicketRepository;
+import kr.pe.midtermproject.model.domain.Ticket;
 
 @Service
 public class TicketService {
@@ -14,4 +15,9 @@ public class TicketService {
 	
 	@Autowired
 	private SeatRepository seatDao;
+	
+	public Ticket checkedTicket() {
+		
+		return null;
+	}
 }

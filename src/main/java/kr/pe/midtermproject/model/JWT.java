@@ -5,25 +5,27 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.springframework.stereotype.Service;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import kr.pe.midtermproject.model.domain.Users;
 
+@Service
 public class JWT {
-	final String key = "Bamdule";
+	final String key = "playdataMidterm";
 
-//    public static void main(String[] args) throws UnsupportedEncodingException {
-//    	JWT JWT = new JWT();
-//
-//        String jwt = JWT.createToken();
-//        System.out.println(jwt);
-//        
-//        Map<String, Object> claimMap = JWT.verifyJWT(jwt);
-//        System.out.println(claimMap); // 토큰이 만료되었거나 문제가있으면 null
-//    }
-    //토큰 생성
+	/*
+	 * JWT JWT = new JWT();
+	 * String jwt = JWT.createToken(); // 토큰 생성
+	 * System.out.println(jwt);
+	 * Map<String, Object> claimMap = JWT.verifyJWT(jwt); // 토큰 검증 만료되었거나 문제가 있을시 null
+	 * System.out.println(claimMap);
+	 */	
+    
+	//토큰 생성
     public String createToken(Users user) {
 
         //Header 부분 설정
