@@ -23,6 +23,7 @@ public class JWT {
 //        Map<String, Object> claimMap = JWT.verifyJWT(jwt);
 //        System.out.println(claimMap); // 토큰이 만료되었거나 문제가있으면 null
 //    }
+	
     //토큰 생성
     public String createToken(Users user) {
 

@@ -11,5 +11,7 @@ public interface TicketRepository extends CrudRepository<Ticket, Long>{
 	//select * from Ticket where title=?
 	//동일한 메소드명 fildByTitle
 	List<Ticket> findTicketByTicketIdx(int ticketIdx);
+	
+	Ticket findTicketByUser(Long userIdx);
 
 }
