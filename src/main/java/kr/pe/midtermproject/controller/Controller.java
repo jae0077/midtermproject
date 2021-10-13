@@ -9,14 +9,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.pe.midtermproject.model.JWT;
 import kr.pe.midtermproject.model.BoardService;
+import kr.pe.midtermproject.model.JWT;
 import kr.pe.midtermproject.model.TicketService;
 import kr.pe.midtermproject.model.UsersService;
 import kr.pe.midtermproject.model.domain.Board;
 import kr.pe.midtermproject.model.domain.Users;
 import kr.pe.midtermproject.model.dto.BoardDTO;
-import kr.pe.midtermproject.model.domain.UsersDTO;
 
 
 @RestController
@@ -114,4 +113,12 @@ public class Controller {
 //        return boardService.searchAllDesc();
 //    }
 
+	@PostMapping("ticket")
+	public boolean createTicket(@RequestBody Long userIdx, int limit) {
+		boolean result = false;
+
+		result = ticketService.createTicket(userIdx, limit);
+		
+		return result;
+	}
 }
