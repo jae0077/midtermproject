@@ -1,6 +1,6 @@
 package kr.pe.midtermproject.model.domain;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -36,6 +36,7 @@ public class Ticket {
 	@JoinColumn(name="user_idx")  
 	private Users user;
 	
+	//티켓 종료일
 	@Column(name="limit", nullable=false, unique=false)
-	private Date limit;
+	private LocalDate limit;
 }
