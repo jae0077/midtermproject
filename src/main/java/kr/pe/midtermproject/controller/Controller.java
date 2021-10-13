@@ -1,10 +1,5 @@
 package kr.pe.midtermproject.controller;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,14 +9,15 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.pe.midtermproject.model.JWT;
 import kr.pe.midtermproject.model.BoardService;
 import kr.pe.midtermproject.model.TicketService;
 import kr.pe.midtermproject.model.UsersService;
 import kr.pe.midtermproject.model.domain.Board;
 import kr.pe.midtermproject.model.domain.Users;
-
 import kr.pe.midtermproject.model.dto.BoardDTO;
 import kr.pe.midtermproject.model.domain.UsersDTO;
+
 
 @RestController
 public class Controller {
@@ -52,16 +48,17 @@ public class Controller {
 
 	//로그인
 	@PostMapping("login")
-	public Users login(@RequestBody Users user) {
-		boolean result = userService.login(user.getUserId(), user.getUserPw());
-		System.out.println(result);
-		Users u = null;
-		
-		if(result == true) {
-			u = userService.findById(user.getUserId());
+	public String login(@RequestBody Users reqUser) {
+		Users user = userService.login(reqUser.getUserId(), reqUser.getUserPw());
+		System.out.println(user);
+		String token = null; 
+		if (user != null) {
+			JWT jwt = new JWT();
+			token = jwt.createToken(user);
+	        System.out.println(token);
 		}
 		
-		return u;
+		return token;
 	}
 
 	@GetMapping("user/{userIdx}")
