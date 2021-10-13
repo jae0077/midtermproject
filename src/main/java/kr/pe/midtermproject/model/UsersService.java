@@ -63,7 +63,6 @@ public class UsersService {
 		return result;
 	}
 
-	
 	// userId로 정보수정하기
 	public boolean updateUser(Long user_idx, Users reqUser) {
 		boolean result = false;

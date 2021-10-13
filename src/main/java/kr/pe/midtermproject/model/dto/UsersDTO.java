@@ -1,4 +1,4 @@
-package kr.pe.midtermproject.model.domain;
+package kr.pe.midtermproject.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
