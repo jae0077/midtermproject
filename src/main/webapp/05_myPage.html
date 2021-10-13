@@ -2,55 +2,231 @@
 <html>
 <head>
 <meta charset=UTF-8>
-<title>마이페이지</title>
-
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    
-    <!-- 네이게이션 바 -->
-    <a> Logo </a>
-    
-    <a> 좌석선택 </a>
-    <a> 이용권구매 </a>
-    <a> 커뮤니티 </a>
-    <a> 이용안내 </a>
-    <a> 회원가입 </a>
-    <a> 로그인 </a>
-
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="./script.js"></script>
+<title>MyPage</title>
 </head>
-<body>
+<body class="body">
+    <div id="body-div">
+        <nav-bar></nav-bar>
 
-<div>
-
-메인페이지 - 플레이독서실 
-
-</div>
-
-
-<div>
-	<div>
-	공지사항
-	</div>
-	<div>
-	자유게시판
-	</div>
-</div>
+        <!-- 메인 -->
+        <div class="main-container">
+            <my-page></my-page>
 
 
-<footer>
+            <foot></foot>
+        </div>
+    </div>
 
-<div>
-푸터
-</div>
+    <template id="myPageTemp">
+        <div class="sub-container"> 
+            <h1>나의 정보</h1><hr>
+            <div><p>이용권 종료일 : </p></div>
+            <div><p>현재 좌석 : </p></div>
+            
+            <div class="w3-row">
+                <div class="w3-col w3-container" style="width:5%;"></div>
+                
+                <div class="w3-col w3-container" style="width:25%">
+                    <p>내 정보 수정</p>
+                    <img src="./img/mainPicture.jpg" style="width:80%" @click="openCheck('modifying')">
+                </div>
 
-</footer>
+                <div class="w3-col w3-container" style="width:7%;"></div>
+
+                <div class="w3-col w3-container" style="width:25%">
+                    <p>좌석 변경</p>
+                    <img src="./img/mainPicture.jpg" style="width:80%" @click="openCheck('seating')">
+                </div>
+
+                <div class="w3-col w3-container" style="width:7%;"></div>
+                
+                <div class="w3-col w3-container" style="width:25%">
+                    <p>퇴실</p>
+                    <img src="./img/mainPicture.jpg" style="width:80%" @click="openCheck('exiting')">
+                </div>
+                
+                <div class="w3-col w3-container" style="width:5%;"></div>
+            </div>
+        
+
+
+
+            <div id="modalCheck" class="modal">
+                <form class="modal-content">
+                    <div class="container" style="text-align: left;">
+                        <h1>비밀번호를 입력해 주세요</h1>
+                        <p>아이디 : </p> 
+                        <input required placeholder="비밀번호"> 
+                        </p>
+                        {{message}}
+                        <div class="clearfix">
+                            <button @click="check" type="button" class="signup" style="width:50%">확인</button>
+                            <button @click="modalClose" type="button" class="cancelbtn">취소</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            
+            <div id="modalModify" class="modal">
+                <form class="modal-content">
+                    <div class="container">
+                        <div style="text-align: left;">
+                            <h3>나의 정보 수정</h3>
+                            <p>아이디 : </p>
+                            
+                            <p>비밀번호</p>
+                            <input required placeholder="비밀번호"> <br><br>
+                            <p>비밀번호 확인</p>
+                            <input required placeholder="비밀번호 확인"> <br><br>
+                            <p>이름</p>
+                            <input required placeholder="홍길동"> <br><br>
+                            <p>전화번호</p>
+                            <input required placeholder="000-0000-0000"> <br><br>
+                        </div>
+                        <div class="clearfix">
+                            <button @click="modify" type="button" class="signup" style="width:50%">확인</button>
+                            <button @click="modalClose" type="button" class="cancelbtn">취소</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div id="modalSeat" class="modal">
+                <form class="modal-content">
+                    <div class="container" style="text-align: left;">
+                        <h1>현재 좌석</h1>
+                        <div></div>
+                        <h1>좌석을 선택하세요</h1>
+                        <div></div>
+                        <div class="clearfix">
+                            <button @click="seatChange" type="button" class="signup" style="width:50%">확인</button>
+                            <button @click="modalClose" type="button" class="cancelbtn">취소</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div id="modalExit" class="modal">
+                <form class="modal-content">
+                    <div class="container">
+                        <div style="text-align: left;">
+                            <h3>퇴실 확인</h3>
+                            <h1>퇴실하시겠습니까?</h1>
+                        </div>
+                        <div class="clearfix">
+                            <button @click="exit" type="button" class="signup" style="width:50%">확인</button>
+                            <button @click="modalClose" type="button" class="cancelbtn">취소</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
 
 <script>
+    Vue.component('my-page', {
+        template: "#myPageTemp",
+        data: function() {
+            return{
+                now : "",
+                message : ""
+            }
+        },
+        methods: {
+            openCheck: function(v){
+                this.now = v;
+                document.getElementById('modalCheck').style.display='block';
+            },
+            modalClose: function(){
+                pw = "";
+                this.now = "";
+                this.message = "";
+                document.getElementById('modalCheck').style.display='none'
+                document.getElementById('modalModify').style.display='none';
+                document.getElementById('modalSeat').style.display='none';
+                document.getElementById('modalExit').style.display='none';
+            },
+            check: function(){
+                let pw = "test"; //인풋 pw
+                
+                if(pw == "test"){ //인풋 pw와 DB의 pw가 같으면
+                    document.getElementById('modalCheck').style.display='none';
+                    if(this.now == "modifying"){
+                        document.getElementById('modalModify').style.display='block';
+                    }
+                    else if(this.now == "seating"){
+                        document.getElementById('modalSeat').style.display='block';
+                    }
+                    else if(this.now == "exiting"){
+                        document.getElementById('modalExit').style.display='block';
+                    }else{
+                        alert("에러가 발생했습니다");
+                        location.href="05_myPage.html";
+                    }
+
+                    
+                }else{
+                    this.message = "비밀번호가 틀렸습니다";
+                }
+                pw = ""
+                this.now = "";
+                this.message = "";
+            },
+            modify: function(v){
+                this.now = v;
+                document.getElementById('modalModify').style.display='none';
+            },
+            seatChange: function(v){
+                this.now = v;
+                document.getElementById('modalSeat').style.display='none';
+            },
+            exit: function(v){
+                this.now = v;
+                document.getElementById('modalExit').style.display='none';
+            },
 
 
 
+        }
+    })
+    navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
+    footer();    
+
+    Vue.component('nav-bar', {
+        template: navBarScript,
+        data: function() {
+                return {
+                    login,
+                    logout,
+                }
+            },
+        methods: {
+            ClickLogout: function(){
+                sessionStorage.setItem("session", null);
+                alert("로그아웃 했습니다");
+                location.href="00_index.html";
+            }
+        }
+    })
+    Vue.component('foot', {
+        template: footerScript,
+    })
+
+    new Vue({
+        el: "#body-div",
+        data: {
+            model: {
+                showIndex: true,
+                showLogin: false
+            }
+        }
+    })
 </script>
-
-
 </body>
 </html>
