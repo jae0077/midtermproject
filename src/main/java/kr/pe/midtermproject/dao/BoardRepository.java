@@ -1,12 +1,14 @@
 package kr.pe.midtermproject.dao;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 
 import kr.pe.midtermproject.model.domain.Board;
-import kr.pe.midtermproject.model.dto.BoardDTO;
 
 public interface BoardRepository extends CrudRepository<Board, Long>{
 
-//	Board save(BoardDTO boardDTO);
+	//게시글 역순 정렬
+	List<Board> findAllByOrderByBoardIdxDesc();
 	
 }
