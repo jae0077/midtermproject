@@ -53,6 +53,7 @@ public class BoardService {
 	}
 	
 	//글 전체 조회
+	@Transactional(rollbackOn = Exception.class)
 	public List<BoardResDTO> searchAllDesc() {
 		
 		return boardRepo.findAllByOrderByBoardIdxDesc().stream()
@@ -63,11 +64,10 @@ public class BoardService {
 	//글 삭제
 	@Transactional(rollbackOn = Exception.class)
 	public void deletePost(Long id) {
-		Board board = boardRepo.findById(id)
-                .orElseThrow(()->new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
+		Board board = boardRepo.findById(id).orElseThrow(()
+				-> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
 
 		boardRepo.delete(board);
-		
 	}
 	
 	//댓글 작성

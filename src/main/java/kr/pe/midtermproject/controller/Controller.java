@@ -13,12 +13,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.pe.midtermproject.model.BoardService;
 import kr.pe.midtermproject.model.JWT;
+import kr.pe.midtermproject.model.NoticeService;
 import kr.pe.midtermproject.model.TicketService;
 import kr.pe.midtermproject.model.UsersService;
 import kr.pe.midtermproject.model.domain.Board;
+import kr.pe.midtermproject.model.domain.Notice;
 import kr.pe.midtermproject.model.domain.Users;
 import kr.pe.midtermproject.model.dto.BoardDTO;
 import kr.pe.midtermproject.model.dto.BoardResDTO;
+import kr.pe.midtermproject.model.dto.NoticeDTO;
+import kr.pe.midtermproject.model.dto.NoticeResDTO;
 
 
 @RestController
@@ -32,6 +36,9 @@ public class Controller {
 	
 	@Autowired
 	private BoardService boardService;
+	
+	@Autowired
+	private NoticeService noticeService;
 
 	//회원가입
 	@PostMapping("join")
@@ -106,22 +113,59 @@ public class Controller {
 		return boardService.updateBoard(id, board);
 	}
 	
-	 //개별 조회
+	 //post 개별 조회
     @GetMapping("board/{id}")
     public BoardResDTO searchByPostId(@PathVariable Long id) {
-    	    	
+    	
         return boardService.searchByPostId(id);
     }
     
-    //전체 조회(목록)
+    //post 전체 조회(목록)
     @GetMapping("board")
-    public List<BoardResDTO> searchAllDesc() {
+    public List<BoardResDTO> searchAllPostDesc() {
+    	
         return boardService.searchAllDesc();
     }
     
+    //post 삭제
     @DeleteMapping("board/{id}")
     public void deletePost(@PathVariable Long id){
+    	
         boardService.deletePost(id);
     }
 
+    //notice 작성
+  	@PostMapping("notice")
+  	public Notice createNotice(@RequestBody NoticeDTO notice) {		
+  		
+  		return noticeService.createNotice(notice);
+  	}
+  	
+  	//notice 수정
+  	@PutMapping("notice/{id}")
+	public Notice updateNotice(@PathVariable Long id, @RequestBody NoticeDTO notice) {
+  		
+		return noticeService.updateNotice(id, notice);
+	}
+  	
+  	//notice 1개 조회
+  	@GetMapping("notice/{id}")
+    public NoticeResDTO searchByNoticeId(@PathVariable Long id) {
+    	
+        return noticeService.searchByNoticeId(id);
+    }
+  	
+  	//notice 전체 조회(목록)
+  	@GetMapping("notice")
+    public List<NoticeResDTO> searchAllNoticeDesc() {
+    	
+        return noticeService.searchAllNoticeDesc();
+    }
+  	
+  	//notice 삭제
+    @DeleteMapping("notice/{id}")
+    public void deleteNotice(@PathVariable Long id){
+    	
+    	noticeService.createNotice(id);
+    }
 }

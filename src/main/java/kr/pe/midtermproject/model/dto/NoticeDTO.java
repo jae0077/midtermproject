@@ -11,10 +11,9 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class BoardDTO {
+public class NoticeDTO {
 	
-	private Long writerId;
 	private String title;
 	private String content;
-		
+
 }
