@@ -54,10 +54,12 @@ public class Controller {
 		
 		return u;
 	}
-	
-	@GetMapping("user/{user_idx}")
-	public Users userInfo(int user_idx) {
-		return null;
+
+	@GetMapping("user/{userIdx}")
+	public Users userInfo(@PathVariable Long userIdx) {
+		Users result = null;
+		result = userService.getUser(userIdx);
+		return result;
 	}
 	
 	// userId중복확인

@@ -41,10 +41,17 @@ public class UsersService {
 		return result;
 	}
 
+	// idx 테스트
+	public Users getUser(Long userIdx) {
+		Users result = null;
+		result = userDao.findById(userIdx).get();
+		return result;
+	}
+	
 	// userId로 users정보 가져오기
 	public Users findById(String userId) {
 		Users user = userDao.findUsersByUserId(userId);
-
+	
 		return user;
 	}
 	
