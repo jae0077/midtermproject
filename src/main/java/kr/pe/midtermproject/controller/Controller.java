@@ -1,5 +1,7 @@
 package kr.pe.midtermproject.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.util.Map;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,11 +11,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.pe.midtermproject.model.BoardService;
 import kr.pe.midtermproject.model.CommentsService;
 import kr.pe.midtermproject.model.JWT;
+
 import kr.pe.midtermproject.model.NoticeService;
 import kr.pe.midtermproject.model.SeatService;
 import kr.pe.midtermproject.model.TicketService;
@@ -49,7 +53,10 @@ public class Controller {
 	
 	@Autowired
 	private CommentsService commentsService;
-
+  
+  @Autowired
+	private JWT JWT;
+	
 	//회원가입
 	@PostMapping("user/join")
 	public boolean createUser(@RequestBody Users user) {
@@ -72,8 +79,7 @@ public class Controller {
 		System.out.println(user);
 		String token = null; 
 		if (user != null) {
-			JWT jwt = new JWT();
-			token = jwt.createToken(user);
+			token = JWT.createToken(user);
 	        System.out.println(token);
 		}
 		
@@ -87,6 +93,17 @@ public class Controller {
 		return result;
 	}
 	
+	@GetMapping("user/info/{user_idx}")
+	public String userInfo(@RequestHeader("Authorization") String token, @PathVariable Long user_idx) throws UnsupportedEncodingException {
+		Map<String, Object> claimMap = JWT.verifyJWT(token); // 토큰 검증 만료되었거나 문제가 있을시 null
+		System.out.println(claimMap);
+		
+//		Users result = null;
+//		result = userService.getUser(userIdx);
+		return token;
+	}
+	// naver.com/mypage => 브라우저상에 주소
+	// 매핑할떄 사용하는 uri => axios 
 	// userId중복확인
 	@PostMapping("user/checkedid")
 	public boolean checkedUserId(@RequestBody Users reqUser){
@@ -160,7 +177,7 @@ public class Controller {
 		System.out.println(result);
 	}
 	
-	//post 작성
+	//post 작성 POST board // 게시글 작성api
 	@PostMapping("board")
 	public Board createPost(@RequestBody BoardDTO board) {		
 		

@@ -15,7 +15,7 @@ public class UsersService {
 	// 회원가입
 	public boolean createUser(Users user) {
 		boolean result = false;
-		System.out.println(user);
+
 		try {
 			if (user.getIsAdmin() == null) {
 				user.setIsAdmin("0");
@@ -63,7 +63,6 @@ public class UsersService {
 		return result;
 	}
 
-	
 	// userId로 정보수정하기
 	public boolean updateUser(Long user_idx, Users reqUser) {
 		boolean result = false;

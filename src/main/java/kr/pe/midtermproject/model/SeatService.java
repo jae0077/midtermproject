@@ -23,14 +23,20 @@ public class SeatService {
 	public boolean seatSelect(String userId, Long seat_idx) {
 		boolean result = false;
 		Users user = userDao.findUsersByUserId(userId);
-		Seat seat = seatDao.findById(seat_idx).get();
+		Seat seat = new Seat();
 		
-		if(user.getSeat() == null && seat.getIsUsed().equals("0")) {
-			user.setSeat(seat);
-			seat.setIsUsed("1");
-			userDao.save(user);
-			seatDao.save(seat);
-			result = true;
+		try {
+			seat = seatDao.findById(seat_idx).get();
+			
+			if(user.getSeat() == null && seat.getIsUsed().equals("0")) {
+				user.setSeat(seat);
+				seat.setIsUsed("1");
+				userDao.save(user);
+				seatDao.save(seat);
+				result = true;
+			}
+		}catch(Exception e) {
+			
 		}
 		
 		return result;
@@ -40,17 +46,23 @@ public class SeatService {
 	public boolean seatChange(String userId, Long seat_idx) {
 		boolean result = false;
 		Users user = userDao.findUsersByUserId(userId);
-		Seat newSeat = seatDao.findById(seat_idx).get();
+		Seat newSeat = new Seat();
 		
-		if(user.getSeat() != null && newSeat.getIsUsed().equals("0")) {
-			Seat oldSeat = user.getSeat();
-			user.setSeat(newSeat);
-			oldSeat.setIsUsed("0");
-			newSeat.setIsUsed("1");
-			userDao.save(user);
-			seatDao.save(oldSeat);
-			seatDao.save(newSeat);
-			result = true;
+		try {
+			newSeat = seatDao.findById(seat_idx).get();
+			
+			if(user.getSeat() != null && newSeat.getIsUsed().equals("0")) {
+				Seat oldSeat = user.getSeat();
+				user.setSeat(newSeat);
+				oldSeat.setIsUsed("0");
+				newSeat.setIsUsed("1");
+				userDao.save(user);
+				seatDao.save(oldSeat);
+				seatDao.save(newSeat);
+				result = true;
+			}
+		}catch(Exception e) {
+			
 		}
 		
 		return result;
@@ -100,10 +112,16 @@ public class SeatService {
 	//좌석번호로 사용중인지 확인
 	public boolean checkSeat(Long seat_idx) {
 		boolean result = false;
-		Seat seat = seatDao.findById(seat_idx).get();
+		Seat seat = new Seat();
 		
-		if(seat.getIsUsed().equals("1")) {
-			result = true;
+		try {
+			seat = seatDao.findById(seat_idx).get();
+			
+			if(seat.getIsUsed().equals("1")) {
+				result = true;
+			}
+		}catch(Exception e) {
+			
 		}
 		
 		return result;
