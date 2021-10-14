@@ -17,7 +17,7 @@ public class UsersService {
 	// 회원가입
 	public boolean createUser(Users user) {
 		boolean result = false;
-		System.out.println(user);
+
 		try {
 			if (user.getIsAdmin() == null) {
 				user.setIsAdmin("0");

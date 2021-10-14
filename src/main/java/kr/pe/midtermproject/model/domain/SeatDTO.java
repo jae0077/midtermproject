@@ -1,4 +1,4 @@
-package kr.pe.midtermproject.model.dto;
+package kr.pe.midtermproject.model.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,10 +11,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class BoardDTO {
-	
-	private Long writerId;
-	private String title;
-	private String content;
-		
+public class SeatDTO {
+	private Long seatId;
+	private String isUsed;
 }

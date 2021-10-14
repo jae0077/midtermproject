@@ -1,6 +1,6 @@
 package kr.pe.midtermproject.model.domain;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,7 +11,7 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,8 +39,7 @@ public class Notice {
 	@Column(nullable=false)
 	private String content;
 	
-	@Temporal(TemporalType.DATE)
-	@CreationTimestamp
+	@CreatedDate
 	@Column(nullable=false)
-	private Date created;
+	private LocalDate created;
 }

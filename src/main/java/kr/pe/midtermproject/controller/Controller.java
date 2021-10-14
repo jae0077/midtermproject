@@ -16,17 +16,25 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.pe.midtermproject.model.BoardService;
+import kr.pe.midtermproject.model.CommentsService;
 import kr.pe.midtermproject.model.JWT;
+
+import kr.pe.midtermproject.model.NoticeService;
 import kr.pe.midtermproject.model.SeatService;
 import kr.pe.midtermproject.model.TicketService;
 import kr.pe.midtermproject.model.UsersService;
 import kr.pe.midtermproject.model.domain.Board;
+import kr.pe.midtermproject.model.domain.Notice;
 import kr.pe.midtermproject.model.domain.Seat;
 import kr.pe.midtermproject.model.domain.Ticket;
 import kr.pe.midtermproject.model.domain.Users;
 import kr.pe.midtermproject.model.dto.BoardDTO;
 import kr.pe.midtermproject.model.dto.BoardResDTO;
 import kr.pe.midtermproject.model.dto.TicketDTO;
+import kr.pe.midtermproject.model.dto.CommentsDTO;
+import kr.pe.midtermproject.model.dto.CommentsResDTO;
+import kr.pe.midtermproject.model.dto.NoticeDTO;
+import kr.pe.midtermproject.model.dto.NoticeResDTO;
 
 @RestController
 public class Controller {
@@ -44,9 +52,14 @@ public class Controller {
 	private BoardService boardService;
 	
 	@Autowired
+	private NoticeService noticeService;
+	
+	@Autowired
+	private CommentsService commentsService;
+  
+  @Autowired
 	private JWT JWT;
 	
-
 	//회원가입
 	@PostMapping("user/join")
 	public boolean createUser(@RequestBody Users user) {
@@ -184,25 +197,91 @@ public class Controller {
 		return boardService.updateBoard(id, board);
 	}
 	
-	 //개별 조회
+	 //post 개별 조회
     @GetMapping("board/{id}")
     public BoardResDTO searchByPostId(@PathVariable Long id) {
-    	    	
+    	
         return boardService.searchByPostId(id);
     }
     
-    //전체 조회(목록)
+    //post 전체 조회(목록)
     @GetMapping("board")
-    public List<BoardResDTO> searchAllDesc() {
+    public List<BoardResDTO> searchAllPostDesc() {
+    	
         return boardService.searchAllDesc();
     }
     
+    //post 삭제
     @DeleteMapping("board/{id}")
     public void deletePost(@PathVariable Long id){
+    	
         boardService.deletePost(id);
     }
+
+    //notice 작성
+  	@PostMapping("notice")
+  	public Notice createNotice(@RequestBody NoticeDTO notice) {		
+  		
+  		return noticeService.createNotice(notice);
+  	}
+  	
+  	//notice 수정
+  	@PutMapping("notice/{id}")
+	public Notice updateNotice(@PathVariable Long id, @RequestBody NoticeDTO notice) {
+  		
+		return noticeService.updateNotice(id, notice);
+	}
+  	
+  	//notice 1개 조회
+  	@GetMapping("notice/{id}")
+    public NoticeResDTO searchByNoticeId(@PathVariable Long id) {
+    	
+        return noticeService.searchByNoticeId(id);
+    }
+  	
+  	//notice 전체 조회(목록)
+  	@GetMapping("notice")
+    public List<NoticeResDTO> searchAllNoticeDesc() {
+    	
+        return noticeService.searchAllNoticeDesc();
+    }
+  	
+  	//notice 삭제
+    @DeleteMapping("notice/{id}")
+    public void deleteNotice(@PathVariable Long id){
+    	
+    	noticeService.createNotice(id);
+    }
     
-    // 이용권 구매
+    //코멘트 작성
+    @PostMapping("comment")
+  	public Boolean createComment(@RequestBody CommentsDTO comment) {		
+  		
+  		return commentsService.createComment(comment);
+  	}
+    
+    //코멘트 
+  	@PutMapping("comment/{id}")
+  	public Boolean updateComment(@PathVariable Long id, @RequestBody CommentsDTO comment) {
+  		
+  		return commentsService.updateComment(id, comment);
+  	}
+    
+    //코멘트 전체 조회 (post 별로)
+  	@GetMapping("board/{boardId}/comment")
+    public List<CommentsResDTO> searchCommentsDesc(@PathVariable Long boardId) {
+    	
+        return commentsService.searchCommentsDesc(boardId);
+    }
+    
+    //코멘트 삭제
+    @DeleteMapping("comment/{id}")
+    public void deleteComment(@PathVariable Long id){
+    	
+    	commentsService.deleteComment(id);
+    }
+
+  // 이용권 구매
 	@PostMapping("ticket")
 	public boolean createTicket(@RequestHeader("Authorization") String token, @RequestBody TicketDTO ticket) {
 		boolean result = false;
