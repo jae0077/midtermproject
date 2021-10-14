@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import kr.pe.midtermproject.dao.BoardRepository;
 import kr.pe.midtermproject.dao.CommentsRepository;
-import kr.pe.midtermproject.dao.UserRepository;
 import kr.pe.midtermproject.model.domain.Board;
 import kr.pe.midtermproject.model.domain.Comments;
 import kr.pe.midtermproject.model.domain.Users;
@@ -24,9 +23,6 @@ public class CommentsService {
 	@Autowired
 	private BoardRepository boardDao;
 	
-	@Autowired
-	private UserRepository userDao;
-
 	//댓글 작성
 	@Transactional(rollbackOn = Exception.class)
 	public boolean createComment(Users user, Board board, Comments comment) {
