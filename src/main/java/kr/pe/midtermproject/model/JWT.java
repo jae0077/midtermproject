@@ -18,6 +18,7 @@ public class JWT {
 	final String key = "playdataMidterm";
 
 	/*
+	 * 사용방법
 	 * JWT JWT = new JWT();
 	 * String jwt = JWT.createToken(); // 토큰 생성
 	 * System.out.println(jwt);

@@ -9,13 +9,13 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -37,18 +37,20 @@ public class Comments {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="comment_idx_seq")
 	private Long commentIdx;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="board_idx")
 	private Board board;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="user_idx")  
 	private Users writer;
 	
+	@Lob
 	@Column(nullable=false)
 	private String content;
 	
-	@LastModifiedDate
+	@UpdateTimestamp
 	@Column(nullable=false)
 	private LocalDate created;
 	

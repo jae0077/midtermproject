@@ -11,14 +11,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,36 +40,39 @@ public class Board {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="board_idx_seq")
 	private Long boardIdx;
 	
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name="user_idx")  
 	private Users writer;
 	
 	@Column(nullable=false)
 	private String title;
 	
+	@Lob
 	@Column(nullable=false)
 	private String content;
 	
-	@CreatedDate
+	@CreationTimestamp
 	@Column(nullable=false)
 	private LocalDate created;
 	
-	@LastModifiedDate
+	@UpdateTimestamp
+	@Column(nullable=false)
 	private LocalDate updated;
 	
-//	@OneToMany(mappedBy="board",
-//			fetch=FetchType.LAZY,
-//			cascade=CascadeType.ALL)
-//	private List<Comments> commentList;
+	@JsonIgnore
+	@OneToMany(mappedBy="board",
+			fetch=FetchType.LAZY,
+			cascade=CascadeType.ALL)
+	private List<Comments> commentList;
 	
-	public void update(String title, String content) {
-        this.title = title;
-        this.content = content;
-    }
+//	public void update(String title, String content) {
+//        this.title = title;
+//        this.content = content;
+//    }
 
 	@Override
 	public String toString() {
-		return "Board [boardIdx=" + boardIdx + ", writer=" + writer.getUserIdx() + ", title=" + title + ", content=" + content
+		return "Board [boardIdx=" + boardIdx + ", writer=" + writer.getUserId() + ", title=" + title + ", content=" + content
 				+ ", created=" + created + ", updated=" + updated + "]";
 	}
 	

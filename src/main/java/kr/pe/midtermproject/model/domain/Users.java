@@ -1,13 +1,20 @@
 package kr.pe.midtermproject.model.domain;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -47,23 +54,25 @@ public class Users {
 	@JoinColumn(name="seat_idx", nullable=true)
 	private Seat seat;
 	
-	@OneToOne
-	@JoinColumn(name="ticket_idx", nullable=true)
-	private Ticket ticket;
+//	@OneToOne
+//	@JoinColumn(name="ticket_idx", nullable=true)
+//	private Ticket ticket;
 	
 //	@OneToMany(mappedBy="users",
 //			fetch=FetchType.LAZY,
 //			cascade=CascadeType.ALL)
 //	private List<Ticket> ticketList;
 	
-//	@OneToMany(mappedBy="writer",
-//			fetch=FetchType.LAZY,
-//			cascade=CascadeType.ALL)
-//	private List<Board> boardList;
+	@JsonIgnore
+	@OneToMany(mappedBy="writer",
+			fetch=FetchType.LAZY,
+			cascade=CascadeType.ALL)
+	private List<Board> boardList;
 	
-//	@OneToMany(mappedBy="writer",
-//			fetch=FetchType.LAZY,
-//			cascade=CascadeType.ALL)
-//	private List<Comments> commentList;
+	@JsonIgnore
+	@OneToMany(mappedBy="writer",
+			fetch=FetchType.LAZY,
+			cascade=CascadeType.ALL)
+	private List<Comments> commentList;
 	
 }
