@@ -11,10 +11,10 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class BoardDTO {
+public class CommentsDTO {
 	
+	private Long postId;
 	private Long writerId;
-	private String title;
 	private String content;
-		
+
 }

@@ -1,5 +1,6 @@
 package kr.pe.midtermproject.model;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -29,7 +30,7 @@ public class BoardService {
 	public Board createBoard(BoardDTO boardDTO) {
 		Users writer = userRepo.findById(boardDTO.getWriterId()).get();
 		
-		return boardRepo.save(new Board(null, writer, boardDTO.getTitle(), boardDTO.getContent(), null, null, null));
+		return boardRepo.save(new Board(null, writer, boardDTO.getTitle(), boardDTO.getContent(), LocalDate.now(), LocalDate.now()));
 	}
 
 	//글 수정
@@ -53,6 +54,7 @@ public class BoardService {
 	}
 	
 	//글 전체 조회
+	@Transactional(rollbackOn = Exception.class)
 	public List<BoardResDTO> searchAllDesc() {
 		
 		return boardRepo.findAllByOrderByBoardIdxDesc().stream()
@@ -63,16 +65,10 @@ public class BoardService {
 	//글 삭제
 	@Transactional(rollbackOn = Exception.class)
 	public void deletePost(Long id) {
-		Board board = boardRepo.findById(id)
-                .orElseThrow(()->new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
+		Board board = boardRepo.findById(id).orElseThrow(()
+				-> new IllegalArgumentException("해당 게시물이 존재하지 않습니다."));
 
 		boardRepo.delete(board);
-		
-	}
-	
-	//댓글 작성
-	
-	//댓글 삭제
-	
+	}	
 	
 }
