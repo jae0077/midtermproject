@@ -19,13 +19,13 @@ import kr.pe.midtermproject.model.SeatService;
 import kr.pe.midtermproject.model.TicketService;
 import kr.pe.midtermproject.model.UsersService;
 import kr.pe.midtermproject.model.domain.Board;
-import kr.pe.midtermproject.model.domain.Comments;
 import kr.pe.midtermproject.model.domain.Notice;
 import kr.pe.midtermproject.model.domain.Seat;
 import kr.pe.midtermproject.model.domain.Users;
 import kr.pe.midtermproject.model.dto.BoardDTO;
 import kr.pe.midtermproject.model.dto.BoardResDTO;
 import kr.pe.midtermproject.model.dto.CommentsDTO;
+import kr.pe.midtermproject.model.dto.CommentsResDTO;
 import kr.pe.midtermproject.model.dto.NoticeDTO;
 import kr.pe.midtermproject.model.dto.NoticeResDTO;
 
@@ -232,23 +232,30 @@ public class Controller {
     
     //코멘트 작성
     @PostMapping("comment")
-  	public Comments createComment(@RequestBody CommentsDTO comment) {		
+  	public Boolean createComment(@RequestBody CommentsDTO comment) {		
   		
   		return commentsService.createComment(comment);
   	}
     
-    //코멘트 전체 조회
-  	@GetMapping("comment")
-    public List<NoticeResDTO> searchAllCommentsDesc() {
+    //코멘트 
+  	@PutMapping("comment/{id}")
+  	public Boolean updateComment(@PathVariable Long id, @RequestBody CommentsDTO comment) {
+  		
+  		return commentsService.updateComment(id, comment);
+  	}
+    
+    //코멘트 전체 조회 (post 별로)
+  	@GetMapping("board/{boardId}/comment")
+    public List<CommentsResDTO> searchCommentsDesc(@PathVariable Long boardId) {
     	
-        return commentsService.searchAllCommentsDesc();
+        return commentsService.searchCommentsDesc(boardId);
     }
     
     //코멘트 삭제
     @DeleteMapping("comment/{id}")
     public void deleteComment(@PathVariable Long id){
     	
-    	commentsService.createComment(id);
+    	commentsService.deleteComment(id);
     }
     
 	@PostMapping("ticket")
