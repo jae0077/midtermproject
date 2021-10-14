@@ -1,5 +1,7 @@
 package kr.pe.midtermproject.model;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,17 +39,19 @@ public class UsersService {
 	}
 	
 	// idx 테스트
-	public Users getUser(Long userIdx) {
+	public Users getUser(Map<String, Object> claimMap, Long userIdx) {
 		Users result = null;
-		result = userDao.findById(userIdx).get();
+		if (Long.parseLong(String.valueOf(claimMap.get("user_idx"))) == userIdx) {
+			result = userDao.findById(userIdx).get();
+		}
 		
 		return result;
 	}
 
 	// userId로 users정보 가져오기
 	public Users findById(String userId) {
+		
 		Users user = userDao.findUsersByUserId(userId);
-
 		return user;
 	}
 	

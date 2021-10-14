@@ -1,8 +1,9 @@
 package kr.pe.midtermproject.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Map;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,15 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.pe.midtermproject.model.BoardService;
 import kr.pe.midtermproject.model.JWT;
-
 import kr.pe.midtermproject.model.SeatService;
 import kr.pe.midtermproject.model.TicketService;
 import kr.pe.midtermproject.model.UsersService;
 import kr.pe.midtermproject.model.domain.Board;
 import kr.pe.midtermproject.model.domain.Seat;
+import kr.pe.midtermproject.model.domain.Ticket;
 import kr.pe.midtermproject.model.domain.Users;
 import kr.pe.midtermproject.model.dto.BoardDTO;
 import kr.pe.midtermproject.model.dto.BoardResDTO;
+import kr.pe.midtermproject.model.dto.TicketDTO;
 
 @RestController
 public class Controller {
@@ -36,9 +38,9 @@ public class Controller {
 	private TicketService ticketService;
 	
 	@Autowired
-  private SeatService seatService;
+	private SeatService seatService;
   
-  @Autowired
+	@Autowired
 	private BoardService boardService;
 	
 	@Autowired
@@ -61,7 +63,7 @@ public class Controller {
 	}
 
 	//로그인
-	@PostMapping("login")
+	@PostMapping("/login")
 	public String login(@RequestBody Users reqUser) {
 		Users user = userService.login(reqUser.getUserId(), reqUser.getUserPw());
 		System.out.println(user);
@@ -74,24 +76,27 @@ public class Controller {
 		return token;
 	}
   
-	@GetMapping("user/{userIdx}")
-	public Users userInfo(@PathVariable Long userIdx) {
+//	@GetMapping("user/{userIdx}")
+//	public Users userInfo(@PathVariable Long userIdx) {
+//		Users result = null;
+//		result = userService.getUser(userIdx);
+//		return result;
+//	}
+	
+	@GetMapping("user/info/{userIdx}")
+	public Users userInfo(@RequestHeader("Authorization") String token, @PathVariable Long userIdx) {
+		Map<String, Object> claimMap;
 		Users result = null;
-		result = userService.getUser(userIdx);
+		try {
+			// 토큰 검증 만료되었거나 문제가 있을시 null
+			claimMap = JWT.verifyJWT(token);
+			result = userService.getUser(claimMap, userIdx);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		return result;
 	}
 	
-	@GetMapping("user/info/{user_idx}")
-	public String userInfo(@RequestHeader("Authorization") String token, @PathVariable Long user_idx) throws UnsupportedEncodingException {
-		Map<String, Object> claimMap = JWT.verifyJWT(token); // 토큰 검증 만료되었거나 문제가 있을시 null
-		System.out.println(claimMap);
-		
-//		Users result = null;
-//		result = userService.getUser(userIdx);
-		return token;
-	}
-	// naver.com/mypage => 브라우저상에 주소
-	// 매핑할떄 사용하는 uri => axios 
 	// userId중복확인
 	@PostMapping("user/checkedid")
 	public boolean checkedUserId(@RequestBody Users reqUser){
@@ -196,13 +201,42 @@ public class Controller {
     public void deletePost(@PathVariable Long id){
         boardService.deletePost(id);
     }
-
+    
+    // 이용권 구매
 	@PostMapping("ticket")
-	public boolean createTicket(@RequestBody Long userIdx, int limit) {
+	public boolean createTicket(@RequestHeader("Authorization") String token, @RequestBody TicketDTO ticket) {
 		boolean result = false;
-
-		result = ticketService.createTicket(userIdx, limit);
+		Map<String, Object> claimMap;
+		try {
+			claimMap = JWT.verifyJWT(token);
+			if (claimMap != null) {
+				Users user = userService.getUser(claimMap, Long.parseLong(String.valueOf(claimMap.get("user_idx"))));
+				result = ticketService.createTicket(user, ticket.getLimit());				
+			}
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 		
+		return result;
+	}
+	
+	// 잔여시간
+	@GetMapping("ticket/{user_idx}")
+	public LocalDate SearchByticketLimit(@RequestHeader("Authorization") String token) {
+		LocalDate result = null;
+		Map<String, Object> claimMap;
+		try {
+			claimMap = JWT.verifyJWT(token);
+			if (claimMap != null) {
+				if (claimMap != null) {
+					Users user = userService.getUser(claimMap, Long.parseLong(String.valueOf(claimMap.get("user_idx"))));
+					result = ticketService.SearchByticketLimit(user);	
+				}
+			}
+		} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+		}
+			
 		return result;
 	}
 }

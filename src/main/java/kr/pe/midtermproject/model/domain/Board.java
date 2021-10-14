@@ -39,8 +39,7 @@ public class Board {
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="board_idx_seq")
 	private Long boardIdx;
 	
-	@ManyToOne
-	(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="user_idx")  
 	private Users writer;
 	

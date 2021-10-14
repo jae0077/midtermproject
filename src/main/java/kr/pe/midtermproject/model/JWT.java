@@ -62,7 +62,7 @@ public class JWT {
         try {
             Claims claims = Jwts.parser()
                     .setSigningKey(key.getBytes("UTF-8")) // Set Key
-                    .parseClaimsJws(jwt) // 파싱 및 검증, 실패 시 에러
+                    .parseClaimsJws(jwt.split(" ")[1]) // 파싱 및 검증, 실패 시 에러
                     .getBody();
 
             claimMap = claims;
