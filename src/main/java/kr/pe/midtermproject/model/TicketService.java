@@ -5,9 +5,7 @@ import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import kr.pe.midtermproject.dao.SeatRepository;
 import kr.pe.midtermproject.dao.TicketRepository;
-import kr.pe.midtermproject.dao.UserRepository;
 import kr.pe.midtermproject.model.domain.Ticket;
 import kr.pe.midtermproject.model.domain.Users;
 
@@ -16,9 +14,6 @@ public class TicketService {
 	
 	@Autowired
 	private TicketRepository ticketDao;
-	
-	@Autowired
-	private SeatRepository seatDao;
 
 	// 이용권 구매
 	public boolean createTicket(Users user, int limit) {
@@ -49,7 +44,7 @@ public class TicketService {
 	}
 	
 	// 잔여시간 확인
-	public LocalDate SearchByticketLimit(Users user) {
+	public LocalDate getTicketDetail(Users user) {
 		LocalDate today = LocalDate.now();
 		Ticket ticket = ticketDao.findTicketByUser(user);
 		LocalDate result = null;

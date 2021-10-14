@@ -1,5 +1,6 @@
 package kr.pe.midtermproject.model.dto;
 
+import kr.pe.midtermproject.model.domain.Users;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,9 +13,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class BoardDTO {
-	
-	private Long writerId;
+	private Users writer;
 	private String title;
 	private String content;
-		
 }

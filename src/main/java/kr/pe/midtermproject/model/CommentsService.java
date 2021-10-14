@@ -1,8 +1,6 @@
 package kr.pe.midtermproject.model;
 
-import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -15,69 +13,83 @@ import kr.pe.midtermproject.dao.UserRepository;
 import kr.pe.midtermproject.model.domain.Board;
 import kr.pe.midtermproject.model.domain.Comments;
 import kr.pe.midtermproject.model.domain.Users;
-import kr.pe.midtermproject.model.dto.BoardResDTO;
 import kr.pe.midtermproject.model.dto.CommentsDTO;
-import kr.pe.midtermproject.model.dto.CommentsResDTO;
 
 @Service
 public class CommentsService {
 	
 	@Autowired
-	private CommentsRepository commentsRepo;
+	private CommentsRepository commentsDao;
 	
 	@Autowired
-	private BoardRepository boardRepo;
+	private BoardRepository boardDao;
 	
 	@Autowired
-	private UserRepository userRepo;
+	private UserRepository userDao;
 
 	//댓글 작성
 	@Transactional(rollbackOn = Exception.class)
-	public Boolean createComment(CommentsDTO commentDTO) {
-		Board post = boardRepo.findById(commentDTO.getPostId()).get();
-		Users writer = userRepo.findById(commentDTO.getWriterId()).get();
-		
+	public boolean createComment(Users user, Board board, Comments comment) {
+		boolean result = false;
+		comment.setBoard(board);
+		comment.setWriter(user);
 		try {
-			commentsRepo.save(new Comments(null, post, writer, commentDTO.getContent(), LocalDate.now()));
-			return true;
-		} catch (Exception e){
-			return false;
-		}
-		
-	}
-	
-	@Transactional(rollbackOn = Exception.class)
-	public Boolean updateComment(Long id, CommentsDTO commentDTO) {
-		
-		Comments comment = commentsRepo.findById(id).orElseThrow(() 
-				-> new IllegalArgumentException("해당 게시글이 존재하지 않습니다."));
-		try {
-			comment.setContent(commentDTO.getContent());
-			return true;
+			commentsDao.save(comment);
+			result = true;
 		} catch (Exception e) {
-			return false;
+			e.printStackTrace();
 		}
-		
+		return result;
 	}
 	
-	//post id별 댓글 리스트
+	// 댓글 수정
 	@Transactional(rollbackOn = Exception.class)
-	public List<CommentsResDTO> searchCommentsDesc(Long boardId) {
-		return commentsRepo.findAll().stream()
-				.map(CommentsResDTO::new).filter(x -> x.getBoardId() == boardId)
-				.collect(Collectors.toList());
+	public boolean updateComment(Users user, CommentsDTO commentDTO) {
+		boolean result = false;
+		Comments comment = commentsDao.findById(commentDTO.getCommentIdx()).get();
+		if (comment != null) {
+			if (comment.getWriter().getUserId().equals(user.getUserId()) ) {
+				comment.setContent(commentDTO.getContent());
+				commentsDao.save(comment);
+				result = true;
+			}
+		}
+		return result;
+	}
+	
+	// 게시글별 댓글 리스트
+	public List<Comments> getCommentList(Long boardIdx) {
+		List<Comments> result = null;
+//		result = commentsDao.findAllByOrderByCommentIdxDesc();
+		try {
+			Board board = boardDao.findById(boardIdx).get();
+			if (board != null) {
+				result = board.getCommentList();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 
 	//댓글 삭제
 	@Transactional(rollbackOn = Exception.class)
-	public void deleteComment(Long id) {
-		Comments comment = commentsRepo.findById(id).orElseThrow(()
-				-> new IllegalArgumentException("해당 댓글이 존재하지 않습니다."));
+	public boolean deleteComment(Users user, Long commentIdx) {
+		boolean result = false;
 		
-		commentsRepo.delete(comment);
+		try {
+			Comments comment = commentsDao.findById(commentIdx).get();
+			
+			if (comment.getWriter().getUserId().equals(user.getUserId()) ) {
+				if (comment != null) {
+					commentsDao.delete(comment);
+					result = true;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
+		
 	}
-
-
-	
-	
 }

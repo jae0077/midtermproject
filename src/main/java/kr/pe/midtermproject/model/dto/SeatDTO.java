@@ -11,9 +11,7 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class NoticeDTO {
-	
-	private String title;
-	private String content;
-
+public class SeatDTO {
+	private Long seatIdx;
+	private String isUsed;
 }

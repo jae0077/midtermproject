@@ -12,11 +12,8 @@ import lombok.ToString;
 @Getter
 @ToString
 public class UsersDTO {
-	private Long userIdx;
 	private String userId;
-	private String oldPw;
-	private String newPw;
+	private String userPw;
 	private String name;
 	private String phone;
-	private String isAdmin;
 }

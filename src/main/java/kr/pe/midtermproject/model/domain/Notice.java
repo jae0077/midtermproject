@@ -7,10 +7,12 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import lombok.AllArgsConstructor;
@@ -36,10 +38,11 @@ public class Notice {
 	@Column(nullable=false)
 	private String title;
 	
+	@Lob
 	@Column(nullable=false)
 	private String content;
 	
-	@CreatedDate
+	@CreationTimestamp
 	@Column(nullable=false)
 	private LocalDate created;
 }
