@@ -1,6 +1,6 @@
 package kr.pe.midtermproject.model.dto;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import kr.pe.midtermproject.model.domain.Board;
 import lombok.AllArgsConstructor;
@@ -19,8 +19,8 @@ public class BoardResDTO {
     private String writer;
     private String title;
     private String content;
-    private Date created;
-    private Date updated;
+    private LocalDate created;
+    private LocalDate updated;
     
     public BoardResDTO(Board entity) {
         this.id = entity.getBoardIdx();

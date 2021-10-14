@@ -4,6 +4,6 @@ import org.springframework.data.repository.CrudRepository;
 
 import kr.pe.midtermproject.model.domain.Comments;
 
-public interface CommentRepository extends CrudRepository<Comments, Long>{
+public interface CommentsRepository extends CrudRepository<Comments, Long>{
 	
 }

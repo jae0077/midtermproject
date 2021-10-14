@@ -1,5 +1,6 @@
 package kr.pe.midtermproject.model;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,7 +24,7 @@ public class NoticeService {
 	@Transactional(rollbackOn = Exception.class)
 	public Notice createNotice(NoticeDTO noticeDTO) {
 		
-		return noticeRepo.save(new Notice(null, noticeDTO.getTitle(), noticeDTO.getContent(), null));
+		return noticeRepo.save(new Notice(null, noticeDTO.getTitle(), noticeDTO.getContent(), LocalDate.now()));
 	}
 
 	//공지 수정

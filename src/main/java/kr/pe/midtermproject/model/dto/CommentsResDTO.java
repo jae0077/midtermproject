@@ -2,7 +2,7 @@ package kr.pe.midtermproject.model.dto;
 
 import java.time.LocalDate;
 
-import kr.pe.midtermproject.model.domain.Notice;
+import kr.pe.midtermproject.model.domain.Comments;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,15 +14,15 @@ import lombok.ToString;
 @Setter
 @Getter
 @ToString
-public class NoticeResDTO {
-	private Long id;
-	private String title;
+public class CommentsResDTO {
+	private Long boardId;
+	private String writer;
 	private String content;
 	private LocalDate created;
 	
-	public NoticeResDTO(Notice entity) {
-        this.id = entity.getNoticeIdx();
-        this.title = entity.getTitle();
+	public CommentsResDTO(Comments entity) {
+		this.boardId = entity.getBoard().getBoardIdx();
+        this.writer = entity.getWriter().getName();
         this.content = entity.getContent();
         this.created = entity.getCreated();
     }

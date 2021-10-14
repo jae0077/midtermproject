@@ -1,6 +1,6 @@
 package kr.pe.midtermproject.model.domain;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -17,8 +17,8 @@ import javax.persistence.SequenceGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -50,19 +50,17 @@ public class Board {
 	@Column(nullable=false)
 	private String content;
 	
-	@Temporal(TemporalType.DATE)
-	@CreationTimestamp
+	@CreatedDate
 	@Column(nullable=false)
-	private Date created;
+	private LocalDate created;
 	
-	@Temporal(TemporalType.DATE)
-	@UpdateTimestamp
-	private Date updated;
+	@LastModifiedDate
+	private LocalDate updated;
 	
-	@OneToMany(mappedBy="board",
-			fetch=FetchType.LAZY,
-			cascade=CascadeType.ALL)
-	private List<Comments> commentList;
+//	@OneToMany(mappedBy="board",
+//			fetch=FetchType.LAZY,
+//			cascade=CascadeType.ALL)
+//	private List<Comments> commentList;
 	
 	public void update(String title, String content) {
         this.title = title;
@@ -74,8 +72,5 @@ public class Board {
 		return "Board [boardIdx=" + boardIdx + ", writer=" + writer.getUserIdx() + ", title=" + title + ", content=" + content
 				+ ", created=" + created + ", updated=" + updated + "]";
 	}
-
-	
-	
 	
 }

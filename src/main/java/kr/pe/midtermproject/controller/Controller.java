@@ -12,17 +12,20 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.pe.midtermproject.model.BoardService;
+import kr.pe.midtermproject.model.CommentsService;
 import kr.pe.midtermproject.model.JWT;
 import kr.pe.midtermproject.model.NoticeService;
 import kr.pe.midtermproject.model.SeatService;
 import kr.pe.midtermproject.model.TicketService;
 import kr.pe.midtermproject.model.UsersService;
 import kr.pe.midtermproject.model.domain.Board;
+import kr.pe.midtermproject.model.domain.Comments;
 import kr.pe.midtermproject.model.domain.Notice;
 import kr.pe.midtermproject.model.domain.Seat;
 import kr.pe.midtermproject.model.domain.Users;
 import kr.pe.midtermproject.model.dto.BoardDTO;
 import kr.pe.midtermproject.model.dto.BoardResDTO;
+import kr.pe.midtermproject.model.dto.CommentsDTO;
 import kr.pe.midtermproject.model.dto.NoticeDTO;
 import kr.pe.midtermproject.model.dto.NoticeResDTO;
 
@@ -43,6 +46,9 @@ public class Controller {
 	
 	@Autowired
 	private NoticeService noticeService;
+	
+	@Autowired
+	private CommentsService commentsService;
 
 	//회원가입
 	@PostMapping("user/join")
@@ -222,6 +228,27 @@ public class Controller {
     public void deleteNotice(@PathVariable Long id){
     	
     	noticeService.createNotice(id);
+    }
+    
+    //코멘트 작성
+    @PostMapping("comment")
+  	public Comments createComment(@RequestBody CommentsDTO comment) {		
+  		
+  		return commentsService.createComment(comment);
+  	}
+    
+    //코멘트 전체 조회
+  	@GetMapping("comment")
+    public List<NoticeResDTO> searchAllCommentsDesc() {
+    	
+        return commentsService.searchAllCommentsDesc();
+    }
+    
+    //코멘트 삭제
+    @DeleteMapping("comment/{id}")
+    public void deleteComment(@PathVariable Long id){
+    	
+    	commentsService.createComment(id);
     }
     
 	@PostMapping("ticket")
