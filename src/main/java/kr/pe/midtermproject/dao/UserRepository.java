@@ -8,4 +8,6 @@ public interface UserRepository extends CrudRepository<Users, Long>{
 	// 해당 아이디의 정보 가져오기
 	Users findUsersByUserId(String userId);
 	
+	// 로그인용 id pw 확인
+	Users findUsersByUserIdAndUserPw(String userId, String userPw);
 }

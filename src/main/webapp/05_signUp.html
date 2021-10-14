@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="./script.js"></script>
+<title>SignUp</title>
+</head>
+<body class="body">
+    <body class="body">
+        <div id="body-div">
+            <nav-bar></nav-bar>
+
+        <!-- 메인 -->
+            <div class="main-container">
+                <sign-up v-show="model2.showSignUp" v-on:view-signup="viewSignUp" v-bind:data1="model2"></sign-up>
+                <sign-up-check v-show="model2.showCheck" v-on:view-check="viewCheck" v-bind:data2="model2"></sign-up-check>
+
+
+                <foot></foot>
+            </div>
+        </div>
+
+    <template id="signUpTemp">
+            <div class="sub-container" style="text-align: left;">
+                <h1 style="text-align: center;"> 회원가입 </h1> <hr>
+                <div style="width: 30%; margin-left: 35%;">
+                    <div class="sign-up">
+                        <input type="text" v-model="CheckId" style="width: 64%;" autofocus required placeholder="아이디, 최소 3글자">
+                        <button style="width: 34%; padding: 4px; height: 40px;">중복확인</button>
+                    </div>
+                    <div id="inputId" style="color: brown;">{{messageId}}<hr></div>
+                    <div class="sign-up">
+                        <input type="password" v-model="CheckPw" style="width: 100%;" required placeholder="비밀번호, 최소 4글자"></div>
+                    <div id="inputPw" style="color: brown;">{{messagePw}}<hr></div>
+                    <div class="sign-up">
+                        <input type="password" v-model="CheckPw2" style="width: 100%;" required placeholder="비밀번호 확인"></div>
+                    <div id="inputPw2" style="color: brown;">{{messagePw2}}<hr></div>
+                    <div class="sign-up">
+                        <input type="text" v-model="CheckName" style="width: 100%;" required placeholder="이름, 최소 2글자"></div>
+                    <div id="inputName"  style="color: brown;">{{messageName}}<hr></div>
+                    <div class="sign-up">
+                        <input type="text" v-model="CheckPhone" style="width: 100%;" required placeholder="'-' 없이 입력해주세요"></div>
+                    <div id="inputPhone"  style="color: brown;">{{messagePhone}}<hr></div>
+                    <button @click="signUp"> 가입하기 </button>
+                </div>
+            </div>
+    </template>
+
+    <template id="signUpCheck">
+        <div class="sub-container">
+            <h1 style="text-align: center;"> 입력정보 확인 </h1> <hr>
+            <div style="width: 30%; margin-left: 35%;">
+                <ul style="text-align: left; width:100%">
+                    <li>ID : {{data2.id}}</li> <hr>       
+                    <li>이름 : {{data2.name}}</li> <hr>                    
+                    <li>전화번호 : {{data2.phone}}</li> <hr>                    
+                </ul>
+                <button @click="signUpFinal" style="width: 40%; float: auto;"> 가입 </button>
+                <button @click="goBack" style="width: 40%; float: right; background-color: chocolate;"> 수정 </button>
+            </div>
+        </div>
+    </template>
+
+
+    
+<script>
+    Vue.component('sign-up',{
+        template: "#signUpTemp",
+        props: ['data1'],
+        data: function() {
+            return {
+                model: {
+                    showSignUp: false,
+                    id : "",
+                    pw : "",    
+                    name : "",
+                    phone : "",     
+                },
+                pw2 : "",
+                messageId : "※ 아이디를 입력해주세요",
+                messagePw : "※ 비밀번호를 입력해주세요",
+                messagePw2 : "※ 비밀번호를 한 번 더 입력해주세요",
+                messageName : "※ 이름을 입력해주세요",
+                messagePhone : "※ 전화번호를 입력해주세요"
+            }
+        },
+        computed : {
+            CheckId : {
+                get : function(){
+                    return this.model.id;
+                },
+                set : function(inputId){
+                    document.getElementById("inputId").style.color="brown";
+                    if(inputId.length == 0){
+                        this.messageId = "※ 아이디를 입력해주세요";
+                    }
+                    else if(0 < inputId.length && inputId.length < 3){
+                        this.messageId = "※ 3글자 이상 입력해주세요";
+                    }
+                    else if(10 < inputId.length){
+                        this.messageId = "※ 아이디가 너무 깁니다";
+                    }
+                    else if(2 < inputId.length){
+                        this.messageId = "OK";
+                        document.getElementById("inputId").style.color="green";
+                    }
+                    this.model.id = inputId;
+                }
+            },
+            CheckPw : {
+                get : function(){
+                    return this.model.pw;
+                },
+                set : function(inputPw){
+                    document.getElementById("inputPw").style.color="brown";
+
+                    this.pw2 = "";
+                    document.getElementById("inputPw2").style.color="brown";
+                    this.messagePw2 = "※ 비밀번호를 한 번 더 입력해주세요";
+
+                    if(inputPw.length == 0){
+                        this.messagePw = "※ 비밀번호를 입력해주세요";
+                    }
+                    else if(0 < inputPw.length && inputPw.length < 4){
+                        this.messagePw = "※ 4글자 이상 입력해주세요";
+                    }
+                    else if(12 < inputPw.length){
+                        this.messagePw = "※ 비밀번호가 너무 깁니다";
+                    }
+                    else if(3 < inputPw.length){
+                        this.messagePw = "OK";
+                        document.getElementById("inputPw").style.color="green";
+                    }
+                    this.model.pw = inputPw;
+                }
+            },
+            CheckPw2 : {
+                get : function(){
+                    return this.pw2;
+                },
+                set : function(inputPw2){
+                    document.getElementById("inputPw2").style.color="brown";
+                    if(inputPw2.length == 0){
+                        this.messagePw2 = "※ 비밀번호를 한 번 더 입력해주세요";
+                    }
+                    else if(inputPw2 == this.model.pw){
+                        this.messagePw2 = "OK";
+                        document.getElementById("inputPw2").style.color="green";
+                        
+                    }
+                    else{
+                        this.messagePw2 = "※ 비밀번호가 다릅니다";
+                    }
+                    this.pw2 = inputPw2;
+                }
+            },
+            CheckName : {
+                get : function(){
+                    return this.model.name;
+                },
+                set : function(inputName){
+                    document.getElementById("inputName").style.color="brown";
+                    if(inputName.length == 0){
+                        this.messageName = "※ 이름를 입력해주세요";
+                    }
+                    else if(0 < inputName.length && inputName.length < 2){
+                        this.messageName = "※ 2글자 이상 입력해주세요";
+                    }
+                    else if(4 < inputName.length){
+                        this.messageName = "※ 이름이 너무 깁니다";
+                    }
+                    else if(1 < inputName.length){
+                        this.messageName = "OK";
+                        document.getElementById("inputName").style.color="green";
+                    }
+                    this.model.name = inputName;
+                }
+            },
+            CheckPhone : {
+                get : function(){
+                    return this.model.phone;
+                },
+                set : function(inputPhone){
+                    document.getElementById("inputPhone").style.color="brown";
+
+                    if( /[^0-9]/g.test(inputPhone)){   // ^는 부정을 의미 => 숫자가 아닌 것이 들어오면 TRUE
+                        this.messagePhone = "※ 숫자를 입력해주세요";
+                    }
+                    else if(0 <= inputPhone){
+                        if(inputPhone.length < 10){
+                        this.messagePhone = "※ 전화번호를 입력해주세요";
+                        }
+                        else if(11 < inputPhone.length){
+                            this.messagePhone = "※ 전화번호가 너무 깁니다";
+                        }    
+                        else if(9 < inputPhone.length){
+                            this.messagePhone = "OK";
+                            document.getElementById("inputPhone").style.color="green";
+                        }    
+                    }
+                    this.model.phone = inputPhone;
+                }
+            }
+        },
+        methods: {
+            signUp: function(){
+                if(this.messageId == "OK" || this.messagePw == "OK" || this.messagePw2 == "OK" || this.messageName == "OK" || this.messagePhone == "OK"){
+                    this.$emit('view-signup',this.model);
+                }
+                else{
+                    alert("입력한 정보를 다시 확인해주세요");
+                }
+            }
+        }
+    })
+
+    Vue.component('sign-up-check', {
+        template: "#signUpCheck",
+        props: ['data2'],
+        data: function() {
+            return {
+            }
+        },
+        methods: {
+            goBack: function() {
+                this.$emit('view-check',false)
+            },
+            signUpFinal: function() {
+            }
+        },
+    })
+
+    // ========================================공통========================================
+
+    navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
+    footer();    
+
+    Vue.component('nav-bar', {
+        template: navBarScript,
+        data: function() {
+                return {
+                    login,
+                    logout,
+                }
+            },
+        methods: {
+            ClickLogout: function(){
+                sessionStorage.setItem("session", null);
+                alert("로그아웃 했습니다");
+                location.href="00_index.html";
+            }
+        }
+    })
+    Vue.component('foot', {
+        template: footerScript,
+    })
+    new Vue({
+        el: "#body-div",
+        data: {
+            model2: {
+                showSignUp: true,
+                showCheck: false,
+                id : "",
+                pw : "",
+                name : "",
+                phone : ""
+            }
+        },
+        methods: {
+            viewSignUp: function(v){
+                this.model2 = v;
+                this.model2.showSignUp = false;
+                this.model2.showCheck = true;
+            },
+            viewCheck: function(v){
+                this.model2.showSignUp = true;
+                this.model2.showCheck = false;
+            }
+        }
+    })
+
+</script>
+</body>
+</html>
