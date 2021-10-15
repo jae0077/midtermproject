@@ -16,114 +16,115 @@
 
         <!-- 메인 -->
         <div class="main-container">
-            <buy-ticket></buy-ticket>
+            <ticket></ticket>
 
 
             <foot></foot>
         </div>
     </div>
-
-    <template id="ticketTemp">
+  <!-- ========================================= 템플릿 ===================================== -->
+    <template id="ticket_temp">
         <div class="sub-container" style="height: 80%; margin-bottom: 5%;">
             <h1>이용권 구매</h1><hr>
             <p>모든 이용권의 일수는 당일을 포함하여 계산됩니다</p> <br>
             <p>1일권의 경우 당일 23시59분에 만료됩니다</p> <br>
             <div class="w3-row">
                 <div class="w3-col s4 w3-green w3-center" style="width:30%;">
-                    <img class="ticket-img" src="./img/ticket.jpg" @click="click1day">
+                    <img class="ticket-img" src="./img/ticket.jpg" @click="clickTicket('1')">
                 </div>
 
                 <div class="w3-col w3-container" style="width:5%;"></div>
 
                 <div class="w3-col s4 w3-dark-grey w3-center" style="width:30%;">
-                    <img class="ticket-img" src="./img/ticket.jpg" @click="click7day">
+                    <img class="ticket-img" src="./img/ticket.jpg" @click="clickTicket('7')">
                 </div>
 
                 <div class="w3-col w3-container" style="width:5%;"></div>
                 
                 <div class="w3-col s4 w3-dark-grey w3-center" style="width:30%;">
-                    <img class="ticket-img" src="./img/ticket.jpg" @click="click30day">
+                    <img class="ticket-img" src="./img/ticket.jpg" @click="clickTicket('30')">
                 </div>
             </div>
-<!-- ================================모달================================= -->
-        <div id="modal01" class="modal">
-            <form class="modal-content">
-                <div class="container">
-                    <h1>1일권</h1>
-                    <p>예정종료일 : </p>
-                    <p>해당 이용권을 구매하시겠습니까?</p>
-                    <div class="clearfix">
-                        <button @click="buy1day" type="button" class="signup" style="width:50%">1일권 구매</button>
-                        <button @click="modalClose" type="button" class="cancelbtn">취소</button>
+        <!-- ==========================모달=========================== -->
+            <div id="modal01" class="modal">
+                <form class="modal-content">
+                    <div class="container">
+                        <h1>{{select_day}}일권</h1>
+                        <p>예정종료일 : {{end_day}}</p>
+                        <p>해당 이용권을 구매하시겠습니까?</p>
+                        <div class="clearfix">
+                            <button @click="buyTicket" type="button" class="signup" style="width:50%">{{select_day}}일권 구매</button>
+                            <button @click="modalClose" type="button" class="cancelbtn">취소</button>
+                        </div>
                     </div>
-                </div>
-            </form>
-        </div>
+                </form>
+            </div>
 
-        <div id="modal02" class="modal">
-            <form class="modal-content">
-                <div class="container">
-                    <h1>7일권</h1>
-                    <p>예정종료일 : </p>
-                    <p>해당 이용권을 구매하시겠습니까?</p>
-                    <div class="clearfix">
-                        <button @click="buy7day" type="button" class="signup" style="width:50%">7일권 구매</button>
-                        <button @click="modalClose" type="button" class="cancelbtn">취소</button>
-                    </div>
-                </div>
-            </form>
         </div>
-
-        <div id="modal03" class="modal">
-            <form class="modal-content">
-                <div class="container">
-                    <h1>30일권</h1>
-                    <p>예정종료일 : </p>
-                    <p>해당 이용권을 구매하시겠습니까?</p>
-                    <div class="clearfix">
-                        <button @click="buy30day" type="button" class="signup" style="width:50%">30일권 구매</button>
-                        <button @click="modalClose" type="button" class="cancelbtn">취소</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-
-    </div>
     </template>
-
+<!-- ============================================ 스크립트 ====================================== -->
 <script>
-    Vue.component('buy-ticket', {
-        template: "#ticketTemp",
+    Vue.component('ticket', {
+        template: "#ticket_temp",
         data: function() {
             return{
+                select_day: 0,
+                end_day: 0
             }
         },
         methods: {
-            click1day: function(){
-                document.getElementById('modal01').style.display='block'
+            clickTicket: function(v) {
+                this.select_day = v;
+                axios({
+                    method: "get",
+                    url: "ticket/" + sessionStorage.getItem("userIdx"),
+                    headers: {authorization: `bearer ${sessionStorage.getItem("token")}`}
+                }).then(resData => {
+                    // if(resData.data != null || resData.data != "") {   // 데이터가 없는데 왜 조건에 걸리는지? 
+                    if(resData.data.length != 0) {
+                        const result = confirm("기존 이용권이 존재합니다. 기한을 연장하시겠습니까?")
+                        if(result) {
+                            this.end_day = resData.data;
+                            document.getElementById('modal01').style.display='block';
+                        }
+                    }
+                    else {
+                        this.end_day = "이용권 정보가 없습니다";
+                        document.getElementById('modal01').style.display='block';
+                    }
+                }).catch(errorData => {
+                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                    window.location.reload();
+                });
             },
-            click7day: function(){
-                document.getElementById('modal02').style.display='block'
-            },
-            click30day: function(){
-                document.getElementById('modal03').style.display='block'
+            buyTicket: function() {
+                axios({
+                    method: "post",
+                    url: "ticket",
+                    data: {limit: this.select_day},
+                    headers: {authorization: `bearer ${sessionStorage.getItem("token")}`}
+                }).then(resData => {
+                    if(resData.data) {
+                        alert("이용권 구매 완료");
+                        this.modalClose();
+                    }
+                    else{
+                        alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                    }
+                }).catch(errorData => {
+                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                    window.location.reload();
+                });
             },
             modalClose: function(){
                 document.getElementById('modal01').style.display='none'
-                document.getElementById('modal02').style.display='none'
-                document.getElementById('modal03').style.display='none'
-            },
-            buy1day: function(){
-                document.getElementById('modal01').style.display='none'
-            },
-            buy7day: function(){
-                document.getElementById('modal02').style.display='none'
-            },
-            buy30day: function(){
-                document.getElementById('modal03').style.display='none'
             },
         }
     })
+
+
+
+            // ============================= 공통 스크립트 ==========================
 
     navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
     footer();    
@@ -138,7 +139,7 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.clear("token");
+                sessionStorage.clear();
                 this.login = false;
                 this.logout = true;
                 alert("로그아웃 했습니다");

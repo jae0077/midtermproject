@@ -25,101 +25,29 @@
 
 
     <!-- ========================================== 템플릿 ================================================ -->
-<template id="seatSelect">
+<template id="seat-select-temp">
     <div class="sub-container">
         <h1>좌석 선택</h1><hr>
         <div>
-            전체 : 
-            /잔여 : 
-            선택 가능한 좌석은 초록색으로 표시됩니다.{{checkSeat()}}<br>
+            남은 좌석 : {{remain_seat}} / {{seat_list1.length + seat_list2.length}}<br>
+            선택 가능한 좌석은 초록색으로 표시됩니다<br>
         </div>
-        <div style="border-style: groove; width: 90%; height: 90%; margin-top: 2%; margin-left: 5%;">
-            <div style="padding: 1%; display: flex; width: 100%;">
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <!-- <div id="seat00" class="square" @click="selectSeat('seat01')"></div> -->
-                    <div id="seat1" class="content" onclick="ajaxReq(1)">1</div>
+        <div style="border-style: groove; width: 85%; height: 90%; margin-top: 2%;">
+            <div style="padding: 1%; display:flex; width: 100%;">
+                <div v-for="(seat, index) in seat_list1" style="padding: 1%;">
+                    <button v-if="seat.seatIdx == selected" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
+                    <button v-else-if="seat.isUsed == 0" @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
+                    <button v-else class="square" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
                 </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat2" class="content" onclick="ajaxReq(2)">2</div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat3" class="content" onclick="ajaxReq(3)">3</div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat4" class="content" onclick="ajaxReq(4)">4</div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat5" class="content" onclick="ajaxReq(5)">5</div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat6" class="content">6</div>
-                </div> 
-                
-                <div style="width: 5%; background-color: rgb(255, 255, 255);"></div>
-
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat7" class="content"></div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat8" class="content"></div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat9" class="content"></div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat10" class="content"></div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat11" class="content"></div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat12" class="content"></div>
-                </div> 
             </div>
-
-            <div style="padding: 1%; display: flex; width: 100%;">
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat13" class="content"></div>
+            <div style="padding: 1%; display:flex; width: 100%;">
+                <div v-for="(seat, index) in seat_list2" style="padding: 1%;">
+                    <button v-if="seat.seatIdx == selected" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
+                    <button v-else-if="seat.isUsed == 0" @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
+                    <button v-else class="square" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
                 </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat14" class="content"></div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat15" class="content"></div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat16" class="content"></div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat17" class="content"></div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat18" class="content"></div>
-                </div> 
-                
-                <div style="width: 5%; background-color: rgb(255, 255, 255);"></div>
-                
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat19" class="content"></div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat20" class="content"></div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat21" class="content"></div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat22" class="content"></div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat23" class="content"></div>
-                </div>
-                <div class="square" style="padding: 10px; margin-left: 10px;">
-                    <div id="seat24" class="content"></div>
-                </div> 
             </div>
         </div>
-    </div>
 </template>
 
 <div id="select" class="w3-modal w3-animate-opacity">
@@ -133,62 +61,120 @@
 	</div>
 </div>
 
-<script>
-	seatIdx = 0;
+<!-- ==============================================스크립트 ================================== -->
 
-	function ajaxReq(v){
-	    axios.get("seat/check/"+v)
-	    .then(resData => {
-			if(resData.data){
-				alert("선택 불가");
-			}else{
-				document.getElementById('select').style.display='block';
-				document.getElementById('s').textContent=v+"번 좌석을 선택하시겠습니까?";
-				seatIdx = v;
-			}
-	    }).catch(error => {
-			console.log("비정상 응답 ", error);
-	    });
-	}
-	
-	function yes(){
-		alert(seatIdx);
-	}
-	
-    navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
-    footer();    
+<script>
     Vue.component('seat-select', {
-        template: "#seatSelect",
-        data: function(){
+        template: "#seat-select-temp",
+        data: function() {
             return{
-                seat : "",
-                using : false
+                seat_list1: [],
+                seat_list2: [],
+                remain_seat: 0,
+                selected: false
             }
         },
-        methods:{
-        	checkSeat : function(){
-        		axios({
-        			method: "get",
-        			url: "seat1"
-        		}).then(resData => {
-        			datas = resData.data;
-        			for(let s of datas){
-        				if(s.isUsed == "1"){
-        					document.getElementById("seat"+s.seatIdx).style.backgroundColor='rgb(221, 61, 61)';
-        				}
-        			}
-        		}).catch(errorData => {
-        			alert(errorData);
-        		});
-            },
-            selectSeat: function(v){
-                this.using = false; // DB에서 좌석이 사용중인지 불린값을 가져와서 비교
-                if(this.using == false){
-                    this.seat = v; //시트값을 저장하고 
-                    using = true; //사용중으로 불린값 변경 후 DB에 전송
-                    document.getElementById('seat00').style.backgroundColor='rgb(221, 61, 61)';
-                }
+        created: function() {
+            const get_token = sessionStorage.getItem("token");
+            // ======================= 1.좌석정보 불러오기 =====================
+            axios({
+                method: "get",
+                url: "seat", 
+                headers: {authorization : `bearer ${get_token}`}
+            }).then(resData => {  
+                this.seat_list1 = resData.data.slice(undefined, 10);
+                this.seat_list2 = resData.data.slice(10, 20);
+                // ====================== 2. 잔여 좌석 불러오기 =================
+                axios({
+                method: "get",
+                url: "seat/remain", 
+                headers: {authorization : `bearer ${get_token}`}
+                }).then(resData => {  
+                    this.remain_seat = resData.data;
+                    // =============== 3. 회원정보 불러오기 - 선택한 좌석 체크 ===========
+                    axios({
+                        method: "get",
+                        url: "user/" + sessionStorage.getItem("userIdx"), 
+                        headers: {authorization : `bearer ${get_token}`}
+                    }).then(resData => {  
+                        if(resData.data.seat != null) {
+                            this.selected = resData.data.seat.seatIdx;
+                        }
+                    }).catch(errorData => {
+                    alert("좌석정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
+                    location.href="00_index.html";
+                });
 
+
+                }).catch(errorData => {
+                    alert("좌석정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
+                    location.href="00_index.html";
+                });
+
+            }).catch(errorData => {
+                alert("좌석정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
+                location.href="00_index.html";
+            });
+        },
+        methods: {
+            selectSeat: function(i) {
+                const get_token = sessionStorage.getItem("token");
+                const get_userIdx = sessionStorage.getItem("userIdx");
+                //=========================1. 이용권 구매여부 확인 ==================================
+                axios({
+                    method: "get",
+                    url: "ticket/" + get_userIdx,
+                    headers: {authorization: `bearer ${get_token}`}
+                }).then(resData => {
+                    if(resData.data == null || resData.data == "") {
+                        alert("이용권을 먼저 구매해주세요");
+                        location.href="02_ticket.html";
+                    }
+                    else {
+                         //=================2. 이미 좌석 선택했는지 확인 (변경은 마이페이지에서) ========
+                        axios({
+                            method: "get",
+                            url: "user/" + get_userIdx,
+                            headers: {authorization: `bearer ${get_token}`}
+                        }).then(resData => {
+                            if(resData.data.seat != null) {
+                                alert("좌석 변경은 [마이페이지]에서 할 수 있습니다");
+                            }
+                            else {
+                                //=================3. 좌석 선택 실행 ========================
+                                const result = confirm(i + "번 좌석을 선택하시겠습니까?");
+                                if(result) {
+                                    axios({
+                                        method: "post",
+                                        url: "seat",
+                                        data: {seatIdx: i},
+                                        headers: {authorization: `bearer ${get_token}`}
+                                    }).then(resData => {
+                                        if(resData.data) {
+                                            alert(i + "번 좌석 선택완료");
+                                        }
+                                        else {
+                                            alert("좌석선택 실패. 잠시 후에 다시 시도해주세요");
+                                        }
+                                        window.location.reload();
+                                    }).catch(errorData => {
+                                        alert("좌석선택 실패. 잠시 후에 다시 시도해주세요");
+                                        window.location.reload();
+                                    });
+                                }
+                                //========================= 3 끝 ============================
+                            }
+                        }).catch(errorData => {
+                            alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                            window.location.reload();
+                        });
+                        //========================= 2 끝 ============================
+                    }
+                }).catch(errorData => {
+                    alert("좌석선택 실패. 잠시 후에 다시 시도해주세요");
+                    window.location.reload();
+                });
+                //========================= 1 끝 ==================================
             }
         }
 
@@ -196,7 +182,7 @@
 
 
 
-// ==================================================공통=========================================
+//                  ======================공통 스크립트====================
     navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
     footer();    
 
@@ -210,7 +196,7 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.clear("token");
+                sessionStorage.clear();
                 this.login = false;
                 this.logout = true;
                 alert("로그아웃 했습니다");

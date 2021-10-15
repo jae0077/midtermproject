@@ -42,16 +42,18 @@
                 </tr>
                 </thead>
                 <tr v-for="(board, index) in board_list" @click="viewBoardOne(index)" style="cursor: pointer;">
-                <td v-if="(index_max > index) && (index >= index_min)" style="column-width: 5%">{{board.id}}</td>
-                <td v-if="(index_max > index) && (index >= index_min)" style="column-width: 5%">{{board.writer}}</td>
+                <td v-if="(index_max > index) && (index >= index_min)" style="column-width: 5%">{{board.boardIdx}}</td>
+                <td v-if="(index_max > index) && (index >= index_min)" style="column-width: 5%">{{board.writerId}}</td>
                 <td v-if="(index_max > index) && (index >= index_min)" style="column-width: 85%">{{board.title}}</td>
                 <td v-if="(index_max > index) && (index >= index_min)" style="column-width: 5%">{{board.created}}</td>
                 </tr>
             </table>
             <div style="display: inline-block; padding-top: 3%;">
+<!-- 
                 <div v-for="(index) in board_list" style="float:left">
                     <<a v-on:click="index_min, index_max += 10">{{page_number}}</a>>
                 </div>  
+                 -->
             </div>
         </div>
     </div>
@@ -77,15 +79,18 @@
                     method: "get",
                     url: "http://localhost/board/", 
                 }).then(resData => {  
-                    this.board_list = resData.data;
+                    for(d of resData.data) {
+                        let board_model = {boardIdx: d.boardIdx, writerId: d.writer.userId, title: d.title, created: d.created, updated: d.updated};
+                        this.board_list.push(board_model);
+                    }
                 }).catch(errorData => {
                     alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
                 });
         },
         methods: {
             viewBoardOne: function(index) {
-                if(index != null){
-                    location.href = "03_01_view.html?id=" + this.board_list[index].id;
+                if(index != null){  
+                    location.href = "03_01_view.html?boardIdx=" + this.board_list[index].boardIdx;
                 }
                 else{
                     alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
@@ -117,7 +122,7 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.clear("token");
+                sessionStorage.clear();
                 this.login = false;
                 this.logout = true;
                 alert("로그아웃 했습니다");
