@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -88,6 +89,11 @@ public class SeatController {
 		return result;
 	}
 	
+	@GetMapping("seat1")
+	public List<Seat> getSeatList1(){
+		return seatService.getSeatList();
+	}
+	
 	// 잔여 좌석 개수
 	@GetMapping("seat/remain")
 	public int remainSeat() {
@@ -100,9 +106,9 @@ public class SeatController {
 //		return seatService.checkSeatSelect(reqUser.getUserId());
 //	}
 	
-//	//좌석번호로 사용중인지 확인
-//	@GetMapping("seat/check/{seat_idx}")
-//	public boolean checkSeat(@PathVariable Long seat_idx) {
-//		return seatService.checkSeat(seat_idx);
-//	}
+	//좌석번호로 사용중인지 확인
+	@GetMapping("seat/check/{seat_idx}")
+	public boolean checkSeat(@PathVariable Long seat_idx) {
+		return seatService.checkSeat(seat_idx);
+	}
 }

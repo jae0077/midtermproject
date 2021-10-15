@@ -31,99 +31,133 @@
         <div>
             전체 : 
             /잔여 : 
-            선택 가능한 좌석은 초록색으로 표시됩니다.
+            선택 가능한 좌석은 초록색으로 표시됩니다.{{checkSeat()}}<br>
         </div>
         <div style="border-style: groove; width: 90%; height: 90%; margin-top: 2%; margin-left: 5%;">
             <div style="padding: 1%; display: flex; width: 100%;">
                 <div style="padding: 10px;">
-                    <div id="seat00" class="square" @click="selectSeat('seat01')"></div>
+                    <!-- <div id="seat00" class="square" @click="selectSeat('seat01')"></div> -->
+                    <div id="seat1" class="square" onclick="ajaxReq(1)"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat2" class="square" onclick="ajaxReq(2)"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat3" class="square" onclick="ajaxReq(3)"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat4" class="square" onclick="ajaxReq(4)"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat5" class="square" onclick="ajaxReq(5)"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat6" class="square"></div>
                 </div> 
                 
                 <div style="width: 50%; background-color: rgb(255, 255, 255);"></div>
 
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat7" class="square"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat8" class="square"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat9" class="square"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat10" class="square"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat11" class="square"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat12" class="square"></div>
                 </div> 
             </div>
 
             <div style="padding: 1%; display: flex; width: 100%;">
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat13" class="square"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat14" class="square"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat15" class="square"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat16" class="square"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat17" class="square"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat18" class="square"></div>
                 </div> 
                 
                 <div style="width: 50%; background-color: rgb(255, 255, 255);"></div>
                 
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat19" class="square"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat20" class="square"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat21" class="square"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat22" class="square"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat23" class="square"></div>
                 </div>
                 <div style="padding: 10px;">
-                    <div id="seat01" class="square"></div>
+                    <div id="seat24" class="square"></div>
                 </div> 
             </div>
         </div>
     </div>
 </template>
-<!-- ===================================================스크립트 ======================================== -->
-<script>
 
-Vue.component('seat-select', {
+<div id="select" class="w3-modal w3-animate-opacity">
+	<div class="w3-modal-content" style="padding: 32px; text-align: center;">
+		<div class="w3-container" >
+			<i onclick="document.getElementById('select').style.display='none'" class="fa fa-remove w3-transparent w3-button w3-xlarge w3-right"></i>
+			<h2 id="s" ></h2>
+			<button style="width: 100px;" onclick="yes()">네</button> 
+			<button style="width: 100px;" onclick="document.getElementById('select').style.display='none'">아니오</button>
+		</div>
+	</div>
+</div>
+
+<script>
+	seatIdx = 0;
+
+	function ajaxReq(v){
+	    axios.get("seat/check/"+v)
+	    .then(resData => {
+			if(resData.data){
+				alert("선택 불가");
+			}else{
+				document.getElementById('select').style.display='block';
+				document.getElementById('s').textContent=v+"번 좌석을 선택하시겠습니까?";
+				seatIdx = v;
+			}
+	    }).catch(error => {
+			console.log("비정상 응답 ", error);
+	    });
+	}
+	
+	function yes(){
+		alert(seatIdx);
+	}
+	
+    navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
+    footer();    
+    Vue.component('seat-select', {
         template: "#seatSelect",
         data: function(){
             return{
@@ -132,6 +166,21 @@ Vue.component('seat-select', {
             }
         },
         methods:{
+        	checkSeat : function(){
+        		axios({
+        			method: "get",
+        			url: "seat1"
+        		}).then(resData => {
+        			datas = resData.data;
+        			for(let s of datas){
+        				if(s.isUsed == "1"){
+        					document.getElementById("seat"+s.seatIdx).style.backgroundColor='rgb(221, 61, 61)';
+        				}
+        			}
+        		}).catch(errorData => {
+        			alert(errorData);
+        		});
+            },
             selectSeat: function(v){
                 this.using = false; // DB에서 좌석이 사용중인지 불린값을 가져와서 비교
                 if(this.using == false){
@@ -175,7 +224,31 @@ Vue.component('seat-select', {
 
     new Vue({
         el: "#body-div",
-    })
+
+        data: {
+            model: {
+                showIndex: true,
+                showLogin: false
+            }
+        },
+        methods: {
+            test: function(){
+                console.log("12");
+            }
+        }
+    });
+    
+    new Vue({
+        el: "#select",
+        data: {
+            seatIdx: 0
+        },
+        methods: {
+            seat: function(v){
+                console.log(v);
+            }
+        }
+    });
 
 </script>
 </body>
