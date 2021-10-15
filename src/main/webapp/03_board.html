@@ -16,55 +16,98 @@
 
         <!-- 메인 -->
         <div class="main-container">
+            <view-allboard></view-allboard>
 
-            <div class="sub-container">
-                <h1>자유게시판</h1><hr>
-                <div style="float:right;">
-                    <button class="w3-button  w3-card-4" onclick="location.href='03_02_write.html'" style="background-color: #ecdbdb; width: 100px;">글쓰기</button> <br><br>
-                </div>
-                <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
-                    <thead>
-                    <tr style="background-color: #e7dcdc">
-                        <th style="column-width: 50px">글 번호</th>
-                        <th style="column-width: 100px">작성자</th>
-                        <th style="column-width: 150px">제목</th>
-                        <th style="column-width: 50px">날짜</th>
-                    </tr>
-                    </thead>
-                    <tr>
-                    <td style="column-width: 50px">1</td>
-                    <td style="column-width: 100px">Jill</td>
-                    <td style="column-width: 150px">
-                    <a href="03_01_view.html">이거보여주려고 어그로끌었다</a>
-                    </td>
-                    <td style="column-width: 50px">50</td>
-                    </tr>
-                    <tr>
-                    <td style="column-width: 50px">1</td>
-                    <td style="column-width: 100px">Jill</td>
-                    <td style="column-width: 150px">Smith</td>
-                    <td style="column-width: 50px">50</td>
-                    </tr>
-                    <tr>
-                    <td style="column-width: 50px">1</td>
-                    <td style="column-width: 100px">Jill</td>
-                    <td style="column-width: 150px">Smith</td>
-                    <td style="column-width: 50px">50</td>
-                    </tr>
-                    <tr>
-                    <td style="column-width: 50px">1</td>
-                    <td style="column-width: 100px">Jill</td>
-                    <td style="column-width: 150px">Smith</td>
-                    <td style="column-width: 50px">50</td>
-                    </tr>
-                    
-                </table>
-            </div>
+
+
+
                 <foot></foot>
         </div>
     </div>
 
+<template id="view-allboard-temp">
+    <div class="sub-container">
+        <h1>자유게시판</h1><hr>
+        <div style="width: 70%; display: inline-block;">
+            <div style="float:right;">
+                <button class="w3-button  w3-card-4" onclick="location.href='03_02_write.html'" style="background-color: #ecdbdb; width: 100px;">글쓰기</button> <br><br>
+            </div>
+            <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
+                <thead>
+                <tr style="background-color: #e7dcdc">
+                    <th style="column-width: 5%;">글 번호</th>
+                    <th style="column-width: 5%">작성자</th>
+                    <th style="column-width: 85%">제목</th>
+                    <th style="column-width: 5%">날짜</th>
+                </tr>
+                </thead>
+                <tr v-for="(board, index) in board_list" @click="viewBoardOne(index)" style="cursor: pointer;">
+                <td v-if="(index_max > index) && (index >= index_min)" style="column-width: 5%">{{board.id}}</td>
+                <td v-if="(index_max > index) && (index >= index_min)" style="column-width: 5%">{{board.writer}}</td>
+                <td v-if="(index_max > index) && (index >= index_min)" style="column-width: 85%">{{board.title}}</td>
+                <td v-if="(index_max > index) && (index >= index_min)" style="column-width: 5%">{{board.created}}</td>
+                </tr>
+            </table>
+            <div style="display: inline-block; padding-top: 3%;">
+                <div v-for="(index) in board_list.length" style="float:left">
+                    <<a v-on:click="index_min, index_max += 10">{{page_number}}</a>>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<!-- ========================================스크립트======================================== -->
+
 <script>
+    let enventBus = new Vue();
+
+    // ==============================view-allboard 컴포넌트===============================
+    Vue.component('view-allboard', {
+        template: "#view-allboard-temp",
+        data: function() {
+            return {
+                board_list: [],
+                index_min: 0,
+                index_max: 10,
+                page_list: []
+            }
+        },
+        created: function() {
+            axios({
+                    method: "get",
+                    url: "http://localhost/board", 
+                }).then(resData => {  
+                    this.board_list = resData.data;
+                    var count = 0;
+                    while(this.board_list.length > count) {
+                        
+                    }
+                }).catch(errorData => {
+                    alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+                });
+        },
+        methods: {
+            viewBoardOne: function(index) {
+                if(index != null){
+                    location.href = "03_01_view.html?id=" + this.board_list[index].id;
+                }
+                else{
+                    alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+                }
+            }
+        }
+    })
+    Vue.component('page-control', {
+        template: "#page-control-temp",
+        data: function() {
+            return {
+                limit : 10
+            }
+        }
+    })
+
+    // ========================================공통 스크립트========================================
+
     navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
     footer();    
 

@@ -16,32 +16,133 @@
 
         <!-- 메인 -->
         <div class="main-container">
-
-            <div class="sub-container" style="margin-bottom: 100px; width: 70%;">
-                <div style="padding: 3%; text-align: left; border-style: groove;">
-                    <div><a>현재 게시판 표시</a></div>
-                    <div style="padding-top: 1%;"><textarea style="resize: none;" rows="1" cols="130" spellcheck="false" autofocus required maxlength="130" placeholder="제목을 입력해주세요"></textarea></div>
-                    <hr>
-                    <div>
-                        <textarea style="resize: none;" rows="15" cols="130" maxlength="4000" spellcheck="false" required placeholder="내용을 입력해주세요"></textarea>
-                    </div>
-                </div>
-                <div style="padding-top: 1%;">
-                    <div style="display: inline; float:left;">
-                        <button class="w3-button w3-card-4" onclick="location.href='03_board.html'" style="background-color: #ecdbdb; width: 100px;">목록</button> <br><br>
-                    </div>
-                    <div style="display:flex; float:right;">
-                        <button class="w3-button w3-card-4" onclick="location.href='#'" style="background-color: #ecdbdb; width: 100px; margin-right: 10%;">수정하기</button> <br><br>
-                        <button class="w3-button w3-card-4" onclick="location.href='03_02_write.html'" style="background-color: #ecdbdb; width: 100px;">글쓰기</button> <br><br>
-                    </div>
-                </div>
-            </div>
+            <write-board></write-board>
                     
                 <foot></foot>
         </div>
     </div>
 
+<!-- ========================================템플릿======================================== -->
+<template id="write-board-temp">
+    <div class="sub-container" style="width: 50%;">
+        <div style="margin-bottom: 100px;">
+            <div style="padding-left: 1%; text-align: left; border-style: groove;">
+                <a><h6>자유게시판</h6></a>
+                <div style="padding-left: 0.5%; padding-top: 1%;">
+                    <textarea v-model="write_title" id="titleId" style="resize: none;" rows="1" cols="99" maxlength="65" spellcheck="false" autofocus required maxlength="130" placeholder="제목을 입력해주세요"></textarea>
+                </div>
+                <hr>
+                <div style="padding-left: 0.5%; padding-bottom: 1%;">
+                    <textarea v-model="write_content" id="contentId" style="resize: none;" rows="15" cols="99" maxlength="4000" spellcheck="false" required placeholder="내용을 입력해주세요"></textarea>
+                </div>
+            </div>
+
+            <div style="padding-top: 1%;">
+                <div style="display: inline; float:left;">
+                    <button @click="writeCancel" class="w3-button" style="background-color: #ecdbdb; width: 100px;">취소</button> <br><br>
+                </div>
+                <div style="display:flex; float:right;">
+                    <button @click="previewBoard" class="w3-button" style="background-color: #ecdbdb; width: 110px; margin-right: 10%;">미리보기</button> 
+                    <button @click="writeFinal" class="w3-button" style="background-color: #ecdbdb; width: 100px;">작성 완료</button> <br><br>
+                </div>
+            </div>
+        </div>
+            <!-- ================모달================== -->
+
+        <div id="modalWrite" class="modal">
+            <form class="modal-content" style="width: 50%;">
+                <div class="container" style="text-align: left;">
+
+                    <div style="text-align: left; border-style: groove;">
+                        <div style="padding-left: 1%;"><a href='03_board.html'><h6>자유게시판</h6></a></div>
+                        <div style="padding-left: 3%; padding-bottom: 3%; padding-right: 3%;">
+                            <div><h3>{{write_title}}</h3></div>
+                            <div>작성자 : <a style="padding-right: 2%;">test</a></div>
+                            <hr>
+                            {{write_content}}
+                        </div>
+                    </div>
+                    
+                    <div class="clearfix">
+                        <button @click="writeFinal" type="button" class="signup" style="width:50%">확인</button>
+                        <button @click="modalClose" type="button" class="cancelbtn">취소</button>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+    </div>
+</template>
+
+<!-- ========================================스크립트================================================== -->
 <script>
+
+    // ==================== write-board (자유게시판 글쓰기) 컴포넌트=====================
+
+    Vue.component('write-board', {
+        template: "#write-board-temp",
+        data: function() {
+            return {
+                write_title: "",
+                write_content: "",
+            }
+        },
+        created: function() {
+            this.write_title = ""
+            this.write_content = ""
+        },
+        methods: {
+            writeCancel: function() {
+                if(this.write_title != "" || this.write_content != ""){
+                    var result = confirm("작성중인 내용이 있습니다. 취소하시겠습니까?");
+                    if(result){
+                        this.write_title = "",
+                        this.write_content = ""
+                        location.href="03_board.html";
+                    }
+                }
+                else{
+                    location.href="03_board.html";
+                }
+            },
+            writeFinal: function() {      //글쓴이 아이디 수정하기 ---------------------
+                const writerId = 1;    
+                const board = {"writerId": writerId, "title": this.write_title, "content": this.write_content};
+                axios({
+                    method: "post",
+                    url: "http://localhost/board", 
+                    data: board
+                }).then(resData => {  
+                }).catch(errorData => {
+                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요")
+                });
+                this.write_title = "",
+                this.write_content = ""
+                location.href="03_board.html";
+            },
+            previewBoard: function() {
+                if(this.write_title.length != 0 && this.write_content.length != 0){
+                    document.getElementById('modalWrite').style.display="block";
+                }
+                else if(this.write_title.length == 0) {
+                    alert("제목을 입력해주세요")
+                }
+                else if(this.write_content.length == 0) {
+                    alert("내용을 입력해주세요")
+                }
+                else{
+                    alert("에러가 발생했습니다. 다시 시도해주세요")
+                }
+            },
+            modalClose: function() {
+                document.getElementById('modalWrite').style.display="none";
+            }
+        }
+    })
+
+    // ==========================공통==============================
+
     navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
     footer();    
 
@@ -68,10 +169,8 @@
     new Vue({
         el: "#body-div",
         data: {
-            model: {
-                showIndex: true,
-                showLogin: false
-            }
+        },
+        methods: {
         }
     })
 

@@ -61,7 +61,7 @@
                     <li>전화번호 : {{data2.phone}}</li> <hr>                    
                 </ul>
                 <button @click="signUpFinal" style="width: 40%; float: auto;"> 가입 </button>
-                <button @click="goBack" style="width: 40%; float: right; background-color: chocolate;"> 수정 </button>
+                <button @click="backToSignUp" style="width: 40%; float: right; background-color: chocolate;"> 수정 </button>
             </div>
         </div>
     </template>
@@ -227,7 +227,7 @@
             }
         },
         methods: {
-            goBack: function() {
+            backTosignUp: function() {
                 this.$emit('view-check',false)
             },
             signUpFinal: function() {
