@@ -84,12 +84,17 @@ ul{
 }
 a{
   text-decoration:none;
+  cursor: pointer;
 }
 textarea{
   text-decoration:none;
   resize: none;
   
 }
+table {
+	table-layout: fixed;
+}
+
 /* =========================================================== */
 .square{
 	width: 80px;

@@ -27,7 +27,7 @@
         <div class="sub-container">
             <h1> 로그인 </h1> <hr>
             <div style="width: 30%; margin-top: 5%;  margin-left: 35%;">
-                <input v-model="frontId" required placeholder="아이디"> <br><br>
+                <input v-model="frontId" autofocus required placeholder="아이디"> <br><br>
                 <input v-model="frontPw" required placeholder="비밀번호"> <br><br>
                 <button @click=logInButton> 로그인 </button> <br><br>
                 {{message}}
