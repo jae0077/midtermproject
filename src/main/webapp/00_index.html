@@ -23,7 +23,7 @@
         </div>
     </div>
 
-
+<!-- ========================================템플릿======================================== -->
     <template id="indexTemp">
         <div>
             <div class="w3-row">
@@ -127,20 +127,22 @@
 
 // ========================================공통 스크립트========================================
 
-    navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
-    footer();    
+navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
+footer();    
 
     Vue.component('nav-bar', {
         template: navBarScript,
         data: function() {
                 return {
                     login,
-                    logout,
+                    logout
                 }
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.setItem("session", null);
+                sessionStorage.setItem("token", null);
+                this.login = false;
+                this.logout = true;
                 alert("로그아웃 했습니다");
                 location.href="00_index.html";
             }

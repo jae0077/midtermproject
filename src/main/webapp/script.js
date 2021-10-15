@@ -24,11 +24,10 @@ function navBar(){
         </div>
     </div>
     `
-    getSession = sessionStorage.getItem("session");
-    getSession = JSON.parse(getSession);
+    get_token = sessionStorage.getItem("token");
     login = false;
     logout = true;
-    if(getSession != null){
+    if(get_token != "null"){    // 이전에 null 로 했을때 됐는데 갑자기 안됨.... 
         logRecord();
     }
 }

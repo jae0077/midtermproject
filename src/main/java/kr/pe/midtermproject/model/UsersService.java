@@ -51,10 +51,10 @@ public class UsersService {
 	}
 
 	// 해당 userId가 존재하는지 확인
+
 	public boolean verifyUserId(String userId){
 		boolean result = false;
 		Users users = userDao.findUsersByUserId(userId);
-		System.out.println(users);
 		if(users == null) {
 			result = true;
 		}
