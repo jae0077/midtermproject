@@ -35,13 +35,13 @@
         <div style="border-style: groove; width: 85%; height: 90%; margin-top: 2%;">
             <div style="padding: 1%; display:flex; width: 100%;">
                 <div v-for="(seat, index) in seat_list1" style="padding: 1%;">
-                    <button v-if="seat.isUsed=1" @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
+                    <button v-if="seat.isUsed == 0" @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
                     <button v-else @click="selectSeat(seat.seatIdx)" class="square" style="background-color: brown;">{{seat.seatIdx}}</button>
                 </div>
             </div>
             <div style="padding: 1%; display:flex; width: 100%;">
                 <div v-for="(seat, index) in seat_list2" style="padding: 1%;">
-                    <button v-if="seat.isUsed=1" @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
+                    <button v-if="seat.isUsed == 0" @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
                     <button v-else @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
                 </div>
             </div>
@@ -74,14 +74,16 @@
             }
         },
         created: function() {
+            // ======================= 1.좌석정보 불러오기 =====================
             axios({
                 method: "get",
                 url: "seat", 
                 headers: {authorization : `bearer ${sessionStorage.getItem("token")}`}
             }).then(resData => {  
+                console.log(resData.data);
                 this.seat_list1 = resData.data.slice(undefined, 10);
                 this.seat_list2 = resData.data.slice(10, 20);
-
+                // ====================== 2. 잔여 좌석 불러오기 =================
                 axios({
                 method: "get",
                 url: "seat/remain", 
