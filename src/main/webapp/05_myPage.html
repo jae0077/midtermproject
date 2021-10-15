@@ -180,7 +180,7 @@
             axios({
                 method: "get",
                 url: "http://localhost/user/" + sessionStorage.getItem("userIdx"),
-                headers: {"Authorization" : `Bearer' ${sessionStorage.getItem("token")}`}
+                headers: {"Authorization" : `Bearer ${sessionStorage.getItem("token")}`}
             }).then(resData => {  
                 if(resData.data == null || resData.data == "") {
                     alert("정보 불러오기를 실패했습니다. 잠시 후에 다시 시도해주세요")
@@ -420,7 +420,7 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.setItem("token", null);
+                sessionStorage.clear("token");
                 this.login = false;
                 this.logout = true;
                 alert("로그아웃 했습니다");

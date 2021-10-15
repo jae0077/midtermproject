@@ -94,7 +94,7 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.setItem("token", null);
+                sessionStorage.clear("token");
                 this.login = false;
                 this.logout = true;
                 alert("로그아웃 했습니다");
