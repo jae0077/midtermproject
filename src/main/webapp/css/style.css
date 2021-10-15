@@ -141,14 +141,15 @@ table {
 	background: rgb(57, 196, 103);
     width: 100px; /* 원하는 너비 */
     height: 100px;
+    color: #15171a;
 }
-
+/* 
 .square:before {
     content: "";
     display: block;
     padding-top: 100px; /* 1:1 비율 */
 }
- 
+  */
 .content {
     position: absolute;
     top: 0;
