@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<title>Insert title here</title>
+	
+	<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	
+	<style>
+		table {
+		  border-collapse: collapse;
+		  width: 100%;
+		}
+		
+		th, td {
+		  text-align: left;
+		  padding: 8px;
+		}
+		
+		tr:nth-child(even){background-color: #f2f2f2}
+		
+		th {
+		  background-color: #04AA6D;
+		  color: white;
+		}
+	</style>
+</head>
+<body>
+	
+	
+	Book CRUD Test <br>
+	
+	<a href="book?i=4">1. 가입</a>
+
+
+	<br><hr><br>
+	
+	<div id="bookContent">
+
+		<button onclick="ajaxReq()">1. 클릭시 비동기로 seq는 1, writer=유재석 정보 검색</button>
+		<button @click="reqResAjax()">2. 클릭시 비동기로 모든 책 정보 검색</button>
+		
+		<br><hr><br>
+		
+		<div id="viewData"></div>
+		
+		<div v-if="resData">
+			<!-- <table border=1>
+				 <tr>
+				    <th>번호</th>
+				    <th>title</th>
+				    <th>writer</th>
+				    <th>content</th>
+	  			</tr>
+	  			
+	  			<tr v-for="v in datas">
+				    <td>{{v.seq}}</td>
+				    <td>{{v.title}}</td>
+				    <td>{{v.writer}}</td>
+				    <td>{{v.content}}</td>
+	  			</tr>
+	  			
+			</table> -->
+		</div>
+	
+	</div>
+	
+	<script>
+		function ajaxReq(){
+	      axios.get("seat/check/5")
+	      .then(resData => {
+	    	  	console.log(resData);
+	    	  	alert(resData.data)
+	      }).catch(error => {
+				console.log("비정상 응답 ", error);
+	      });
+		}
+		
+		
+		new Vue({
+			el: "#bookContent",
+			data : {
+				resData: false,  //비동기 응답이 성공으로 전송될때만 렌더링하는 table view 여부 결정 flag
+				datas: []   //서버에서 응답되는 JSON 배열을 대입받을 변수
+			},
+			methods: {
+				reqResAjax: function(){
+        			axios({
+        				method: "get",
+        				url: "seat1"
+        			}).then(resData => {
+        				this.resData = true;
+        				this.datas = resData.data;
+        				console.log(resData.data[1].seatIdx + " " + resData.data[1].isUsed);
+        			}).catch(errorData => {
+        				alert(errorData);
+        			});
+        		}
+			}
+		});
+    </script>
+
+
+</body>
+</html>
