@@ -30,28 +30,28 @@
             <h1>나의 정보</h1><hr>
             <div><p>이름 : {{model.name}}</p></div>
             <div><p>이용권 종료일 : {{end_day}}</p></div>
-            <div><p>현재 좌석 : {{model.seat.seatIdx}}번 좌석</p></div>
+            <div><p>현재 좌석 : {{model.seat.seatIdx}}</p></div>
             
             <div class="w3-row">
                 <div class="w3-col w3-container" style="width:5%;"></div>
                 
                 <div class="w3-col w3-container" style="width:25%">
                     <p>내 정보 수정</p>
-                    <img src="./img/mainPicture.jpg" style="width:80%" @click="openCheck('modifying')">
+                    <img src="./img/mainPicture.jpg" style="width:80%; cursor: pointer;" @click="openCheck('modifying')">
                 </div>
 
                 <div class="w3-col w3-container" style="width:7%;"></div>
 
                 <div class="w3-col w3-container" style="width:25%">
                     <p>좌석 변경</p>
-                    <img src="./img/mainPicture.jpg" style="width:80%" @click="openCheck('seating')">
+                    <img src="./img/mainPicture.jpg" style="width:80%; cursor: pointer;" @click="openCheck('seating')">
                 </div>
 
                 <div class="w3-col w3-container" style="width:7%;"></div>
                 
                 <div class="w3-col w3-container" style="width:25%">
                     <p>퇴실</p>
-                    <img src="./img/mainPicture.jpg" style="width:80%" @click="openCheck('exiting')">
+                    <img src="./img/mainPicture.jpg" style="width:80%; cursor: pointer;" @click="openCheck('exiting')">
                 </div>
                 
                 <div class="w3-col w3-container" style="width:5%;"></div>
@@ -158,10 +158,13 @@
                     userIdx: "",
                     userId: "",
                     userPw: "",
-                    name: "default",
+                    name: "",
                     phone: "",
                     isAdmin: "",
-                    seat: ""
+                    seat: {
+                        seatIdx: "이용중인 좌석 없음",
+                        isUsed: ""
+                    }
                 },
                 modify_model: {
                     userPw: "",
@@ -172,7 +175,7 @@
                 messagePw : "※ 비밀번호를 입력해주세요",
                 messagePw2 : "※ 비밀번호를 한 번 더 입력해주세요",
                 messageName : "※ 이름을 입력해주세요",
-                messagePhone : "※ 전화번호를 입력해주세요"
+                messagePhone : "※ 전화번호를 입력해주세요",
             }
         },
         created() {
@@ -187,10 +190,10 @@
                     location.href="00_index.html";
                 }
                 else{
-                    this.model = resData.data;
-                    if(this.model.seat == null) {
-                        this.model.seat = "이용중인 좌석 없음";
+                    if(resData.data.seat == null) {
+                        resData.data.seat = {seatIdx: "이용중인 좌석 없음", isUsed: ""}
                     }
+                    this.model = resData.data;
                 }
             }).catch(errorData => {
                 alert("정보 불러오기를 실패했습니다. 잠시 후에 다시 시도해주세요")
@@ -311,14 +314,16 @@
         },
         methods: {
             openCheck: function(v){
+                this.now = v;
                 if(v == "seating" || v == "exiting") {
-                    if(this.model.seat == "이용중인 좌석 없음") {
-                        console.log("=====")
+                    if(this.model.seat.seatIdx == "이용중인 좌석 없음") {
                         alert("현재 이용중인 좌석이 없습니다");
+                    }
+                    else {
+                        document.getElementById('modalCheck').style.display='block';
                     }
                 }
                 else {
-                    this.now = v;
                     document.getElementById('modalCheck').style.display='block';
                 }
             },
@@ -382,12 +387,13 @@
                 });
             },
             changeSeat: function(){
+                
             },
             exit: function(){
                 axios({
-                    method: "put",
-                    url: "http://localhost/seat/checkout", 
-                    headers: {"Authorization" : `Bearer' ${sessionStorage.getItem("token")}`}
+                    method: "post",
+                    url: "seat/checkout", 
+                    headers: {authorization : `bearer' ${sessionStorage.getItem("token")}`}
                 }).then(resData => {  
                     if(resData.data){
                         alert("퇴실 완료")
