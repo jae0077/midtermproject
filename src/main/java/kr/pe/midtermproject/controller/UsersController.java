@@ -30,12 +30,12 @@ public class UsersController {
 	//회원가입
 	@PostMapping("user/join")
 	public boolean createUser(@RequestBody Users user) {
-		boolean check = userService.verifyUserId(user.getUserId());
 		boolean result = false;
-		
-		if(!check) {
+		try {
 			result = userService.createUser(user);
 			result = true;
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 		
 		return result;
