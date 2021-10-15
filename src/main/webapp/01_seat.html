@@ -29,7 +29,7 @@
     <div class="sub-container">
         <h1>좌석 선택</h1><hr>
         <div>
-            남은 좌석 : {{remain_seat}} / {{seat_list.length}}<br>
+            남은 좌석 : {{remain_seat}} / {{seat_list1.length + seat_list2.length}}<br>
             선택 가능한 좌석은 초록색으로 표시됩니다<br>
         </div>
         <div style="border-style: groove; width: 85%; height: 90%; margin-top: 2%;">
@@ -62,34 +62,12 @@
 <!-- ==============================================스크립트 ================================== -->
 
 <script>
-	seatIdx = 0;
-
-	function ajaxReq(v){
-	    axios.get("seat/check/"+v)
-	    .then(resData => {
-			if(resData.data){
-				alert("선택 불가");
-			}else{
-				document.getElementById('select').style.display='block';
-				document.getElementById('s').textContent=v+"번 좌석을 선택하시겠습니까?";
-				seatIdx = v;
-			}
-	    }).catch(error => {
-			console.log("비정상 응답 ", error);
-	    });
-	}
-	
-	function yes(){
-		alert(seatIdx);
-	}
-
     Vue.component('seat-select', {
         template: "#seatSelect",
         data: function(){
             return{
                 seat : "",
                 using : false,
-                seat_list: [],
                 seat_list1: [],
                 seat_list2: [],
                 remain_seat: ""
@@ -101,7 +79,6 @@
                 url: "seat", 
                 headers: {authorization : `bearer ${sessionStorage.getItem("token")}`}
             }).then(resData => {  
-                this.seat_list = resData.data;
                 this.seat_list1 = resData.data.slice(undefined, 10);
                 this.seat_list2 = resData.data.slice(10, 20);
 
