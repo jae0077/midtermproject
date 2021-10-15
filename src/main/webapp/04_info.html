@@ -43,7 +43,7 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.clear("token");
+                sessionStorage.clear();
                 this.login = false;
                 this.logout = true;
                 alert("로그아웃 했습니다");

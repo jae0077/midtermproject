@@ -305,7 +305,7 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.clear("token");
+                sessionStorage.clear();
                 this.login = false;
                 this.logout = true;
                 alert("로그아웃 했습니다");
@@ -319,7 +319,7 @@
 
 
 
-                    // ==============공통에서 수정한 부분===========
+            // ==============공통에서 수정한 부분===========
     new Vue({
         el: "#body-div",
         data: {
