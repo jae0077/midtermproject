@@ -27,7 +27,7 @@ function navBar(){
     get_token = sessionStorage.getItem("token");
     login = false;
     logout = true;
-    if(get_token != "null"){    // 이전에 null 로 했을때 됐는데 갑자기 안됨.... 
+    if(get_token != null){  
         logRecord();
     }
 }
