@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import kr.pe.midtermproject.model.JWT;
 import kr.pe.midtermproject.model.UsersService;
 import kr.pe.midtermproject.model.domain.Users;
+import kr.pe.midtermproject.model.dto.LoginResDTO;
 import kr.pe.midtermproject.model.dto.UsersDTO;
 
 @RestController
@@ -31,26 +32,30 @@ public class UsersController {
 	@PostMapping("user/join")
 	public boolean createUser(@RequestBody Users user) {
 		boolean result = false;
+		
 		try {
 			result = userService.createUser(user);
-			result = true;
-		}catch(Exception e) {
+			result = true;				
+		}catch (Exception e) {
 			e.printStackTrace();
 		}
-		
 		return result;
 	}
 
 	// 로그인
 	@PostMapping("/login")
-	public String login(@RequestBody Users reqUser) {
+	public LoginResDTO login(@RequestBody Users reqUser) {
 		Users user = userService.login(reqUser.getUserId(), reqUser.getUserPw());
-		String token = null; 
+		String token = null;
+		LoginResDTO response = null;
 		if (user != null) {
 			token = JWT.createToken(user);
+			response = new LoginResDTO();
+			response.setUserIdx(user.getUserIdx());
+			response.setName(user.getName());
+			response.setToken(token);
 		}
-		
-		return token;
+		return response;
 	}
 
 	// 유저 정보
