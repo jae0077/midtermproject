@@ -125,7 +125,7 @@
             }
         },
         created: function() {
-            eventBus.$on("sendBoardtoModify",this.getBusData);
+            eventBus.$on('sendBoardtoModify',this.getBusData);
         },
         methods: {
             modifyFinal: function() {
@@ -266,7 +266,7 @@
         }
     })
 
-// ========================================공통 스크립트========================================
+    // =======================공통 스크립트===========================
 
     navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
     footer();    
@@ -281,7 +281,9 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.setItem("session", null);
+                sessionStorage.setItem("token", null);
+                this.login = false;
+                this.logout = true;
                 alert("로그아웃 했습니다");
                 location.href="00_index.html";
             }
@@ -290,7 +292,7 @@
     Vue.component('foot', {
         template: footerScript,
     })
-// ========================================공통에서 수정========================================
+            // ===============공통에서 수정===============
     new Vue({
         el: "#body-div",
         data: {

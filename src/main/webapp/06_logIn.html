@@ -23,74 +23,63 @@
         </div>
     </div>
 
+
+
+                        <!-- ==================== 로그인 템플릿 ====================== -->
     <template id="logInTemp">
         <div class="sub-container">
             <h1> 로그인 </h1> <hr>
             <div style="width: 30%; margin-top: 5%;  margin-left: 35%;">
-                <input v-model="frontId" autofocus required placeholder="아이디"> <br><br>
-                <input v-model="frontPw" required placeholder="비밀번호"> <br><br>
-                <button @click=logInButton> 로그인 </button> <br><br>
+                <input v-model="model.userId" tyep="text" autofocus required maxlength="16" spellcheck="false" placeholder="아이디"> <br><br>
+                <input v-model="model.userPw" type="password" required maxlength="16" spellcheck="false" placeholder="비밀번호"> <br><br>
+                <button @click="logInButton"> 로그인 </button> <br><br>
                 {{message}}
             </div>
         </div>
     </template>
 
+
+    <!--   =================================================스크립트 ====================================================================  -->
 <script>
     Vue.component('login', {
     template: "#logInTemp",
     data: function() {
             return {
-                frontId : "",
-                frontPw : "",
                 message : "",
+                model: {
+                    userId: "",
+                    userPw: ""
+                }
             }
         },
     methods: {
-        // logInButton: function(){
-        //     console.log("전송버튼 클릭")
-        //     axios({
-        // 			method: "post",
-        // 			url: "http://localhost/Test.html", //백엔드 컨트롤러 주소로 변경하기
-        //             data: {
-        //                 Id: this.frontId,
-        //                 Pw: this.frontPw
-        //             }
-        // 		}).then(resData => {
-                    
-
-        // 		}).catch(errorData => {
-        // 			alert(errorData);
-        // 		});
-
-        // }
         logInButton: function(){
             axios({
-                    method: "get",
-                    url: "./test.html", //백엔드 컨트롤러 주소로 변경하기
-                }).then(resData => {  //백엔드에서 ID, PW받아오기
-                    // const id = resData.id;
-                    // const pw = resData.pw;
-                    const id = "test"; 
-                    const pw = "test";
-                    if(id == this.frontId && pw == this.frontPw){
-                        const data = {"sessionId" : id, "sessionPw" : pw};
-
-                        sessionStorage.setItem("session", JSON.stringify(data));
-                        getSession = sessionStorage.getItem("session");
-                        getSession = JSON.parse(getSession);
-
-                        location.href="./00_index.html";
-                    }else{
-                        alert("아이디나 비밀번호를 확인하세요");
-                        this.message = "아이디나 비밀번호를 확인하세요";
+                    method: "post",
+                    url: "http://localhost/login", 
+                    data: this.model
+                }).then(resData => {  
+                    if(resData.data.length == 0){
+                        alert("로그인 정보가 다릅니다")
+                        window.location.reload();
+                    }
+                    else{
+                        sessionStorage.setItem("token",resData.data.token);
+                        sessionStorage.setItem("userIdx",resData.data.userIdx);
+                        sessionStorage.setItem("name",resData.data.name);
+                        alert("로그인 성공")
+                        location.href="00_index.html";
                     }
                 }).catch(errorData => {
                     alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요")
+                    window.location.reload();
                 });
-
             }
         }
     })
+
+    
+                // ========================공통 스크립트===========================
 
     navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
     footer();     
@@ -105,7 +94,9 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.setItem("session", null);
+                sessionStorage.setItem("token", null);
+                this.login = false;
+                this.logout = true;
                 alert("로그아웃 했습니다");
                 location.href="00_index.html";
             }

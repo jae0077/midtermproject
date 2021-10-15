@@ -156,7 +156,9 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.setItem("session", null);
+                sessionStorage.setItem("token", null);
+                this.login = false;
+                this.logout = true;
                 alert("로그아웃 했습니다");
                 location.href="00_index.html";
             }

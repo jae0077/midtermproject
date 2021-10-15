@@ -23,11 +23,14 @@
         </div>
     </div>
 
+<!-- ========================================템플릿======================================== -->
+
     <template id="myPageTemp">
         <div class="sub-container"> 
             <h1>나의 정보</h1><hr>
-            <div><p>이용권 종료일 : </p></div>
-            <div><p>현재 좌석 : </p></div>
+            <div><p>이름 : {{model.name}}</p></div>
+            <div><p>이용권 종료일 : {{end_day}}</p></div>
+            <div><p>현재 좌석 : {{model.seat}}</p></div>
             
             <div class="w3-row">
                 <div class="w3-col w3-container" style="width:5%;"></div>
@@ -55,16 +58,14 @@
             </div>
         
 
-
+                            <!-- =====================체크 모달 (첫 번째)======================= -->
 
             <div id="modalCheck" class="modal">
                 <form class="modal-content">
                     <div class="container" style="text-align: left;">
                         <h1>비밀번호를 입력해 주세요</h1>
-                        <p>아이디 : </p> 
-                        <input required placeholder="비밀번호"> 
-                        </p>
-                        {{message}}
+                        <h3>ID : {{model.userId}}</h3>
+                        <input id="pw_check_input" type="password" required autofocus maxlength="16" spellcheck="false" placeholder="비밀번호"> 
                         <div class="clearfix">
                             <button @click="check" type="button" class="signup" style="width:50%">확인</button>
                             <button @click="modalClose" type="button" class="cancelbtn">취소</button>
@@ -73,21 +74,30 @@
                 </form>
             </div>
             
+                             <!-- =====================내 정보 변경 모달======================= -->
+
             <div id="modalModify" class="modal">
                 <form class="modal-content">
                     <div class="container">
                         <div style="text-align: left;">
-                            <h3>나의 정보 수정</h3>
-                            <p>아이디 : </p>
-                            
-                            <p>비밀번호</p>
-                            <input required placeholder="비밀번호"> <br><br>
-                            <p>비밀번호 확인</p>
-                            <input required placeholder="비밀번호 확인"> <br><br>
-                            <p>이름</p>
-                            <input required placeholder="홍길동"> <br><br>
-                            <p>전화번호</p>
-                            <input required placeholder="000-0000-0000"> <br><br>
+                            <h3 style="text-align: center;">나의 정보 수정</h3>
+                            <p>아이디 : {{model.userId}}<hr></p>
+                            변경할 비밀번호
+                            <input v-model="CheckPw" type="password" required autofocus maxlength="16" spellcheck="false" placeholder="최소 4글자"> 
+                            <p id="inputPwId" style="color: brown; margin-top: 0%;">
+                                {{messagePw}} <hr></p>
+                            비밀번호 확인
+                            <input v-model="CheckPw2" type="password" required maxlength="16" spellcheck="false" placeholder="비밀번호 확인"> 
+                            <p id="inputPw2Id" style="color: brown; margin-top: 0%;">
+                                {{messagePw2}} <hr></p>
+                            현재 이름 : {{model.name}}
+                            <input v-model="CheckName" type="text" required maxlength="6" spellcheck="false" placeholder="최소 2글자"> 
+                            <p id="inputNameId" style="color: brown; margin-top: 0%;">
+                                {{messageName}} <hr></p>
+                            현재 전화번호 : {{model.phone}}
+                            <input v-model="CheckPhone" type="text" required maxlength="11" spellcheck="false" placeholder="'-' 없이 입력해주세요"> 
+                            <p id="inputPhoneId" style="color: brown; margin-top: 0%;">
+                                {{messagePhone}}</p>
                         </div>
                         <div class="clearfix">
                             <button @click="modify" type="button" class="signup" style="width:50%">확인</button>
@@ -97,6 +107,8 @@
                 </form>
             </div>
 
+                                 <!-- =====================시트정보 변경 모달======================= -->
+
             <div id="modalSeat" class="modal">
                 <form class="modal-content">
                     <div class="container" style="text-align: left;">
@@ -105,12 +117,14 @@
                         <h1>좌석을 선택하세요</h1>
                         <div></div>
                         <div class="clearfix">
-                            <button @click="seatChange" type="button" class="signup" style="width:50%">확인</button>
+                            <button @click="changeSeat" type="button" class="signup" style="width:50%">확인</button>
                             <button @click="modalClose" type="button" class="cancelbtn">취소</button>
                         </div>
                     </div>
                 </form>
             </div>
+
+                                 <!-- =====================퇴실 모달======================= -->
 
             <div id="modalExit" class="modal">
                 <form class="modal-content">
@@ -129,72 +143,270 @@
         </div>
     </template>
 
+ <!-- =========================================================스크립트============================================================================= -->
+
 <script>
+
+                      // ======================마이페이지 컴포넌트=====================
     Vue.component('my-page', {
         template: "#myPageTemp",
         data: function() {
             return{
                 now : "",
-                message : ""
+                end_day : "",
+                model: {
+                    userIdx: "",
+                    userId: "",
+                    userPw: "",
+                    name: "default",
+                    phone: "",
+                    isAdmin: "",
+                    seat: ""
+                },
+                modify_model: {
+                    userPw: "",
+                    name: "",
+                    phone: "",
+                },
+                pw2 : "",
+                messagePw : "※ 비밀번호를 입력해주세요",
+                messagePw2 : "※ 비밀번호를 한 번 더 입력해주세요",
+                messageName : "※ 이름을 입력해주세요",
+                messagePhone : "※ 전화번호를 입력해주세요"
+            }
+        },
+        created() {
+            // ========= user 정보 불러오는 부분========
+            axios({
+                method: "get",
+                url: "http://localhost/user/" + sessionStorage.getItem("userIdx"),
+                headers: {"Authorization" : `Bearer' ${sessionStorage.getItem("token")}`}
+            }).then(resData => {  
+                if(resData.data == null || resData.data == "") {
+                    alert("정보 불러오기를 실패했습니다. 잠시 후에 다시 시도해주세요")
+                    location.href="00_index.html";
+                }
+                else{
+                    this.model = resData.data;
+                    if(this.model.seat == null) {
+                        this.model.seat = "이용중인 좌석 없음";
+                    }
+                }
+            }).catch(errorData => {
+                alert("정보 불러오기를 실패했습니다. 잠시 후에 다시 시도해주세요")
+                location.href="00_index.html";
+            });
+            // =========ticket limit 불러오는 부분========
+            axios({
+                method: "get",
+                url: "http://localhost/ticket/" + sessionStorage.getItem("userIdx"),
+                headers: {"Authorization" : `Bearer' ${sessionStorage.getItem("token")}`}
+            }).then(resData => {  
+                if(resData.data == null || resData.data == "") {
+                    this.end_day = "구매한 이용권이 없습니다"
+                }
+                else{
+                    console.log(resData.data);
+                }
+            }).catch(errorData => {
+                alert("정보 불러오기를 실패했습니다. 잠시 후에 다시 시도해주세요")
+                // location.href="00_index.html";
+            });
+        },
+        computed: {
+            CheckPw : {
+                get : function(){
+                    return this.modify_model.userPw;
+                },
+                set : function(inputPw){
+                    document.getElementById("inputPwId").style.color="brown";
+
+                    this.pw2 = "";
+                    document.getElementById("inputPw2Id").style.color="brown";
+                    this.messagePw2 = "※ 비밀번호를 한 번 더 입력해주세요";
+
+                    if(inputPw.length == 0){
+                        this.messagePw = "※ 비밀번호를 입력해주세요";
+                    }
+                    else if(0 < inputPw.length && inputPw.length < 4){
+                        this.messagePw = "※ 4글자 이상 입력해주세요";
+                    }
+                    else if(12 < inputPw.length){
+                        this.messagePw = "※ 비밀번호가 너무 깁니다";
+                    }
+                    else if(3 < inputPw.length){
+                        this.messagePw = "OK";
+                        document.getElementById("inputPwId").style.color="green";
+                    }
+                    this.modify_model.userPw = inputPw;
+                }
+            },
+            CheckPw2 : {
+                get : function(){
+                    return this.pw2;
+                },
+                set : function(inputPw2){
+                    document.getElementById("inputPw2Id").style.color="brown";
+                    if(inputPw2.length == 0){
+                        this.messagePw2 = "※ 비밀번호를 한 번 더 입력해주세요";
+                    }
+                    else if(inputPw2 == this.modify_model.userPw){
+                        this.messagePw2 = "OK";
+                        document.getElementById("inputPw2Id").style.color="green";
+                        
+                    }
+                    else{
+                        this.messagePw2 = "※ 비밀번호가 다릅니다";
+                    }
+                    this.pw2 = inputPw2;
+                }
+            },
+            CheckName : {
+                get : function(){
+                    return this.modify_model.name;
+                },
+                set : function(inputName){
+                    document.getElementById("inputNameId").style.color="brown";
+                    if(/[0-9]/g.test(inputName)){
+                        this.messageName = "※ 올바르지 않은 정보입니다";
+                    }
+                    else if(inputName.length == 0){
+                        this.messageName = "※ 이름를 입력해주세요";
+                    }
+                    else if(0 < inputName.length && inputName.length < 2){
+                        this.messageName = "※ 2글자 이상 입력해주세요";
+                    }
+                    else if(1 < inputName.length){
+                        this.messageName = "OK";
+                        document.getElementById("inputNameId").style.color="green";
+                    }
+                    this.modify_model.name = inputName;
+                }
+            },
+            CheckPhone : {
+                get : function(){
+                    return this.modify_model.phone;
+                },
+                set : function(inputPhone){
+                    document.getElementById("inputPhoneId").style.color="brown";
+
+                    if(/[^0-9]/g.test(inputPhone)){   // ^는 부정을 의미 => 숫자가 아닌 것이 들어오면 TRUE
+                        this.messagePhone = "※ 숫자를 입력해주세요";
+                    }
+                    else if(0 <= inputPhone){
+                        if(inputPhone.length < 10){
+                        this.messagePhone = "※ 전화번호를 입력해주세요";
+                        }
+                        else if(11 < inputPhone.length){
+                            this.messagePhone = "※ 전화번호가 너무 깁니다";
+                        }    
+                        else if(9 < inputPhone.length){
+                            this.messagePhone = "OK";
+                            document.getElementById("inputPhoneId").style.color="green";
+                        }    
+                    }
+                    this.modify_model.phone = inputPhone;
+                }
             }
         },
         methods: {
             openCheck: function(v){
-                this.now = v;
-                document.getElementById('modalCheck').style.display='block';
+                if(v == "seating" || v == "exiting") {
+                    if(this.model.seat == "이용중인 좌석 없음") {
+                        console.log("=====")
+                        alert("현재 이용중인 좌석이 없습니다");
+                    }
+                }
+                else {
+                    this.now = v;
+                    document.getElementById('modalCheck').style.display='block';
+                }
             },
             modalClose: function(){
-                pw = "";
-                this.now = "";
-                this.message = "";
-                document.getElementById('modalCheck').style.display='none'
-                document.getElementById('modalModify').style.display='none';
-                document.getElementById('modalSeat').style.display='none';
-                document.getElementById('modalExit').style.display='none';
+                window.location.reload();
             },
-            check: function(){
-                let pw = "test"; //인풋 pw
-                
-                if(pw == "test"){ //인풋 pw와 DB의 pw가 같으면
-                    document.getElementById('modalCheck').style.display='none';
-                    if(this.now == "modifying"){
-                        document.getElementById('modalModify').style.display='block';
+            // =========비밀번호 체크 모달 띄우는 메소드=========
+            check: function() {  
+                if(document.getElementById("pw_check_input").value){
+                    let input_pw = document.getElementById("pw_check_input").value;
+                    const check_model = {userId: this.model.userId, userPw: input_pw};
+                    axios({
+                    method: "post",
+                    url: "http://localhost/login", 
+                    data: check_model
+                }).then(resData => {  
+                    if(resData.data == null || resData.data == "") {
+                        alert("비밀번호가 다릅니다")
                     }
-                    else if(this.now == "seating"){
-                        document.getElementById('modalSeat').style.display='block';
+                    else{
+                        document.getElementById('modalCheck').style.display='none';
+                        if(this.now == "modifying") {
+                            document.getElementById('modalModify').style.display='block';
+                        }
+                        else if(this.now == "seating") {
+                            document.getElementById('modalSeat').style.display='block';
+                        }
+                        else if(this.now == "exiting") {
+                            document.getElementById('modalExit').style.display='block';
+                        }else {
+                            alert("에러가 발생했습니다");
+                            location.href="05_myPage.html";
+                        }
                     }
-                    else if(this.now == "exiting"){
-                        document.getElementById('modalExit').style.display='block';
-                    }else{
-                        alert("에러가 발생했습니다");
-                        location.href="05_myPage.html";
-                    }
-
-                    
-                }else{
-                    this.message = "비밀번호가 틀렸습니다";
+                }).catch(errorData => {
+                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요")
+                    window.location.reload();
+                });
                 }
-                pw = ""
-                this.now = "";
-                this.message = "";
+                else{
+                    alert("비밀번호를 입력해주세요")
+                }
+                document.getElementById("pw_check_input").value = null;
             },
-            modify: function(v){
-                this.now = v;
-                document.getElementById('modalModify').style.display='none';
+            modify: function(){
+                axios({
+                    method: "put",
+                    url: "http://localhost/user/" + sessionStorage.getItem("userIdx"), 
+                    data: this.modify_model,
+                    headers: {"Authorization" : `Bearer' ${sessionStorage.getItem("token")}`}
+                }).then(resData => {  
+                    if(resData.data){
+                        alert("정보 수정 성공했습니다")
+                        window.location.reload();
+                    }
+                    else{
+                        alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                    }
+                }).catch(errorData => {
+                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                });
             },
-            seatChange: function(v){
-                this.now = v;
-                document.getElementById('modalSeat').style.display='none';
+            changeSeat: function(){
             },
-            exit: function(v){
-                this.now = v;
-                document.getElementById('modalExit').style.display='none';
+            exit: function(){
+                axios({
+                    method: "put",
+                    url: "http://localhost/seat/checkout", 
+                    headers: {"Authorization" : `Bearer' ${sessionStorage.getItem("token")}`}
+                }).then(resData => {  
+                    if(resData.data){
+                        alert("퇴실 완료")
+                        window.location.reload();
+                    }
+                    else{
+                        alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                    }
+                }).catch(errorData => {
+                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                });
             },
 
 
 
         }
     })
+      // =================================================공통 스크립트================================================
+      
     navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
     footer();    
 
@@ -208,7 +420,9 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.setItem("session", null);
+                sessionStorage.setItem("token", null);
+                this.login = false;
+                this.logout = true;
                 alert("로그아웃 했습니다");
                 location.href="00_index.html";
             }
@@ -220,12 +434,6 @@
 
     new Vue({
         el: "#body-div",
-        data: {
-            model: {
-                showIndex: true,
-                showLogin: false
-            }
-        }
     })
 </script>
 </body>

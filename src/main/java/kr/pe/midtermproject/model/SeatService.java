@@ -24,7 +24,6 @@ public class SeatService {
 	public boolean selectSeat(Users user, SeatDTO seatDTO) {
 		boolean result = false;
 		Seat seat = null;
-		
 		try {
 			seat = seatDao.findById(seatDTO.getSeatIdx()).get();
 			

@@ -30,19 +30,19 @@
             <p>1일권의 경우 당일 23시59분에 만료됩니다</p> <br>
             <div class="w3-row">
                 <div class="w3-col s4 w3-green w3-center" style="width:30%;">
-                    <img src="./img/ticket.jpg" @click="click1day">
+                    <img class="ticket-img" src="./img/ticket.jpg" @click="click1day">
                 </div>
 
                 <div class="w3-col w3-container" style="width:5%;"></div>
 
                 <div class="w3-col s4 w3-dark-grey w3-center" style="width:30%;">
-                    <img src="./img/ticket.jpg" @click="click7day">
+                    <img class="ticket-img" src="./img/ticket.jpg" @click="click7day">
                 </div>
 
                 <div class="w3-col w3-container" style="width:5%;"></div>
                 
                 <div class="w3-col s4 w3-dark-grey w3-center" style="width:30%;">
-                    <img src="./img/ticket.jpg" @click="click30day">
+                    <img class="ticket-img" src="./img/ticket.jpg" @click="click30day">
                 </div>
             </div>
 <!-- ================================모달================================= -->
@@ -138,7 +138,9 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.setItem("session", null);
+                sessionStorage.setItem("token", null);
+                this.login = false;
+                this.logout = true;
                 alert("로그아웃 했습니다");
                 location.href="00_index.html";
             }

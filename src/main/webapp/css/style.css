@@ -15,21 +15,9 @@
   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
 }
 
-.nav-bar{
-	top: 0px;
-	overflow:visible;
-	height: 150px;
-  font-size: 25px;
-  z-index: 1;    /* 하운도움 - z축의 개념 - 디폴트는 0.- 맨 앞으로 꺼내거나 뒤로 밀어내거나  */
-}
 
-.navbar a {
-	float: left;
-	font-size: 16px;
-	color: white;
-	text-align: center;
-	text-decoration: nodlne;
-  }
+
+
   
 .dropdown-content {
 	display: none;
@@ -39,7 +27,7 @@
 	box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 	z-index: 1;
   font-size: 15px;
-  }
+}
 .dropdown-content a {
 	float: none;
 	color: black;
@@ -53,16 +41,68 @@
 }
 .dropdown-content a:hover {
 	background-color: #ddd;
-  }
-/* ================================================ */
+}
+/* Navbar ================================================ */
+.nav-bar{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+	top: 0px;
+	overflow: visible;
+	height: 60px;
+  font-size: 18px;
+  z-index: 1;    /* 하운도움 - z축의 개념 - 디폴트는 0.- 맨 앞으로 꺼내거나 뒤로 밀어내거나  */
+}
+
+.navbar a {
+	float: left;
+	font-size: 16px;
+	color: white;
+	text-align: center;
+	text-decoration: nodlne;
+}
+
+.navbar-logo {
+  width: 10%;
+  height: 100%;
+  padding: 5px 0;
+}
+
+.navbar-contents {
+  box-sizing: border-box;
+  margin-right: 1%;
+}
+
+/* footer ================================================ */
 .footer{
+  position: fixed;
 	bottom: 0px;
 	height: 100px;
 	width: 100%;
 	background-color: #54cbe0;
 	z-index: 1;
-	overflow: auto
+	overflow: auto;
+  /* font-size: 0.9rem; */
 }
+
+.footer-left {
+  width: 50%;
+  float: left;
+  padding: 0 5% 0 10%;
+}
+
+.footer-right {
+  width: 50%;
+  float: right;
+  padding: 0 10%;
+}
+
+.footer-ul {
+  text-align: left
+}
+
+/* ================================================ */
 .body{
 	background-color: #ffffff
 }
@@ -115,10 +155,6 @@ table {
   display: block;
   margin-top: 7%;
 }
-
-
-
-
 
 /* ===========================모달================================== */
 
@@ -230,5 +266,8 @@ table {
         }
 
 
-
-
+/* ticket ==================================== */
+.ticket-img {
+  width: 100%;
+  cursor: pointer;
+}
