@@ -64,7 +64,9 @@
                         window.location.reload();
                     }
                     else{
-                        sessionStorage.setItem("token",resData.data);
+                        sessionStorage.setItem("token",resData.data.token);
+                        sessionStorage.setItem("userIdx",resData.data.userIdx);
+                        sessionStorage.setItem("name",resData.data.name);
                         alert("로그인 성공")
                         location.href="00_index.html";
                     }
