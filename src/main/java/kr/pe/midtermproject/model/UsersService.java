@@ -51,14 +51,14 @@ public class UsersService {
 	}
 
 	// 해당 userId가 존재하는지 확인
-	public boolean verifyUserId(String userId){
-		boolean result = false;
-		Users users = userDao.findUsersByUserId(userId);
-		if(users == null) {
-			result = true;
-		}
-		return result;
-	}
+
+		public boolean verifyUserId(String userId){
+			boolean result = false;
+			Users users = userDao.findUsersByUserId(userId);
+			if(users == null) {
+				result = true;
+			}
+			return result;
 
 	// userId로 정보수정하기
 	public boolean updateUser(Users user, UsersDTO reqUser) {
