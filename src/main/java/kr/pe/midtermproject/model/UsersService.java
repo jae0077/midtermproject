@@ -4,6 +4,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import kr.pe.midtermproject.dao.UserRepository;
 import kr.pe.midtermproject.model.domain.Users;
@@ -23,8 +24,8 @@ public class UsersService {
 			if (user.getIsAdmin() == null) {
 				user.setIsAdmin("0");
 				userDao.save(user);
+				result = true;
 			}
-			result = true;
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -39,7 +40,7 @@ public class UsersService {
 		return user;
 	}
 	
-	// idx 테스트
+	// 유저 정보
 	public Users getUser(Map<String, Object> claimMap, Long userIdx) {
 		Users result = null;
 		if (Long.parseLong(String.valueOf(claimMap.get("user_idx"))) == userIdx) {
@@ -49,18 +50,12 @@ public class UsersService {
 		return result;
 	}
 
-	// userId로 users정보 가져오기
-	public Users findById(String userId) {
-		Users user = userDao.findUsersByUserId(userId);
-		return user;
-	}
-	
 	// 해당 userId가 존재하는지 확인
 	public boolean verifyUserId(String userId){
 		boolean result = false;
 		Users users = userDao.findUsersByUserId(userId);
-		
-		if(users != null) {
+		System.out.println(users);
+		if(users == null) {
 			result = true;
 		}
 		return result;
