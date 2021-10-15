@@ -54,7 +54,6 @@ public class UsersService {
 	public boolean verifyUserId(String userId){
 		boolean result = false;
 		Users users = userDao.findUsersByUserId(userId);
-		System.out.println(users);
 		if(users == null) {
 			result = true;
 		}
