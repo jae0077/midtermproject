@@ -107,12 +107,12 @@
                 }
             },
             writeFinal: function() {      //글쓴이 아이디 수정하기 ---------------------
-                const writerId = 1;    
-                const board = {"writerId": writerId, "title": this.write_title, "content": this.write_content};
+                const board = {"title": this.write_title, "content": this.write_content};
                 axios({
                     method: "post",
                     url: "http://localhost/board", 
-                    data: board
+                    data: board,
+                    headers: {"Authenticaton" : `Bearer ${sessionStorage.getItem("token")}`}
                 }).then(resData => {  
                 }).catch(errorData => {
                     alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요")
@@ -156,7 +156,7 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.setItem("token", null);
+                sessionStorage.clear("token");
                 this.login = false;
                 this.logout = true;
                 alert("로그아웃 했습니다");

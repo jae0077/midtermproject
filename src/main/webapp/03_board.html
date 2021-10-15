@@ -49,7 +49,7 @@
                 </tr>
             </table>
             <div style="display: inline-block; padding-top: 3%;">
-                <div v-for="(index) in totalpage" style="float:left">
+                <div v-for="(index) in board_list" style="float:left">
                     <<a v-on:click="index_min, index_max += 10">{{page_number}}</a>>
                 </div>  
             </div>
@@ -75,13 +75,9 @@
         created: function() {
             axios({
                     method: "get",
-                    url: "http://localhost/board", 
+                    url: "http://localhost/board/", 
                 }).then(resData => {  
                     this.board_list = resData.data;
-                    var count = 0;
-                    while(this.board_list.length > count) {
-
-                    }
                 }).catch(errorData => {
                     alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
                 });
@@ -121,7 +117,7 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.setItem("token", null);
+                sessionStorage.clear("token");
                 this.login = false;
                 this.logout = true;
                 alert("로그아웃 했습니다");
