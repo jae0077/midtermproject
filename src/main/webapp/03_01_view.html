@@ -276,22 +276,19 @@
                 if(resData.data.length > 0) {
                     for(c of resData.data) {
                         this.comment_list.push({
-                                commentIdx: c.commentIdx,
-                                userIdx: c.writer.userIdx,
-                                userId: c.writer.userId,
-                                created: c.created,
-                                content: c.content})
+                            commentIdx: c.commentIdx,
+                            userIdx: c.writer.userIdx,
+                            userId: c.writer.userId,
+                            created: c.created,
+                            content: c.content})
                     }
                     if(sessionStorage.getItem("userIdx") != null) {
                         this.session_userIdx = sessionStorage.getItem("userIdx");
                     }
                 }
-                
-
-
             }).catch(errorData => {
                 alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
-                window.location.reload();
+                location.href="03_board.html"
             });
         },
         computed: {

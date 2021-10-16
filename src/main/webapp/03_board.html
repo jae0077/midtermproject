@@ -79,9 +79,13 @@
                     method: "get",
                     url: "http://localhost/board/", 
                 }).then(resData => {  
-                    for(d of resData.data) {
-                        let board_model = {boardIdx: d.boardIdx, writerId: d.writer.userId, title: d.title, created: d.created, updated: d.updated};
-                        this.board_list.push(board_model);
+                    for(b of resData.data) {
+                        this.board_list.push({
+                            boardIdx: b.boardIdx,
+                            writerId: b.writer.userId,
+                            title: b.title,
+                            created: b.created,
+                            updated: b.updated});
                     }
                 }).catch(errorData => {
                     alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
