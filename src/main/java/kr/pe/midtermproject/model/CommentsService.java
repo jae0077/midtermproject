@@ -56,11 +56,11 @@ public class CommentsService {
 	// 게시글별 댓글 리스트
 	public List<Comments> getCommentList(Long boardIdx) {
 		List<Comments> result = null;
-//		result = commentsDao.findAllByOrderByCommentIdxDesc();
 		try {
 			Board board = boardDao.findById(boardIdx).get();
 			if (board != null) {
-				result = board.getCommentList();
+				result = commentsDao.findAllByOrderByCommentIdxDesc();
+//				result = board.getCommentList();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
