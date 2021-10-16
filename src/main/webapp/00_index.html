@@ -36,49 +36,49 @@
             </div>
 
             <div class="w3-row" style="margin-top:50px; margin-bottom:100px;">
-                <div class="w3-col w3-container" style="width:20%;"></div>
-                <div class="w3-col w3-container" style="width:25%">
+                <div class="w3-col w3-container" style="width:10%;"></div>
+                <div class="w3-col w3-container" style="width:35%">
                     <div class="w3-panel w3-black" style="width:75%; float: left">공지사항</div>
                     <div style="margin-top: 6%;"><a href="03_notice.html"><h5>더 보기</h5></a></div>
                     <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
                         <thead>
                         <tr style="background-color: #e7dcdc">
                             <th style="column-width: 5%">No</th>
-                            <th style="column-width: 5%">작성자</th>
                             <th style="column-width: 85%">제목</th>
+                            <th style="column-width: 5%">작성자</th>
                             <th style="column-width: 5%">날짜</th>
                         </tr>
                         </thead>
                         <tr v-for="(notice, index) in notice_list" @click="viewNoticeOne(index)" style="cursor: pointer;">  <!-- ======공지사항 연동하기 =====-->
-                            <td v-if="index_max > index" style="column-width: 5%">{{notice.noticeIdx}}</td>
-                            <td v-if="index_max > index" style="column-width: 5%">관리자</td>
-                            <td v-if="index_max > index" style="column-width: 85%">{{notice.title}}</td>
-                            <td v-if="index_max > index" style="column-width: 5%">{{notice.created}}</td>
+                            <td style="column-width: 5%">{{notice.noticeIdx}}</td>
+                            <td style="column-width: 85%">{{notice.title}}</td>
+                            <td style="column-width: 5%">관리자</td>
+                            <td style="column-width: 5%">{{notice.created}}</td>
                         </tr>
                     </table>
                 </div>
                 <div class="w3-col w3-container" style="width:10%"></div>
-                <div class="w3-col w3-container" style="width:25%">
+                <div class="w3-col w3-container" style="width:35%">
                     <div class="w3-panel w3-black" style="width:75%; float: left;">자유게시판</div>
                     <div style="margin-top: 6%;"><a href="03_board.html"><h5>더 보기</h5></a></div>
                     <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
                         <thead>
                         <tr style="background-color: #e7dcdc">
-                            <th style="column-width: 50px">No</th>
-                            <th style="column-width: 100px">작성자</th>
-                            <th style="column-width: 150px">제목</th>
-                            <th style="column-width: 50px">날짜</th>
+                            <th style="column-width: 5%">No</th>
+                            <th style="column-width: 85%">제목</th>
+                            <th style="column-width: 5%">작성자</th>
+                            <th style="column-width: 5%">날짜</th>
                         </tr>
                         </thead>
                         <tr v-for="(board, index) in board_list" @click="viewBoardOne(index)" style="cursor: pointer;">
-                            <td v-if="index_max > index" style="column-width: 50px">{{board.boardIdx}}</td>
-                            <td  v-if="index_max > index" style="column-width: 100px">{{board.writerId}}</td>
-                            <td  v-if="index_max > index" style="column-width: 150px">{{board.title}}</td>
-                            <td  v-if="index_max > index" style="column-width: 50px">{{board.created}}</td>
+                            <td style="column-width: 5%">{{board.boardIdx}}</td>
+                            <td style="column-width: 85%">{{board.title}}</td>
+                            <td style="column-width: 5%">{{board.writerId}}</td>
+                            <td style="column-width: 5%">{{board.created}}</td>
                         </tr>
                     </table>
                 </div>
-                <div class="w3-col w3-container" style="width:20%"></div>
+                <div class="w3-col w3-container" style="width:10%"></div>
             </div>
         </div>
     </template>
@@ -91,16 +91,38 @@
             return {
                 notice_list: [],
                 board_list: [],
-                index_min: 0,
-                index_max: 5
+                message: "",
+                board_list: [],
+                total_pages: 1,
+                page_now: 0
             }
         },
     created: function() {
             axios({
                 method: "get",
-                url: "notice/1", 
+                url: "notice", 
+                params: {
+                    size: 5,
+                    sort: "noticeIdx,desc",
+                    page: 0
+                }
             }).then(resData => {  
-                this.notice_list = resData.data;
+                if(resData.data.content.length == 0) {
+                    this.message = "공지사항이 없습니다";
+                }
+                else {
+                    for(n of resData.data.content) {
+                        if(n.title.length > 8) {
+                            n.title = n.title.substring(0,8) + "...";
+                        }
+                        this.notice_list.push({
+                            noticeIdx: n.noticeIdx,
+                            title: n.title,
+                            created: n.created
+                        })
+                    }
+                    this.total_pages = resData.data.totalPages;
+                }
             }).catch(errorData => {
                 alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
             });
@@ -108,8 +130,16 @@
             axios({
                 method: "get",
                 url: "board", 
+                params: {
+                    size: 5,
+                    sort: "boardIdx,desc",
+                    page: 0
+                }
             }).then(resData => {  
-                for(b of resData.data) {
+                for(b of resData.data.content) {
+                    if(b.title.length > 8) {
+                        b.title = b.title.substring(0,8) + "...";
+                    }
                     this.board_list.push({
                         boardIdx: b.boardIdx,
                         writerId: b.writer.userId,
@@ -117,6 +147,7 @@
                         created: b.created,
                         updated: b.updated});
                 }
+                this.total_pages = resData.data.totalPages;
             }).catch(errorData => {
                 alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
             });
@@ -124,7 +155,7 @@
     methods: {
             viewNoticeOne: function(index) {
                 if(index != null){
-                    location.href = "03_01_view.html?boardIdx=" + this.board_list[index].boardIdx; //====공지사항 링크로 수정 필요====
+                    location.href = "03_01_view.html?noticeIdx=" + this.notice_list[index].noticeIdx; 
                 }
                 else{
                     alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
