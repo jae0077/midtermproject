@@ -120,12 +120,15 @@
                                 <div v-for="(seat, index) in seat_list1" style="padding: 1%;">
                                     <button v-if="seat.seatIdx == selected" class="square" style="background-color: rgb(59, 127, 182); cursor:not-allowed;">{{seat.seatIdx}}</button>
                                     <button v-else-if="seat.seatIdx == using" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
-                                    <button v-else-if="seat.isUsed == 0" @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
+                                    <button type="button" v-else-if="seat.isUsed == 0" @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
                                     <button v-else class="square" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
+                                 
+                                    <!-- <button id="test" type="button" @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button> -->
                                 </div>
                             </div>
                             <div style="padding: 1%; display:flex; width: 100%;">
                                 <div v-for="(seat, index) in seat_list2" style="padding: 1%;">
+                                    <button v-if="seat.seatIdx == selected" class="square" style="background-color: rgb(59, 127, 182); cursor:not-allowed;">{{seat.seatIdx}}</button>
                                     <button v-if="seat.seatIdx == using" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
                                     <button v-else-if="seat.isUsed == 0" @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
                                     <button v-else class="square" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
@@ -455,6 +458,10 @@
                 const result = confirm(v + "번 좌석으로 바꾸시겠습니까?");
                 if(result) {
                     this.selected = v;
+                    // document.getElementById("test").style.background="blue";
+                }
+                else{
+                    console.log("======")
                 }
             },
             changeSeat: function() {
@@ -466,7 +473,7 @@
                 }).then(resData => {
                     if(resData.data) {
                         alert("좌석변경 완료");
-                        window.location.reload();
+                        // window.location.reload();
                     }
                     else {
                         alert("좌석변경 실패. 잠시 후에 다시 시도해주세요");

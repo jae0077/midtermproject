@@ -29,25 +29,31 @@
     <div class="sub-container">
         <h1>공지사항</h1><hr>
         <div style="width: 70%; display: inline-block;">
-            <div style="float:right;">
-                <button v-show="is_admin" class="w3-button  w3-card-4" onclick="location.href='03_03_write_notice.html'" style="background-color: #ecdbdb; width: 100px;">글쓰기</button> <br><br>
-            </div>
-            <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
-                <thead>
-                    <tr style="background-color: #e7dcdc">
-                        <th style="column-width: 5%;">글 번호</th>
-                        <th style="column-width: 5%">작성자</th>
-                        <th style="column-width: 85%">제목</th>
-                        <th style="column-width: 5%">날짜</th>
+            <div style="height: 380px;">
+                <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
+                    <thead>
+                        <tr style="background-color: #e7dcdc">
+                            <th style="column-width: 5%;">글 번호</th>
+                            <th style="column-width: 5%">작성자</th>
+                            <th style="column-width: 85%">제목</th>
+                            <th style="column-width: 5%">날짜</th>
+                        </tr>
+                    </thead>
+                    <tr v-for="(notice, index) in notice_list" @click="viewNoticeOne(index)" style="cursor:pointer">
+                        <td style="column-width: 5%">{{notice.noticeIdx}}</td>
+                        <td style="column-width: 5%">관리자</td>
+                        <td style="column-width: 85%">{{notice.title}}</td>
+                        <td style="column-width: 5%">{{notice.created}}</td>
                     </tr>
-                </thead>
-                <tr v-for="notice in notice_list" @click="viewNoticeOne(index)" style="cursor:pointer">
-                    <td style="column-width: 5%">{{notice.noticeIdx}}</td>
-                    <td style="column-width: 5%">관리자</td>
-                    <td style="column-width: 85%">{{notice.title}}</td>
-                    <td style="column-width: 5%">{{notice.created}}</td>
-                </tr>
-            </table>
+                </table>
+            </div>
+
+            <div style="display: inline-block; padding-top: 3%;">
+                <div v-for="(page, index) in total_pages" style="float:left">
+                    <a v-if="index == page_now" @click=selectPage(index) style="font-weight: bold;"> <span style="text-decoration: underline;">{{page}}</span> &nbsp; </a>
+                    <a v-else @click=selectPage(index)> {{page}} &nbsp; </a>
+                </div>  
+            </div>
         </div>
     </div>
 </template>
@@ -59,39 +65,40 @@
             return {
                 notice_list: [],
                 message: "",
-                is_admin: false
+                board_list: [],
+                total_pages: 1,
+                page_now: 0
             }
         },
         created: function() {
             axios({
                 method: "get",
-                url: "notice/1", 
+                url: "notice",
+                params: {
+                    size: 10,
+                    sort: "noticeIdx,desc",
+                    page: 0
+                } 
             }).then(resData => { 
-                if(resData.data.length == 0) {
+                if(resData.data.content.length == 0) {
                     this.message = "공지사항이 없습니다";
                 }
                 else {
-                    this.notice_list = resData.data;
+                    for(n of resData.data.content) {
+                        if(n.title.length > 8) {
+                            n.title = n.title.substring(0,8) + "...";
+                        }
+                        this.notice_list.push({
+                            noticeIdx: n.noticeIdx,
+                            title: n.title,
+                            created: n.created
+                        })
+                    }
+                    this.total_pages = resData.data.totalPages;
                 }
             }).catch(errorData => {
                 alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
             });
-
-            if(sessionStorage.getItem("userIdx") != null) {
-                const userIdx = sessionStorage.getItem("userIdx")
-                axios({
-                    method: "get",
-                    url: "user/" + userIdx, 
-                    headers: {authorization: `bearer ${sessionStorage.getItem("token")}`}
-                }).then(resData => { 
-                    console.log(resData.data);
-                    if(resData.data.isAdmin == "1") {
-                        this.is_admin = true;
-                    }
-                }).catch(errorData => {
-                    alert("데이터을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
-                });
-            }
         },
     })
 
