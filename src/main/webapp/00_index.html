@@ -71,10 +71,10 @@
                         </tr>
                         </thead>
                         <tr v-for="(board, index) in board_list" @click="viewBoardOne(index)" style="cursor: pointer;">
-                            <td v-if="(index_max > index) && (index >= index_min)" style="column-width: 50px">{{board.id}}</td>
-                            <td  v-if="(index_max > index) && (index >= index_min)" style="column-width: 100px">{{board.writer}}</td>
-                            <td  v-if="(index_max > index) && (index >= index_min)" style="column-width: 150px">{{board.title}}</td>
-                            <td  v-if="(index_max > index) && (index >= index_min)" style="column-width: 50px">{{board.created}}</td>
+                            <td v-if="index_max > index" style="column-width: 50px">{{board.boardIdx}}</td>
+                            <td  v-if="index_max > index" style="column-width: 100px">{{board.writerId}}</td>
+                            <td  v-if="index_max > index" style="column-width: 150px">{{board.title}}</td>
+                            <td  v-if="index_max > index" style="column-width: 50px">{{board.created}}</td>
                         </tr>
                     </table>
                 </div>
@@ -82,6 +82,8 @@
             </div>
         </div>
     </template>
+
+<!-- ===================================== 스크립트 ===================================== -->
 <script>
     Vue.component('index', {
     template: "#indexTemp",
@@ -98,16 +100,22 @@
                     method: "get",
                     url: "http://localhost/board", 
                 }).then(resData => {  
-                    this.board_list = resData.data;
+                    for(b of resData.data) {
+                        this.board_list.push({
+                            boardIdx: b.boardIdx,
+                            writerId: b.writer.userId,
+                            title: b.title,
+                            created: b.created,
+                            updated: b.updated});
+                    }
                 }).catch(errorData => {
                     alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
                 });
     },
     methods: {
             viewBoardOne: function(index) {
-                console.log(index)
-                if(index != null){
-                    location.href = "03_01_view.html?id=" + this.board_list[index].id;
+                if(index != null) {
+                    location.href = "03_01_view.html?boardIdx=" + this.board_list[index].boardIdx;
                 }
                 else{
                     alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
@@ -116,7 +124,7 @@
             viewNoticeOne: function(index) {
                 console.log(index)
                 if(index != null){
-                    location.href = "03_01_view.html?id=" + this.board_list[index].id; //====공지사항 링크로 수정 필요====
+                    location.href = "03_01_view.html?boardIdx=" + this.board_list[index].boardIdx; //====공지사항 링크로 수정 필요====
                 }
                 else{
                     alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
