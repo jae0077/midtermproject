@@ -35,14 +35,14 @@
         <div style="border-style: groove; width: 85%; height: 90%; margin-top: 2%;">
             <div style="padding: 1%; display:flex; width: 100%;">
                 <div v-for="(seat, index) in seat_list1" style="padding: 1%;">
-                    <button v-if="seat.seatIdx == selected" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
+                    <button v-if="seat.seatIdx == using" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
                     <button v-else-if="seat.isUsed == 0" @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
                     <button v-else class="square" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
                 </div>
             </div>
             <div style="padding: 1%; display:flex; width: 100%;">
                 <div v-for="(seat, index) in seat_list2" style="padding: 1%;">
-                    <button v-if="seat.seatIdx == selected" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
+                    <button v-if="seat.seatIdx == using" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
                     <button v-else-if="seat.isUsed == 0" @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
                     <button v-else class="square" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
                 </div>
@@ -50,16 +50,6 @@
         </div>
 </template>
 
-<div id="select" class="w3-modal w3-animate-opacity">
-	<div class="w3-modal-content" style="padding: 32px; text-align: center;">
-		<div class="w3-container" >
-			<i onclick="document.getElementById('select').style.display='none'" class="fa fa-remove w3-transparent w3-button w3-xlarge w3-right"></i>
-			<h2 id="s" ></h2>
-			<button style="width: 100px;" onclick="yes()">네</button> 
-			<button style="width: 100px;" onclick="document.getElementById('select').style.display='none'">아니오</button>
-		</div>
-	</div>
-</div>
 
 <!-- ==============================================스크립트 ================================== -->
 
@@ -71,7 +61,7 @@
                 seat_list1: [],
                 seat_list2: [],
                 remain_seat: 0,
-                selected: false
+                using: ""
             }
         },
         created: function() {
@@ -98,7 +88,7 @@
                         headers: {authorization : `bearer ${get_token}`}
                     }).then(resData => {  
                         if(resData.data.seat != null) {
-                            this.selected = resData.data.seat.seatIdx;
+                            this.using = resData.data.seat.seatIdx;
                         }
                     }).catch(errorData => {
                     alert("좌석정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
@@ -210,30 +200,6 @@
 
     new Vue({
         el: "#body-div",
-
-        data: {
-            model: {
-                showIndex: true,
-                showLogin: false
-            }
-        },
-        methods: {
-            test: function(){
-                console.log("12");
-            }
-        }
-    });
-    
-    new Vue({
-        el: "#select",
-        data: {
-            seatIdx: 0
-        },
-        methods: {
-            seat: function(v){
-                console.log(v);
-            }
-        }
     });
 
 </script>
