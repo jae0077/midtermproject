@@ -1,14 +1,10 @@
 package kr.pe.midtermproject.dao;
 
-import java.util.List;
-
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
 import kr.pe.midtermproject.model.domain.Board;
 
-public interface BoardRepository extends CrudRepository<Board, Long>{
+public interface BoardRepository extends CrudRepository<Board, Long>, PagingAndSortingRepository<Board, Long>{
 
-	// 게시글 역순 정렬
-	List<Board> findAllByOrderByBoardIdxDesc();
-	
 }

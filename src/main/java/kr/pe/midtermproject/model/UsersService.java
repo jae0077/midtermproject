@@ -4,7 +4,6 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import kr.pe.midtermproject.dao.UserRepository;
 import kr.pe.midtermproject.model.domain.Users;
@@ -51,7 +50,6 @@ public class UsersService {
 	}
 
 	// 해당 userId가 존재하는지 확인
-
 	public boolean verifyUserId(String userId){
 		boolean result = false;
 		Users users = userDao.findUsersByUserId(userId);
