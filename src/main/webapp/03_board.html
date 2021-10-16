@@ -30,7 +30,7 @@
         <h1>자유게시판</h1><hr>
         <div style="width: 70%; display: inline-block;">
             <div style="float:right;">
-                <button class="w3-button  w3-card-4" onclick="location.href='03_02_write.html'" style="background-color: #ecdbdb; width: 100px;">글쓰기</button> <br><br>
+                <button class="w3-button  w3-card-4" onclick="location.href='03_03_write.html'" style="background-color: #ecdbdb; width: 100px;">글쓰기</button> <br><br>
             </div>
             <div style="height: 500px;">
                 <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
@@ -52,7 +52,7 @@
             </div>
             <div style="display: inline-block; padding-top: 3%;">
                 <div v-for="(page, index) in total_pages" style="float:left">
-                    <a v-if="index == page_now" @click=selectPage(index) style="font-weight: bold;"> <span style="text-decoration: underline;">{{page}}</span> &nbsp; </a>
+                    <a v-if="index == page_now" style="font-weight: bold; cursor:default"> <span style="text-decoration: underline;">{{page}}</span> &nbsp; </a>
                     <a v-else @click=selectPage(index)> {{page}} &nbsp; </a>
                 </div>  
             </div>
@@ -122,6 +122,9 @@
                 }).then(resData => {  
                     this.board_list = [];
                     for(b of resData.data.content) {
+                        if(b.title.length > 8) {
+                            b.title = b.title.substring(0,8) + "...";
+                        }
                         this.board_list.push({
                             boardIdx: b.boardIdx,
                             writerId: b.writer.userId,
@@ -130,7 +133,6 @@
                             updated: b.updated})
                     }
                 }).catch(errorData => {
-                    console.log(errorData);
                     alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
                 });
             }

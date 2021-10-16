@@ -106,6 +106,7 @@ public class UsersController {
 		try {
 			claimMap = JWT.verifyJWT(token);
 			user = userService.getUser(claimMap, userIdx);
+
 			if (user != null) {
 				seatService.checkoutSeat(user);
 				result = userService.deleteUser(user);					
