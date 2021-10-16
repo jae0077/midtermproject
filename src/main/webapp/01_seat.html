@@ -38,7 +38,6 @@
                     <button v-if="seat.seatIdx == using" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
                     <button v-else-if="seat.isUsed == 0" @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
                     <button v-else class="square" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
-                    <button v-else-if="seat.isUsed == 0" @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
                 </div>
             </div>
             <div style="padding: 1%; display:flex; width: 100%;">

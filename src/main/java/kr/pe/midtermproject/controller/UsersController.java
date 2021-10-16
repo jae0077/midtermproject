@@ -98,12 +98,14 @@ public class UsersController {
 	public boolean deleteUser(@RequestHeader("Authorization") String token, @PathVariable Long userIdx) {
 		Map<String, Object> claimMap;
 		Users user = null;
+		boolean result = false;
 		try {
 			claimMap = JWT.verifyJWT(token);
 			user = userService.getUser(claimMap, userIdx);
+			result = userService.deleteUser(user);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		return userService.deleteUser(user);
+		return result;
 	}
 }
