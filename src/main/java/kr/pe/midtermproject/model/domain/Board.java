@@ -17,6 +17,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -41,12 +43,12 @@ public class Board {
 	private Long boardIdx;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="user_idx")  
+	@JoinColumn(name="user_idx")
 	private Users writer;
-	
+
 	@Column(nullable=false)
 	private String title;
-	
+
 	@Lob
 	@Column(nullable=false)
 	private String content;
@@ -63,13 +65,9 @@ public class Board {
 	@OneToMany(mappedBy="board",
 			fetch=FetchType.LAZY,
 			cascade=CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<Comments> commentList;
 	
-//	public void update(String title, String content) {
-//        this.title = title;
-//        this.content = content;
-//    }
-
 	@Override
 	public String toString() {
 		return "Board [boardIdx=" + boardIdx + ", writer=" + writer.getUserId() + ", title=" + title + ", content=" + content

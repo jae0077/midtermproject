@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.pe.midtermproject.model.JWT;
+import kr.pe.midtermproject.model.SeatService;
 import kr.pe.midtermproject.model.UsersService;
 import kr.pe.midtermproject.model.domain.Users;
 import kr.pe.midtermproject.model.dto.LoginResDTO;
@@ -26,6 +27,9 @@ public class UsersController {
 	private UsersService userService;
 	
 	@Autowired
+	private SeatService seatService;
+	
+	@Autowired
 	private JWT JWT;
 	
 	//회원가입
@@ -35,7 +39,7 @@ public class UsersController {
 		
 		try {
 			result = userService.createUser(user);
-			result = true;				
+					
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -98,12 +102,17 @@ public class UsersController {
 	public boolean deleteUser(@RequestHeader("Authorization") String token, @PathVariable Long userIdx) {
 		Map<String, Object> claimMap;
 		Users user = null;
+		boolean result = false;
 		try {
 			claimMap = JWT.verifyJWT(token);
 			user = userService.getUser(claimMap, userIdx);
+			if (user != null) {
+				seatService.checkoutSeat(user);
+				result = userService.deleteUser(user);					
+			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		return userService.deleteUser(user);
+		return result;
 	}
 }
