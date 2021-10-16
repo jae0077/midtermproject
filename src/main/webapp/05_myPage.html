@@ -205,6 +205,7 @@
             }
         },
         created() {
+            if(select)
             // ========= user 정보 불러오는 부분========
             axios({
                 method: "get",
@@ -458,10 +459,8 @@
                 const result = confirm(v + "번 좌석으로 바꾸시겠습니까?");
                 if(result) {
                     this.selected = v;
-                    // document.getElementById("test").style.background="blue";
                 }
                 else{
-                    console.log("======")
                 }
             },
             changeSeat: function() {
