@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="./script.js"></script>
+<title>Community-write</title>
+</head>
+<body class="body">
+    <div id="body-div">
+        <nav-bar></nav-bar>
+
+        <!-- 메인 -->
+        <div class="main-container">
+                    
+
+                <foot></foot>
+        </div>
+    </div>
+
+
+<script>
+
+
+
+
+         // ==========================공통==============================
+
+    navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
+    footer();    
+
+    Vue.component('nav-bar', {
+        template: navBarScript,
+        data: function() {
+                return {
+                    login,
+                    logout,
+                }
+            },
+        methods: {
+            ClickLogout: function(){
+                sessionStorage.clear();
+                this.login = false;
+                this.logout = true;
+                alert("로그아웃 했습니다");
+                location.href="00_index.html";
+            }
+        }
+    })
+    Vue.component('foot', {
+        template: footerScript,
+    })
+
+    new Vue({
+        el: "#body-div",
+        data: {
+        },
+        methods: {
+        }
+    })
+</script>
+</body>
+</html>

@@ -34,12 +34,12 @@
             </div>
             <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
                 <thead>
-                <tr style="background-color: #e7dcdc">
-                    <th style="column-width: 5%;">글 번호</th>
-                    <th style="column-width: 5%">작성자</th>
-                    <th style="column-width: 85%">제목</th>
-                    <th style="column-width: 5%">날짜</th>
-                </tr>
+                    <tr style="background-color: #e7dcdc">
+                        <th style="column-width: 5%;">글 번호</th>
+                        <th style="column-width: 5%">작성자</th>
+                        <th style="column-width: 85%">제목</th>
+                        <th style="column-width: 5%">날짜</th>
+                    </tr>
                 </thead>
                 <tr v-for="(board, index) in board_list" @click="viewBoardOne(index)" style="cursor: pointer;">
                 <td v-if="(index_max > index) && (index >= index_min)" style="column-width: 5%">{{board.boardIdx}}</td>
@@ -76,20 +76,20 @@
         },
         created: function() {
             axios({
-                    method: "get",
-                    url: "http://localhost/board/", 
-                }).then(resData => {  
-                    for(b of resData.data) {
-                        this.board_list.push({
-                            boardIdx: b.boardIdx,
-                            writerId: b.writer.userId,
-                            title: b.title,
-                            created: b.created,
-                            updated: b.updated});
-                    }
-                }).catch(errorData => {
-                    alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
-                });
+                method: "get",
+                url: "board", 
+            }).then(resData => {  
+                for(b of resData.data) {
+                    this.board_list.push({
+                        boardIdx: b.boardIdx,
+                        writerId: b.writer.userId,
+                        title: b.title,
+                        created: b.created,
+                        updated: b.updated});
+                }
+            }).catch(errorData => {
+                alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+            });
         },
         methods: {
             viewBoardOne: function(index) {

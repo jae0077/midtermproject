@@ -40,7 +40,7 @@ public class JWT {
         payloads.put("user_id", user.getUserId());
         payloads.put("user_name", user.getName());
 
-        Long expiredTime = 1000 * 60L * 60L * 1L; // 토큰 유효 시간 (1시간)
+        Long expiredTime = 1000 * 60L * 60L * 24L; // 토큰 유효 시간 (24시간)
 
         Date ext = new Date(); // 토큰 만료 시간
         ext.setTime(ext.getTime() + expiredTime);

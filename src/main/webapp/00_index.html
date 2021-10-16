@@ -50,10 +50,10 @@
                         </tr>
                         </thead>
                         <tr v-for="(notice, index) in notice_list" @click="viewNoticeOne(index)" style="cursor: pointer;">  <!-- ======공지사항 연동하기 =====-->
-                            <td v-if="(index_max > notice) && (notice >= index_min)" style="column-width: 5%">{{}}</td>
-                            <td v-if="(index_max > notice) && (notice >= index_min)" style="column-width: 85%">{{}}</td>
-                            <td v-if="(index_max > notice) && (notice >= index_min)" style="column-width: 5%">{{}}</td>
-                            <td v-if="(index_max > notice) && (notice >= index_min)" style="column-width: 5%">{{}}</td>
+                            <td v-if="index_max > index" style="column-width: 5%">{{notice.noticeIdx}}</td>
+                            <td v-if="index_max > index" style="column-width: 5%">관리자</td>
+                            <td v-if="index_max > index" style="column-width: 85%">{{notice.title}}</td>
+                            <td v-if="index_max > index" style="column-width: 5%">{{notice.created}}</td>
                         </tr>
                     </table>
                 </div>
@@ -97,22 +97,39 @@
         },
     created: function() {
             axios({
-                    method: "get",
-                    url: "http://localhost/board", 
-                }).then(resData => {  
-                    for(b of resData.data) {
-                        this.board_list.push({
-                            boardIdx: b.boardIdx,
-                            writerId: b.writer.userId,
-                            title: b.title,
-                            created: b.created,
-                            updated: b.updated});
-                    }
-                }).catch(errorData => {
-                    alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
-                });
+                method: "get",
+                url: "notice/1", 
+            }).then(resData => {  
+                this.notice_list = resData.data;
+            }).catch(errorData => {
+                alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+            });
+
+            axios({
+                method: "get",
+                url: "board", 
+            }).then(resData => {  
+                for(b of resData.data) {
+                    this.board_list.push({
+                        boardIdx: b.boardIdx,
+                        writerId: b.writer.userId,
+                        title: b.title,
+                        created: b.created,
+                        updated: b.updated});
+                }
+            }).catch(errorData => {
+                alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+            });
     },
     methods: {
+            viewNoticeOne: function(index) {
+                if(index != null){
+                    location.href = "03_01_view.html?boardIdx=" + this.board_list[index].boardIdx; //====공지사항 링크로 수정 필요====
+                }
+                else{
+                    alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+                }
+            },
             viewBoardOne: function(index) {
                 if(index != null) {
                     location.href = "03_01_view.html?boardIdx=" + this.board_list[index].boardIdx;
@@ -121,15 +138,7 @@
                     alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
                 }
             },
-            viewNoticeOne: function(index) {
-                console.log(index)
-                if(index != null){
-                    location.href = "03_01_view.html?boardIdx=" + this.board_list[index].boardIdx; //====공지사항 링크로 수정 필요====
-                }
-                else{
-                    alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
-                }
-            }
+
         }
     })
 
