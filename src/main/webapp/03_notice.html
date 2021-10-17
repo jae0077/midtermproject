@@ -79,7 +79,6 @@
                     page: 0
                 } 
             }).then(resData => { 
-                console.log(resData.data);
                 if(resData.data.content.length == 0) {
                     this.message = "공지사항이 없습니다";
                 }
@@ -103,7 +102,7 @@
         methods: {
             viewNoticeOne: function(index) {
                 if(index != null) {  
-                    location.href = "03_02_viewNotice.html?noticeIdx=" + this.notice_list[index].noticeIdx;
+                    location.href = "03_02_noticeOne.html?noticeIdx=" + this.notice_list[index].noticeIdx;
                 }
                 else {
                     alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
@@ -156,11 +155,13 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.clear();
-                this.login = false;
-                this.logout = true;
-                alert("로그아웃 했습니다");
-                location.href="00_index.html";
+                const result = confirm("로그아웃 하시겠습니까?");
+                if(result) {
+                    sessionStorage.clear();
+                    this.login = false;
+                    this.logout = true;
+                    location.href="00_index.html";
+                }
             }
         }
     })
