@@ -269,22 +269,27 @@
                 }
             },
             existCheck: function() {
-                axios({
-                        method: "post",
-                        url: "http://localhost/user/verifyid",
-                        data: {"userId": this.model.userId}
-                    }).then(resData => {  
-                        if(resData.data){
-                            alert("사용가능한 아이디입니다");
-                            this.messageId = "OK";
-                            document.getElementById("inputId").style.color="green";
-                        }
-                        else{
-                            this.messageId = "※ 이미 존재하는 아이디입니다";
-                        }
-                    }).catch(errorData => {
-                        alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요")
-                    });
+                if(this.messageId != "※ 오른쪽에서 중복체크를 해주세요") {
+                    alert("올바르지 않은 아이디입니다");
+                }
+                else {
+                    axios({
+                            method: "post",
+                            url: "http://localhost/user/verifyid",
+                            data: {"userId": this.model.userId}
+                        }).then(resData => {  
+                            if(resData.data){
+                                alert("사용가능한 아이디입니다");
+                                this.messageId = "OK";
+                                document.getElementById("inputId").style.color="green";
+                            }
+                            else{
+                                this.messageId = "※ 이미 존재하는 아이디입니다";
+                            }
+                        }).catch(errorData => {
+                            alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요")
+                        });
+                }
             }
         }
     })

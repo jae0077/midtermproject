@@ -48,7 +48,7 @@
             <div style="display:flex; float:right;">
                 <button @click="deleteBoard" v-show="show_board_del" class="w3-button" style="background-color: #ecdbdb; width: 110px; margin-right: 10%;">삭제하기</button> 
                 <button @click="modifyBoard" v-show="show_board_del" class="w3-button" style="background-color: #ecdbdb; width: 110px; margin-right: 10%;">수정하기</button> 
-                <button class="w3-button" onclick="location.href='03_03_write.html'" style="background-color: #ecdbdb; width: 110px;">글쓰기</button> 
+                <button @click="writeBoard" class="w3-button" style="background-color: #ecdbdb; width: 110px;">글쓰기</button> 
             </div>
         </div>
     </div>
@@ -249,6 +249,14 @@
                     alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
                     window.location.reload();
                 });
+            },
+            writeBoard: function() {
+                if(sessionStorage.getItem("token") == null) {
+                    alert("로그인이 필요합니다");
+                }
+                else {
+                    location.href="03_03_write.html";
+                }
             }
         }
     })
@@ -273,8 +281,8 @@
                 method: "get",
                 url: "board/" + this.boardIdx2 + "/comment",
             }).then(resData => {
-                if(resData.data.length > 0) {
-                    for(c of resData.data) {
+                if(resData.data.commentsList.length > 0) {
+                    for(c of resData.data.commentsList) {
                         this.comment_list.push({
                             commentIdx: c.commentIdx,
                             userIdx: c.writer.userIdx,
