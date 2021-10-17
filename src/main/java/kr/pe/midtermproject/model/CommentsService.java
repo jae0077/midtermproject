@@ -59,8 +59,7 @@ public class CommentsService {
 		try {
 			Board board = boardDao.findById(boardIdx).get();
 			if (board != null) {
-				result = commentsDao.findAllByOrderByCommentIdxDesc();
-//				result = board.getCommentList();
+				result = commentsDao.findByBoardOrderByCommentIdxDesc(board);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

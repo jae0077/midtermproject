@@ -1,6 +1,6 @@
 package kr.pe.midtermproject.model.domain;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -21,6 +21,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -55,11 +56,14 @@ public class Board {
 	
 	@CreationTimestamp
 	@Column(nullable=false)
-	private LocalDate created;
-	
+	@JsonFormat(pattern = "yyyy-MM-dd hh:mm")
+//	private LocalDate created;
+	private Date created;
+
 	@UpdateTimestamp
 	@Column(nullable=false)
-	private LocalDate updated;
+//	private LocalDate updated;
+	private Date updated;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy="board",

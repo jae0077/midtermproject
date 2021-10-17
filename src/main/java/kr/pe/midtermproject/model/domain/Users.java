@@ -29,7 +29,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Setter
 @Getter
-//@ToString
+
 @SequenceGenerator(name="users_idx_seq", sequenceName="users_idx_seq", initialValue=1, allocationSize=1)
 @Entity(name="users")
 public class Users {
@@ -54,15 +54,6 @@ public class Users {
 	@OneToOne
 	@JoinColumn(name="seat_idx", nullable=true)
 	private Seat seat;
-	
-//	@OneToOne
-//	@JoinColumn(name="ticket_idx", nullable=true)
-//	private Ticket ticket;
-
-//	@OneToMany(mappedBy="users",
-//			fetch=FetchType.LAZY,
-//			cascade=CascadeType.ALL)
-//	private List<Ticket> ticketList;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy="writer",

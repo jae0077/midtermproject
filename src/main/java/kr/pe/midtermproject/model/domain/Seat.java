@@ -17,7 +17,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @Setter
 @Getter
-//@ToString
 
 @Entity(name="seat")
 @SequenceGenerator(name="seat_idx_seq", sequenceName="seat_idx_seq", initialValue=1, allocationSize=1)
