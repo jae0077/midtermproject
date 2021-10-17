@@ -60,7 +60,7 @@
                     data: this.model
                 }).then(resData => {  
                     if(resData.data.length == 0){
-                        alert("로그인 정보가 다릅니다")
+                        alert("로그인 정보를 확인해주세요")
                         window.location.reload();
                     }
                     else{
@@ -94,11 +94,13 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.clear();
-                this.login = false;
-                this.logout = true;
-                alert("로그아웃 했습니다");
-                location.href="00_index.html";
+                const result = confirm("로그아웃 하시겠습니까?");
+                if(result) {
+                    sessionStorage.clear();
+                    this.login = false;
+                    this.logout = true;
+                    location.href="00_index.html";
+                }
             }
         }
     })

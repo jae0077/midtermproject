@@ -136,7 +136,7 @@
                         </div>
 
                         <div class="clearfix">
-                            <button @click="modalClose" type="button" class="cancelbtn">취소</button>
+                            <button @click="modalClose" type="button" class="cancelbtn" style="width: 100%; margin-top: 2%;">취소</button>
                         </div>
                     </div>
                 </form>
@@ -498,15 +498,16 @@
                     alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
                 });
             },
-            memberOut: function() {  //================================================= 백엔드 모델 수정 중==================================================
+            memberOut: function() {  
                 axios({
                     method: "delete",
                     url: "user/" + sessionStorage.getItem("userIdx"), 
                     headers: {authorization : `bearer' ${sessionStorage.getItem("token")}`},
                 }).then(resData => { 
                     if(resData.data){
+                        sessionStorage.clear();
                         alert("탈퇴 완료")
-                        window.location.reload();
+                        location.href = "00_index.html";
                     }
                     else{
                         alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
@@ -533,11 +534,13 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.clear();
-                this.login = false;
-                this.logout = true;
-                alert("로그아웃 했습니다");
-                location.href="00_index.html";
+                const result = confirm("로그아웃 하시겠습니까?");
+                if(result) {
+                    sessionStorage.clear();
+                    this.login = false;
+                    this.logout = true;
+                    location.href="00_index.html";
+                }
             }
         }
     })

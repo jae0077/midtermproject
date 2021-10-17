@@ -106,7 +106,7 @@
                 }).then(resData => {
                     if(resData.data) {
                         alert("이용권 구매 완료");
-                        this.modalClose();
+                        location.href = "05_myPage.html";
                     }
                     else{
                         alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
@@ -139,11 +139,13 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.clear();
-                this.login = false;
-                this.logout = true;
-                alert("로그아웃 했습니다");
-                location.href="00_index.html";
+                const result = confirm("로그아웃 하시겠습니까?");
+                if(result) {
+                    sessionStorage.clear();
+                    this.login = false;
+                    this.logout = true;
+                    location.href="00_index.html";
+                }
             }
         }
     })

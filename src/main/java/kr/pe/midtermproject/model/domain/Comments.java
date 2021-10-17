@@ -27,7 +27,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Setter
 @Getter
-@ToString
+//@ToString
 
 @Entity
 @SequenceGenerator(name="comment_idx_seq", sequenceName="comment_idx_seq", initialValue=1, allocationSize=1)
