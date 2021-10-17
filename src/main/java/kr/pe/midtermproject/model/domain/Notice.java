@@ -22,7 +22,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @Setter
 @Getter
-@ToString
 
 @Entity
 @SequenceGenerator(name="notice_idx_seq", sequenceName="notice_idx_seq", initialValue=1, allocationSize=1)

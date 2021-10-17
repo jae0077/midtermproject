@@ -73,7 +73,7 @@ public class BoardController {
     public Board getBoardDetail(@PathVariable Long boardIdx) {
     	Board result = null;
     	result = boardService.getBoardDetail(boardIdx);
-    	
+    	System.out.println(result);
         return result;
     }
     
