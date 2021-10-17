@@ -30,7 +30,7 @@
 <!-- ========================================템플릿======================================== -->
 
         <!-- =========================게시글 템플릿===================== -->
-<template id="board-temp">
+<template id="board-one-temp">
     <div>
         <div style="text-align: left; border-style: groove;">
             <div style="padding-left: 1%;"><a href='03_board.html'><h6>자유게시판</h6></a></div>
@@ -48,7 +48,7 @@
             <div style="display:flex; float:right;">
                 <button @click="deleteBoard" v-show="show_board_del" class="w3-button" style="background-color: #ecdbdb; width: 110px; margin-right: 10%;">삭제하기</button> 
                 <button @click="modifyBoard" v-show="show_board_del" class="w3-button" style="background-color: #ecdbdb; width: 110px; margin-right: 10%;">수정하기</button> 
-                <button class="w3-button" onclick="location.href='03_02_write.html'" style="background-color: #ecdbdb; width: 110px;">글쓰기</button> 
+                <button class="w3-button" onclick="location.href='03_03_write.html'" style="background-color: #ecdbdb; width: 110px;">글쓰기</button> 
             </div>
         </div>
     </div>
@@ -196,7 +196,7 @@
 // ========================================board-one 컴포넌트========================================
    
     Vue.component('board-one', {       
-        template: "#board-temp",
+        template: "#board-one-temp",
         data: function() {
             return {
                 board_one: {},
@@ -208,7 +208,7 @@
             const boardIdx = url.searchParams.get('boardIdx');
             axios({
                     method: "get",
-                    url: "http://localhost/board/" + boardIdx, 
+                    url: "board/" + boardIdx, 
                 }).then(resData => {  
                     if(resData.data == null) {
                         alert("게시글을 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
@@ -216,12 +216,12 @@
                     }
                     else {
                         this.board_one = {
-                        boardIdx: resData.data.boardIdx,
-                        userId: resData.data.writer.userId,
-                        title: resData.data.title,
-                        content: resData.data.content,
-                        created: resData.data.created,
-                        updated: resData.data.updated,
+                            boardIdx: resData.data.boardIdx,
+                            userId: resData.data.writer.userId,
+                            title: resData.data.title,
+                            content: resData.data.content,
+                            created: resData.data.created,
+                            updated: resData.data.updated,
                         }
                         if(resData.data.writer.userIdx == sessionStorage.getItem("userIdx")) {
                             this.show_board_del = true;
@@ -386,12 +386,14 @@
                 }
             },
         methods: {
-            ClickLogout: function(){
-                sessionStorage.clear();
-                this.login = false;
-                this.logout = true;
-                alert("로그아웃 했습니다");
-                location.href="00_index.html";
+            ClickLogout: function() {
+                const result = confirm("로그아웃 하시겠습니까?");
+                if(result) {
+                    sessionStorage.clear();
+                    this.login = false;
+                    this.logout = true;
+                    location.href="00_index.html";
+                }
             }
         }
     })
@@ -405,15 +407,6 @@
             showBoard: true,
             showComment: true,
             showModify: false,
-            board_one2: 
-                    {
-                    "boardNumber": "",
-                    "title": "",
-                    "boardWriter": "",
-                    "boardPw": "",
-                    "boardDay": "",
-                    "content": ""
-                },
         },
         methods: {
             viewModify: function(v) {

@@ -155,7 +155,7 @@
     methods: {
             viewNoticeOne: function(index) {
                 if(index != null){
-                    location.href = "03_01_view.html?noticeIdx=" + this.notice_list[index].noticeIdx; 
+                    location.href = "03_01_noticeOne.html?noticeIdx=" + this.notice_list[index].noticeIdx; 
                 }
                 else{
                     alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
@@ -163,7 +163,7 @@
             },
             viewBoardOne: function(index) {
                 if(index != null) {
-                    location.href = "03_01_view.html?boardIdx=" + this.board_list[index].boardIdx;
+                    location.href = "03_01_boardOne.html?boardIdx=" + this.board_list[index].boardIdx;
                 }
                 else{
                     alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
@@ -188,11 +188,13 @@ footer();
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.clear();
-                this.login = false;
-                this.logout = true;
-                alert("로그아웃 했습니다");
-                location.href="00_index.html";
+                const result = confirm("로그아웃 하시겠습니까?");
+                if(result) {
+                    sessionStorage.clear();
+                    this.login = false;
+                    this.logout = true;
+                    location.href="00_index.html";
+                }
             }
         }
     })

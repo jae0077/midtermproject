@@ -29,6 +29,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Setter
 @Getter
+
 @SequenceGenerator(name="users_idx_seq", sequenceName="users_idx_seq", initialValue=1, allocationSize=1)
 @Entity(name="users")
 public class Users {
