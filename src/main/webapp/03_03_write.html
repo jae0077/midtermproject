@@ -29,11 +29,11 @@
             <div style="padding-left: 1%; text-align: left; border-style: groove;">
                 <a><h6>자유게시판</h6></a>
                 <div style="padding-left: 0.5%; padding-top: 1%;">
-                    <textarea v-model="write_title" id="titleId" style="resize: none;" rows="1" cols="99" maxlength="50" spellcheck="false" autofocus required maxlength="130" placeholder="제목을 입력해주세요"></textarea>
+                    <textarea v-model="write_title" style="resize: none;" rows="1" cols="99" maxlength="50" spellcheck="false" autofocus required maxlength="130" placeholder="제목을 입력해주세요"></textarea>
                 </div>
                 <hr>
                 <div style="padding-left: 0.5%; padding-bottom: 1%;">
-                    <textarea v-model="write_content" id="contentId" style="resize: none;" rows="15" cols="99" maxlength="4000" spellcheck="false" required placeholder="내용을 입력해주세요"></textarea>
+                    <textarea v-model="write_content" style="resize: none;" rows="15" cols="99" maxlength="4000" spellcheck="false" required placeholder="내용을 입력해주세요"></textarea>
                 </div>
             </div>
 
@@ -43,7 +43,8 @@
                 </div>
                 <div style="display:flex; float:right;">
                     <button @click="writeCheck('preview')" class="w3-button" style="background-color: #ecdbdb; width: 110px; margin-right: 10%;">미리보기</button> 
-                    <button @click="writeCheck('final')" class="w3-button" style="background-color: #ecdbdb; width: 100px;">작성 완료</button> <br><br>
+                    <!-- <button @click="writeCheck('final')" class="w3-button" style="background-color: #ecdbdb; width: 100px;">작성 완료</button> <br><br> -->
+                    <button @click="test" class="w3-button" style="background-color: #ecdbdb; width: 100px;">작성 완료</button> <br><br>
                 </div>
             </div>
         </div>
@@ -93,6 +94,9 @@
             this.write_content = ""
         },
         methods: {
+            test: function() {
+                console.log(this.write_content);
+            },
             writeCancel: function() {
                 if(this.write_title != "" || this.write_content != "") {
                     var result = confirm("작성중인 내용이 있습니다. 취소하시겠습니까?");
