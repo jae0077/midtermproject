@@ -30,7 +30,7 @@
         <h1>자유게시판</h1><hr>
         <div style="width: 70%; display: inline-block;">
             <div style="float:right;">
-                <button class="w3-button  w3-card-4" onclick="location.href='03_03_write.html'" style="background-color: #ecdbdb; width: 100px;">글쓰기</button> <br><br>
+                <button @click="writeBoard" class="w3-button  w3-card-4" style="background-color: #ecdbdb; width: 100px;">글쓰기</button> <br><br>
             </div>
             <div style="height: 500px;">
                 <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
@@ -44,7 +44,7 @@
                     </thead>
                     <tr v-for="(board, index) in board_list" @click="viewBoardOne(index)" style="cursor: pointer;">
                     <td style="column-width: 5%">{{board.boardIdx}}</td>
-                    <td style="column-width: 85%">{{board.title}}</td>
+                    <td style="column-width: 85%">{{board.title}} <span style="color: cadetblue;">[{{board.comment_length}}]</span></td>
                     <td style="column-width: 5%">{{board.writerId}}</td>
                     <td style="column-width: 5%">{{board.created}}</td>
                     </tr>
@@ -70,11 +70,14 @@
         data: function() {
             return {
                 board_list: [],
+                comment_list: [],
                 total_pages: 1,
-                page_now: 0
+                page_now: 0,
+                write_button: false
             }
         },
         created: function() {
+            //================ 게시글 목록 불러오기 =================
             axios({
                 method: "get",
                 url: "board", 
@@ -89,16 +92,35 @@
                         b.title = b.title.substring(0,8) + "...";
                     }
                     this.board_list.push({
-                        boardIdx: b.boardIdx,
-                        writerId: b.writer.userId,
-                        title: b.title,
-                        created: b.created,
-                        updated: b.updated})
+                            boardIdx: b.boardIdx,
+                            writerId: b.writer.userId,
+                            title: b.title,
+                            created: b.created,
+                            updated: b.updated,
+                            comment_length: 0})
+                }
+                for(b2 of this.board_list) {
+                    //================ 코멘트 리스트 불러와서 갯수만 가져오기 ========
+                    axios({
+                        method: "get",
+                        url: "board/" + b2.boardIdx + "/comment",
+                    }).then(resData => {
+                        for(b3 of this.board_list) {
+                            if(b3.boardIdx == resData.data.boardIdx) {
+                                b3.comment_length = resData.data.commentsList.length;
+                            }
+                        }
+                    }).catch(errorData => {
+                        alert("게시글을 불러오는데 실패했습니다. 잠시 후에 다시 시도해주세요 - error 01");
+                    })
+                    //===========================================================
+
                 }
                 this.total_pages = resData.data.totalPages;
             }).catch(errorData => {
-                alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+                alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요 - error 02")
             });
+            console.log(this.comment_list);
         },
         methods: {
             viewBoardOne: function(index) {
@@ -106,7 +128,7 @@
                     location.href = "03_01_boardOne.html?boardIdx=" + this.board_list[index].boardIdx;
                 }
                 else{
-                    alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+                    alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요 - error 03")
                 }
             },
             selectPage: function(page_index) {
@@ -130,11 +152,37 @@
                             writerId: b.writer.userId,
                             title: b.title,
                             created: b.created,
-                            updated: b.updated})
+                            updated: b.updated,
+                            comment_length: 0})
+                    }
+                    for(b2 of this.board_list) {
+                        //================ 코멘트 리스트 불러와서 갯수만 가져오기 ========
+                        axios({
+                            method: "get",
+                            url: "board/" + b2.boardIdx + "/comment",
+                        }).then(resData => {
+                            for(b3 of this.board_list) {
+                                if(b3.boardIdx == resData.data.boardIdx) {
+                                    b3.comment_length = resData.data.commentsList.length;
+                                }
+                            }
+                        }).catch(errorData => {
+                            alert("게시글을 불러오는데 실패했습니다. 잠시 후에 다시 시도해주세요 - error 01");
+                        })
+                        //===========================================================
+
                     }
                 }).catch(errorData => {
-                    alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+                    alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요 - error 04")
                 });
+            },
+            writeBoard: function() {
+                if(sessionStorage.getItem("token") == null) {
+                    alert("로그인이 필요합니다");
+                }
+                else {
+                    location.href="03_03_write.html";
+                }
             }
         },
     })

@@ -22,6 +22,7 @@ import kr.pe.midtermproject.model.domain.Board;
 import kr.pe.midtermproject.model.domain.Comments;
 import kr.pe.midtermproject.model.domain.Users;
 import kr.pe.midtermproject.model.dto.CommentsDTO;
+import kr.pe.midtermproject.model.dto.CommentsLengthDTO;
 
 @RestController
 public class CommentController {
@@ -59,10 +60,15 @@ public class CommentController {
     
     // 게시글별 코멘트 전체 조회
     @GetMapping("board/{boardIdx}/comment")
-    public List<Comments> getCommentList(@PathVariable Long boardIdx) {
+    public CommentsLengthDTO getCommentList(@PathVariable Long boardIdx) {
     	List<Comments> result = null;
     	result = commentService.getCommentList(boardIdx);
-    	return result;
+    	
+    	CommentsLengthDTO result2 = new CommentsLengthDTO();
+    	result2.setBoardIdx(boardIdx);
+    	result2.setCommentsList(result);
+    	
+    	return result2;
     }
     
     // 코멘트 수정 
