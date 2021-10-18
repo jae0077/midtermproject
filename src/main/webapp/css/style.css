@@ -150,9 +150,9 @@ p {
 .square:before {
     content: "";
     display: block;
-    padding-top: 100px; /* 1:1 비율 */
-}
-  */
+    padding-top: 100px;
+}*/
+  
 .content {
     position: absolute;
     top: 0;
