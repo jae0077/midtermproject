@@ -23,7 +23,6 @@
         </div>
     </div>
 
-
     <!-- ========================================== 템플릿 ================================================ -->
 <template id="seat-select-temp">
     <div class="sub-container">
@@ -32,23 +31,25 @@
             남은 좌석 : {{remain_seat}} / {{seat_list1.length + seat_list2.length}}<br>
             선택 가능한 좌석은 초록색으로 표시됩니다 
         </div>
-        <div style="border-style: groove; width: 85%; height: 90%; margin-top: 2%;">
-            <div style="padding: 1%; display:flex; width: 100%;">
-                <div v-for="(seat, index) in seat_list1" style="padding: 1%;">
-                    <button v-if="seat.seatIdx == selected_now" class="square" style="background-color: rgb(93, 182, 224); cursor:not-allowed;">{{seat.seatIdx}}</button>
-                    <button v-else-if="seat.seatIdx == using" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
-                    <button v-else-if="seat.isUsed == 1" class="square" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
-                    <button v-else-if="(using != '') && (change_mode == false)" class="square" style="cursor: not-allowed;">{{seat.seatIdx}}</button>
-                    <button v-else @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
+        <div style="display:flex;justify-content: center;">
+            <div style="border-style: groove; width: 85%; height: 90%; margin-top: 2%;">
+                <div style="padding: 1%; display:flex; width: 100%;">
+                    <div v-for="(seat, index) in seat_list1" style="padding: 1%;">
+                        <button v-if="seat.seatIdx == selected_now" class="square" style="background-color: rgb(93, 182, 224); cursor:not-allowed;">{{seat.seatIdx}}</button>
+                        <button v-else-if="seat.seatIdx == using" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
+                        <button v-else-if="seat.isUsed == 1" class="square" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
+                        <button v-else-if="(using != '') && (change_mode == false)" class="square" style="cursor: not-allowed;">{{seat.seatIdx}}</button>
+                        <button v-else @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
+                    </div>
                 </div>
-            </div>
-            <div style="padding: 1%; display:flex; width: 100%;">
-                <div v-for="(seat, index) in seat_list2" style="padding: 1%;">
-                    <button v-if="seat.seatIdx == selected_now" class="square" style="background-color: rgb(93, 182, 224); cursor:not-allowed;">{{seat.seatIdx}}</button>
-                    <button v-else-if="seat.seatIdx == using" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
-                    <button v-else-if="seat.isUsed == 1" class="square" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
-                    <button v-else-if="(using != '') && (change_mode == false)" class="square" style="cursor: not-allowed;">{{seat.seatIdx}}</button>
-                    <button v-else @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
+                <div style="padding: 1%; display:flex; width: 100%;">
+                    <div v-for="(seat, index) in seat_list2" style="padding: 1%;">
+                        <button v-if="seat.seatIdx == selected_now" class="square" style="background-color: rgb(93, 182, 224); cursor:not-allowed;">{{seat.seatIdx}}</button>
+                        <button v-else-if="seat.seatIdx == using" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
+                        <button v-else-if="seat.isUsed == 1" class="square" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
+                        <button v-else-if="(using != '') && (change_mode == false)" class="square" style="cursor: not-allowed;">{{seat.seatIdx}}</button>
+                        <button v-else @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
+                    </div>
                 </div>
             </div>
         </div>
