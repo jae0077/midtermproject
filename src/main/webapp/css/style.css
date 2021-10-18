@@ -1,3 +1,8 @@
+/* .table-title {
+  text-align: left;
+  padding-left: 5%;
+} */
+
 .main-container{
 	margin-top: 0px;
 	text-align: center
@@ -15,8 +20,6 @@
   font-size: 30px;
   font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif
 }
-
-
 
 
   
@@ -131,12 +134,12 @@ textarea{
   text-decoration:none;
   resize: none;
 }
-table {
-	table-layout: fixed;
-}
+
 p {
   white-space: pre-line;
 }
+
+
 
 /* =========================================================== */
 .square{
@@ -146,13 +149,7 @@ p {
     height: 100px;
     color: #15171a;
 }
-/* 
-.square:before {
-    content: "";
-    display: block;
-    padding-top: 100px;
-}*/
-  
+
 .content {
     position: absolute;
     top: 0;

@@ -168,10 +168,10 @@
                             window.location.reload();
                         }
                         else{
-                            alert("게시글 수정 실패. 잠시 후에 다시 시도해주세요")
+                            alert("게시글 수정 실패. 잠시 후에 다시 시도해주세요 - error1")
                         }
                     }).catch(errorData => {
-                        alert("게시글 수정 실패. 잠시 후에 다시 시도해주세요")
+                        alert("게시글 수정 실패. 잠시 후에 다시 시도해주세요 - error2")
                     });
                 }
             },
@@ -213,10 +213,11 @@
                     url: "board/" + boardIdx, 
                 }).then(resData => {  
                     if(resData.data == null) {
-                        alert("게시글을 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
+                        alert("게시글을 불러오지 못했습니다. 잠시 후에 다시 시도해주세요 - error3");
                         location.href = "03_board.html";
                     }
                     else {
+                        console.log(resData.data.content);
                         this.board_one = {
                             boardIdx: resData.data.boardIdx,
                             userId: resData.data.writer.userId,
@@ -230,7 +231,7 @@
                         }
                     }
                 }).catch(errorData => {
-                    alert("게시글을 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
+                    alert("게시글을 불러오지 못했습니다. 잠시 후에 다시 시도해주세요 - error4");
                     location.href = "03_board.html";
                 });
         },
@@ -240,17 +241,20 @@
                 eventBus.$emit('sendBoardtoModify', this.board_one);
             },
             deleteBoard: function() {
-                axios({
-                    method: "delete",
-                    url: "http://localhost/board/" + this.board_one.boardIdx, 
-                    headers: {Authorization: `Bearer ${sessionStorage.getItem("token")}`}
-                }).then(resData => {  
-                    alert("게시글 삭제 성공")
-                    location.href = "03_board.html";
-                }).catch(errorData => {
-                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
-                    window.location.reload();
-                });
+                const result = confirm("삭제하시겠습니까?") 
+                if(result) {
+                    axios({
+                        method: "delete",
+                        url: "http://localhost/board/" + this.board_one.boardIdx, 
+                        headers: {Authorization: `Bearer ${sessionStorage.getItem("token")}`}
+                    }).then(resData => {  
+                        alert("게시글 삭제 성공")
+                        location.href = "03_board.html";
+                    }).catch(errorData => {
+                        alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요 - error5");
+                        window.location.reload();
+                    });
+                }
             },
             writeBoard: function() {
                 if(sessionStorage.getItem("token") == null) {
@@ -298,7 +302,7 @@
                     }
                 }
             }).catch(errorData => {
-                alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요 - error6");
                 location.href="03_board.html"
             });
         },
@@ -318,21 +322,26 @@
                     alert("로그인이 필요합니다");
                 }
                 else {
-                    axios({
-                        method: "post",
-                        url: "board/" + this.boardIdx2 + "/comment",
-                        data: {content: this.new_comment_content},
-                        headers: {authorization: `bearer ${sessionStorage.getItem("token")}`}
-                    }).then(resData => {
-                        if(resData.data) {
-                            window.location.reload();
-                        }
-                        else {
-                            alert("등록 실패. 잠시 후에 다시 시도해주세요")
-                        }
-                    }).catch(errorData => {
-                        alert("등록 실패. 잠시 후에 다시 시도해주세요");
-                    });
+                    if(this.new_comment_content == "") {
+                        alert("내용을 입력해주세요");
+                    }
+                    else {
+                        axios({
+                            method: "post",
+                            url: "board/" + this.boardIdx2 + "/comment",
+                            data: {content: this.new_comment_content},
+                            headers: {authorization: `bearer ${sessionStorage.getItem("token")}`}
+                        }).then(resData => {
+                            if(resData.data) {
+                                window.location.reload();
+                            }
+                            else {
+                                alert("등록 실패. 잠시 후에 다시 시도해주세요 - error7")
+                            }
+                        }).catch(errorData => {
+                            alert("등록 실패. 잠시 후에 다시 시도해주세요 - error8");
+                        });
+                    }
                 }
             },
             deleteComment: function(i) {
@@ -344,11 +353,11 @@
                         headers: {authorization: `bearer ${sessionStorage.getItem("token")}`}
                     }).then(resData => {
                         if(!resData.data) {
-                            alert("삭제 실패. 잠시 후에 다시 시도해주세요")
+                            alert("삭제 실패. 잠시 후에 다시 시도해주세요 - error8")
                         }
                         window.location.reload();
                     }).catch(errorData => {
-                        alert("삭제 실패. 잠시 후에 다시 시도해주세요");
+                        alert("삭제 실패. 잠시 후에 다시 시도해주세요 - error9");
                         window.location.reload();
                     });
                 }
@@ -373,10 +382,10 @@
                             window.location.reload();
                         }
                         else {
-                            alert("수정 실패. 잠시 후에 다시 시도해주세요")
+                            alert("수정 실패. 잠시 후에 다시 시도해주세요 - error10")
                         }
                     }).catch(errorData => {
-                        alert("수정 실패. 잠시 후에 다시 시도해주세요");
+                        alert("수정 실패. 잠시 후에 다시 시도해주세요 - error11");
                     });
                 }
             }
