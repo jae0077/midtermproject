@@ -14,6 +14,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.SequenceGenerator;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -47,32 +50,22 @@ public class Users {
 	@Column(name="phone", length=11, nullable=false, unique=false)
 	private String phone;
 	
-	@Column(name="is_admin", length=1, nullable=false, unique=false)
-	private String isAdmin;
-	
 	@OneToOne
 	@JoinColumn(name="seat_idx", nullable=true)
 	private Seat seat;
-	
-//	@OneToOne
-//	@JoinColumn(name="ticket_idx", nullable=true)
-//	private Ticket ticket;
-	
-//	@OneToMany(mappedBy="users",
-//			fetch=FetchType.LAZY,
-//			cascade=CascadeType.ALL)
-//	private List<Ticket> ticketList;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy="writer",
 			fetch=FetchType.LAZY,
 			cascade=CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<Board> boardList;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy="writer",
 			fetch=FetchType.LAZY,
 			cascade=CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<Comments> commentList;
 	
 }

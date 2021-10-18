@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="./script.js"></script>
+<title>Community-write</title>
+</head>
+<body class="body">
+    <div id="body-div">
+        <nav-bar></nav-bar>
+
+        <!-- 메인 -->
+        <div class="main-container">
+            <div class="sub-container" style="width: 50%;">
+
+                <board-one v-show="showBoard" v-on:board-emit="viewModify"></board-one>
+                <comment v-show="showComment"></comment>
+                <modify-board v-show="showModify" v-on:modify-emit="viewBoard"></modify-board>
+
+            </div>
+            <foot></foot>
+        </div>
+    </div>
+
+<!-- ========================================템플릿======================================== -->
+
+        <!-- =========================게시글 템플릿===================== -->
+<template id="board-one-temp">
+    <div>
+        <div style="text-align: left; border-style: groove;">
+            <div style="padding-left: 1%;"><a href='03_board.html'><h6>자유게시판</h6></a></div>
+            <div v-bind="board_one" style="padding-left: 3%; padding-bottom: 3%; padding-right: 3%;">
+                <div><h3>{{board_one.title}}</h3></div>
+                <div>작성자 : <a style="padding-right: 2%;">{{board_one.userId}}</a>마지막으로 수정한 날짜 : <a>{{board_one.created}}</a></div>
+                <hr>
+                {{board_one.content}}
+            </div>
+        </div>
+        <div style="padding-top: 1%;">
+            <div style="display: inline; float:left;">
+                <button class="w3-button" onclick="location.href='03_board.html'" style="background-color: #ecdbdb; width: 100px;">목록</button> 
+            </div>
+            <div style="display:flex; float:right;">
+                <button @click="deleteBoard" v-show="show_board_del" class="w3-button" style="background-color: #ecdbdb; width: 110px; margin-right: 10%;">삭제하기</button> 
+                <button @click="modifyBoard" v-show="show_board_del" class="w3-button" style="background-color: #ecdbdb; width: 110px; margin-right: 10%;">수정하기</button> 
+                <button @click="writeBoard" class="w3-button" style="background-color: #ecdbdb; width: 110px;">글쓰기</button> 
+            </div>
+        </div>
+    </div>
+</template>
+        <!-- =========================댓글 템플릿===================== -->
+<template id="comment-temp">
+    <div class="comment">
+        <div><h6>댓글</h6></div>
+        <div v-for="comment in comment_list">
+            <tr>
+                <td>작성자 : {{comment.userId}}</td>
+                <td>/ 작성일 : {{comment.created}}</td>
+            </tr>
+            <span v-if="comment.userIdx == session_userIdx" @click="openModifyComment(comment.commentIdx)" style="padding-left: 2%; cursor: pointer;">
+                수정
+            </span>
+            <span v-if="comment.userIdx == session_userIdx" @click="deleteComment(comment.commentIdx)" style="padding-left: 2%; cursor: pointer;">
+                삭제
+            </span>
+            <br><br>
+            <tr>
+                <td>
+                    <textarea 
+                        id="modify_comment_id"
+                        v-bind:value="comment.content" 
+                        v-if="(comment.commentIdx == comment_modify_index) && (comment.userIdx == session_userIdx) && (comment_modify_mode == true)" 
+                        type="text" rows="5" cols="100" maxlength="500" spellcheck="false" required placeholder="최대 500자까지 입력 가능"></textarea>
+                    <button 
+                        v-if="(comment.commentIdx == comment_modify_index) && (comment.userIdx == session_userIdx) && (comment_modify_mode == true)" 
+                        @click="modifyComment(comment.commentIdx)" 
+                        class="w3-button" style="width: 8%; background-color: #ecdbdb;">
+                        수정
+                    </button>
+                    <button 
+                        v-if="(comment.commentIdx == comment_modify_index) && (comment.userIdx == session_userIdx) && (comment_modify_mode == true)" 
+                        @click="comment_modify_mode = false" 
+                        class="w3-button" style="width: 8%; background-color: #ecdbdb;">
+                        취소
+                    </button>
+                    <div v-else>{{comment.content}}</div>
+                </td>
+            </tr>
+            <hr>
+        </div>
+        <div style="padding-top: 2%;">
+            <textarea v-model="writeComment" type="text" rows="5" cols="100" maxlength="500" spellcheck="false" required placeholder="최대 500자까지 입력 가능"></textarea>
+        </div>
+        <div style="display:inline-block; padding-top: 2%;">
+            <button @click="addComment" class="w3-button" style="background-color: #ecdbdb;">댓글달기</button> 
+        </div>
+    </div>
+</template>
+
+    <!-- =========================게시글 수정(화면전환) 템플릿===================== -->
+<template id="modify-board-temp">
+    <div style="margin-bottom: 100px;">
+        <div style="padding-left: 1%; text-align: left; border-style: groove;">
+            <a><h6>자유게시판</h6></a>
+            <div style="padding-left: 0.5%; padding-top: 1%;">
+                <textarea v-bind:value="board_one3.title" id="modfiedTitleId" style="resize: none;" rows="1" cols="99" maxlength="38" spellcheck="false" autofocus required placeholder="제목을 입력해주세요"></textarea>
+            </div>
+            <hr>
+            <div style="padding-left: 0.5%; padding-bottom: 1%;">
+                <textarea v-bind:value="board_one3.content" id="modfiedContentId" style="resize: none;" rows="15" cols="99" maxlength="4000" spellcheck="false" required placeholder="내용을 입력해주세요"></textarea>
+            </div>
+        </div>
+        <div style="padding-top: 1%;">
+            <div style="display: inline; float:left;">
+                <button @click="modifyCancel" class="w3-button w3-card-4" style="background-color: #ecdbdb; width: 100px;">취소</button> <br><br>
+            </div>
+            <div style="display:flex; float:right;">
+                <button @click="modifyFinal" class="w3-button w3-card-4" style="background-color: #ecdbdb; width: 100px;">수정 완료</button> <br><br>
+            </div>
+        </div>
+    </div>
+</template>
+<!-- ========================================스크립트======================================== -->
+<script>
+    let eventBus = new Vue();
+
+    // ==========================modify(수정화면) 컴포넌트==============================
+
+    Vue.component('modify-board', {
+        template: "#modify-board-temp",
+        data: function() {
+            return {
+                board_one3: {}
+            }
+        },
+        created: function() {
+            eventBus.$on('sendBoardtoModify',this.getBusData);
+        },
+        methods: {
+            modifyFinal: function() {
+                const modifyed_title = document.getElementById("modfiedTitleId").value;
+                const modifyed_content = document.getElementById("modfiedContentId").value;
+                if(modifyed_title == "") {
+                    alert("제목을 입력해주세요");
+                }
+                else if(modifyed_content == "") {
+                    alert("내용을 입력해주세요");
+                }
+                else {
+                    const model = {"title": modifyed_title, "content": modifyed_content};
+                    axios({
+                        method: "put",
+                        url: "board/" + this.board_one3.boardIdx, 
+                        data: model,
+                        headers: {authorization: `bearer ${sessionStorage.getItem("token")}`}
+                    }).then(resData => {  
+                        if(resData.data) {
+                            this.board_one3.title = modifyed_title;
+                            this.board_one3.content = modifyed_content;
+                            alert("수정 완료");
+                            this.$emit('modify-emit');
+                        }
+                        else{
+                            alert("게시글 수정 실패. 잠시 후에 다시 시도해주세요")
+                        }
+                    }).catch(errorData => {
+                        alert("게시글 수정 실패. 잠시 후에 다시 시도해주세요")
+                    });
+                }
+            },
+            modifyCancel: function() {
+                if(document.getElementById("modfiedTitleId").value != "" || document.getElementById("modfiedContentId").value != "") {
+                    const result = confirm("작성중인 내용이 있습니다. 취소하시겠습니까?");
+                    if(result) {
+                        document.getElementById("modfiedTitleId").value = this.board_one3.title;
+                        document.getElementById("modfiedContentId").value = this.board_one3.content;
+                        this.$emit('modify-emit');
+                    }
+                }   
+                else {
+                    document.getElementById("modfiedTitleId").value = this.board_one3.title;
+                    document.getElementById("modfiedContentId").value = this.board_one3.content;
+                    this.$emit('modify-emit');
+                }
+            },
+            getBusData: function(v) {
+                this.board_one3 = v;
+            },
+        }
+    })
+// ========================================board-one 컴포넌트========================================
+   
+    Vue.component('board-one', {       
+        template: "#board-one-temp",
+        data: function() {
+            return {
+                board_one: {},
+                show_board_del: false,
+            }
+        },
+        created: function() {
+            const url = new URL(window.location.href);
+            const boardIdx = url.searchParams.get('boardIdx');
+            axios({
+                    method: "get",
+                    url: "board/" + boardIdx, 
+                }).then(resData => {  
+                    if(resData.data == null) {
+                        alert("게시글을 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
+                        location.href = "03_board.html";
+                    }
+                    else {
+                        this.board_one = {
+                            boardIdx: resData.data.boardIdx,
+                            userId: resData.data.writer.userId,
+                            title: resData.data.title,
+                            content: resData.data.content,
+                            created: resData.data.created,
+                            updated: resData.data.updated,
+                        }
+                        if(resData.data.writer.userIdx == sessionStorage.getItem("userIdx")) {
+                            this.show_board_del = true;
+                        }
+                    }
+                }).catch(errorData => {
+                    alert("게시글을 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
+                    location.href = "03_board.html";
+                });
+        },
+        methods: {
+            modifyBoard: function() {
+                this.$emit('board-emit');
+                eventBus.$emit('sendBoardtoModify', this.board_one);
+            },
+            deleteBoard: function() {
+                axios({
+                    method: "delete",
+                    url: "http://localhost/board/" + this.board_one.boardIdx, 
+                    headers: {Authorization: `Bearer ${sessionStorage.getItem("token")}`}
+                }).then(resData => {  
+                    alert("게시글 삭제 성공")
+                    location.href = "03_board.html";
+                }).catch(errorData => {
+                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                    window.location.reload();
+                });
+            },
+            writeBoard: function() {
+                if(sessionStorage.getItem("token") == null) {
+                    alert("로그인이 필요합니다");
+                }
+                else {
+                    location.href="03_03_write.html";
+                }
+            }
+        }
+    })
+// ========================================comment 컴포넌트========================================
+    Vue.component('comment', {
+        template: "#comment-temp",
+        data: function() {
+            return {
+                session_userIdx: "",
+                boardIdx2: "",
+                comment_list: [],
+                new_comment_content: "",
+                show_comment_del: false,
+                comment_modify_mode: false,
+                comment_modify_index: ""
+            }
+        },
+        created: function() {
+            const url = new URL(window.location.href);
+            this.boardIdx2 = url.searchParams.get('boardIdx');
+            axios({
+                method: "get",
+                url: "board/" + this.boardIdx2 + "/comment",
+            }).then(resData => {
+                if(resData.data.commentsList.length > 0) {
+                    for(c of resData.data.commentsList) {
+                        this.comment_list.push({
+                            commentIdx: c.commentIdx,
+                            userIdx: c.writer.userIdx,
+                            userId: c.writer.userId,
+                            created: c.created,
+                            content: c.content})
+                    }
+                    if(sessionStorage.getItem("userIdx") != null) {
+                        this.session_userIdx = sessionStorage.getItem("userIdx");
+                    }
+                }
+            }).catch(errorData => {
+                alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                location.href="03_board.html"
+            });
+        },
+        computed: {
+            writeComment: {
+                get: function() {
+                    return this.new_comment_content;
+                },
+                set: function(inputComment) {
+                    this.new_comment_content = inputComment;
+                }
+            },
+        },
+        methods: {
+            addComment: function() {  
+                if(sessionStorage.getItem("token") == null) {
+                    alert("로그인이 필요합니다");
+                }
+                else {
+                    axios({
+                        method: "post",
+                        url: "board/" + this.boardIdx2 + "/comment",
+                        data: {content: this.new_comment_content},
+                        headers: {authorization: `bearer ${sessionStorage.getItem("token")}`}
+                    }).then(resData => {
+                        if(resData.data) {
+                            window.location.reload();
+                        }
+                        else {
+                            alert("등록 실패. 잠시 후에 다시 시도해주세요")
+                        }
+                    }).catch(errorData => {
+                        alert("등록 실패. 잠시 후에 다시 시도해주세요");
+                    });
+                }
+            },
+            deleteComment: function(i) {
+                const result = confirm("삭제하시겠습니까?");
+                if(result) {
+                    axios({
+                        method: "delete",
+                        url: "board/" + this.boardIdx2 + "/comment/" + i,
+                        headers: {authorization: `bearer ${sessionStorage.getItem("token")}`}
+                    }).then(resData => {
+                        if(!resData.data) {
+                            alert("삭제 실패. 잠시 후에 다시 시도해주세요")
+                        }
+                        window.location.reload();
+                    }).catch(errorData => {
+                        alert("삭제 실패. 잠시 후에 다시 시도해주세요");
+                        window.location.reload();
+                    });
+                }
+            },
+            openModifyComment: function(i) {
+                this.comment_modify_mode = true;
+                this.comment_modify_index = i;
+            },
+            modifyComment: function(i) {
+                const modifyed_comment = document.getElementById("modify_comment_id").value;
+                if(modifyed_comment == "") {
+                    alert("내용을 입력해주세요") 
+                }
+                else {
+                    axios({
+                        method: "put",
+                        url: "board/" + this.boardIdx2 + "/comment/" + i,
+                        data: {content: modifyed_comment},
+                        headers: {authorization: `bearer ${sessionStorage.getItem("token")}`}
+                    }).then(resData => {
+                        if(resData.data) {
+                            window.location.reload();
+                        }
+                        else {
+                            alert("수정 실패. 잠시 후에 다시 시도해주세요")
+                        }
+                    }).catch(errorData => {
+                        alert("수정 실패. 잠시 후에 다시 시도해주세요");
+                    });
+                }
+            }
+        }
+    })
+
+    // =======================공통 스크립트===========================
+
+    navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
+    footer();    
+
+    Vue.component('nav-bar', {
+        template: navBarScript,
+        data: function() {
+                return {
+                    login,
+                    logout,
+                }
+            },
+        methods: {
+            ClickLogout: function() {
+                const result = confirm("로그아웃 하시겠습니까?");
+                if(result) {
+                    sessionStorage.clear();
+                    this.login = false;
+                    this.logout = true;
+                    location.href="00_index.html";
+                }
+            }
+        }
+    })
+    Vue.component('foot', {
+        template: footerScript,
+    })
+            // ===============공통에서 수정===============
+    new Vue({
+        el: "#body-div",
+        data: {
+            showBoard: true,
+            showComment: true,
+            showModify: false,
+        },
+        methods: {
+            viewModify: function(v) {
+                this.showBoard = false;
+                this.showComment = false;
+                this.showModify = true;
+            },
+            viewBoard: function(v) {
+                this.showBoard = true;
+                this.showComment = true;
+                this.showModify = false;
+            },
+ 
+        },
+    })
+
+</script>
+
+</body>
+</html>

@@ -29,11 +29,11 @@
             <div style="padding-left: 1%; text-align: left; border-style: groove;">
                 <a><h6>자유게시판</h6></a>
                 <div style="padding-left: 0.5%; padding-top: 1%;">
-                    <textarea v-model="write_title" id="titleId" style="resize: none;" rows="1" cols="99" maxlength="65" spellcheck="false" autofocus required maxlength="130" placeholder="제목을 입력해주세요"></textarea>
+                    <textarea v-model="write_title" style="resize: none;" rows="1" cols="99" maxlength="50" spellcheck="false" autofocus required maxlength="130" placeholder="제목을 입력해주세요"></textarea>
                 </div>
                 <hr>
                 <div style="padding-left: 0.5%; padding-bottom: 1%;">
-                    <textarea v-model="write_content" id="contentId" style="resize: none;" rows="15" cols="99" maxlength="4000" spellcheck="false" required placeholder="내용을 입력해주세요"></textarea>
+                    <textarea v-model="write_content" style="resize: none;" rows="15" cols="99" maxlength="4000" spellcheck="false" required placeholder="내용을 입력해주세요"></textarea>
                 </div>
             </div>
 
@@ -42,8 +42,9 @@
                     <button @click="writeCancel" class="w3-button" style="background-color: #ecdbdb; width: 100px;">취소</button> <br><br>
                 </div>
                 <div style="display:flex; float:right;">
-                    <button @click="previewBoard" class="w3-button" style="background-color: #ecdbdb; width: 110px; margin-right: 10%;">미리보기</button> 
-                    <button @click="writeFinal" class="w3-button" style="background-color: #ecdbdb; width: 100px;">작성 완료</button> <br><br>
+                    <button @click="writeCheck('preview')" class="w3-button" style="background-color: #ecdbdb; width: 110px; margin-right: 10%;">미리보기</button> 
+                    <!-- <button @click="writeCheck('final')" class="w3-button" style="background-color: #ecdbdb; width: 100px;">작성 완료</button> <br><br> -->
+                    <button @click="test" class="w3-button" style="background-color: #ecdbdb; width: 100px;">작성 완료</button> <br><br>
                 </div>
             </div>
         </div>
@@ -93,8 +94,11 @@
             this.write_content = ""
         },
         methods: {
+            test: function() {
+                console.log(this.write_content);
+            },
             writeCancel: function() {
-                if(this.write_title != "" || this.write_content != ""){
+                if(this.write_title != "" || this.write_content != "") {
                     var result = confirm("작성중인 내용이 있습니다. 취소하시겠습니까?");
                     if(result){
                         this.write_title = "",
@@ -102,37 +106,50 @@
                         location.href="03_board.html";
                     }
                 }
-                else{
+                else { 
                     location.href="03_board.html";
                 }
             },
-            writeFinal: function() {      //글쓴이 아이디 수정하기 ---------------------
-                const board = {"title": this.write_title, "content": this.write_content};
-                axios({
-                    method: "post",
-                    url: "http://localhost/board", 
-                    data: board,
-                    headers: {"Authenticaton" : `Bearer ${sessionStorage.getItem("token")}`}
-                }).then(resData => {  
-                }).catch(errorData => {
-                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요")
-                });
-                this.write_title = "",
-                this.write_content = ""
-                location.href="03_board.html";
-            },
-            previewBoard: function() {
-                if(this.write_title.length != 0 && this.write_content.length != 0){
-                    document.getElementById('modalWrite').style.display="block";
+            writeFinal: function() {      
+                const result = confirm("등록하시겠습니까?");
+                if(result) {
+                    const board = {"title": this.write_title, "content": this.write_content};
+                    axios({
+                        method: "post",
+                        url: "http://localhost/board", 
+                        data: board,
+                        headers: {"Authorization" : `Bearer ${sessionStorage.getItem("token")}`}
+                    }).then(resData => {  
+                        if(resData.data) {
+                            this.write_title = "",
+                            this.write_content = ""
+                            location.href="03_board.html";
+                        }
+                        else {
+                            alert("게시글 등록 실패. 잠시 후에 다시 시도해주세요")
+                        }
+                    }).catch(errorData => {
+                        alert("게시글 등록 실패. 잠시 후에 다시 시도해주세요")
+                    });
                 }
-                else if(this.write_title.length == 0) {
+            },
+            writeCheck: function(v) {
+                if(this.write_title.length == 0) {
                     alert("제목을 입력해주세요")
                 }
                 else if(this.write_content.length == 0) {
                     alert("내용을 입력해주세요")
                 }
-                else{
-                    alert("에러가 발생했습니다. 다시 시도해주세요")
+                else {
+                    if(v == "final") {
+                        this.writeFinal();
+                    }
+                    else if(v == "preview") {
+                        document.getElementById('modalWrite').style.display="block";
+                    }
+                    else{
+                        alert("에러가 발생했습니다. 다시 시도해주세요");
+                    }
                 }
             },
             modalClose: function() {
@@ -156,11 +173,13 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.clear("token");
-                this.login = false;
-                this.logout = true;
-                alert("로그아웃 했습니다");
-                location.href="00_index.html";
+                const result = confirm("로그아웃 하시겠습니까?");
+                if(result) {
+                    sessionStorage.clear();
+                    this.login = false;
+                    this.logout = true;
+                    location.href="00_index.html";
+                }
             }
         }
     })
@@ -170,10 +189,6 @@
 
     new Vue({
         el: "#body-div",
-        data: {
-        },
-        methods: {
-        }
     })
 
 </script>

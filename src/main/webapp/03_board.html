@@ -30,27 +30,30 @@
         <h1>자유게시판</h1><hr>
         <div style="width: 70%; display: inline-block;">
             <div style="float:right;">
-                <button class="w3-button  w3-card-4" onclick="location.href='03_02_write.html'" style="background-color: #ecdbdb; width: 100px;">글쓰기</button> <br><br>
+                <button @click="writeBoard" class="w3-button  w3-card-4" style="background-color: #ecdbdb; width: 100px;">글쓰기</button> <br><br>
             </div>
-            <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
-                <thead>
-                <tr style="background-color: #e7dcdc">
-                    <th style="column-width: 5%;">글 번호</th>
-                    <th style="column-width: 5%">작성자</th>
-                    <th style="column-width: 85%">제목</th>
-                    <th style="column-width: 5%">날짜</th>
-                </tr>
-                </thead>
-                <tr v-for="(board, index) in board_list" @click="viewBoardOne(index)" style="cursor: pointer;">
-                <td v-if="(index_max > index) && (index >= index_min)" style="column-width: 5%">{{board.id}}</td>
-                <td v-if="(index_max > index) && (index >= index_min)" style="column-width: 5%">{{board.writer}}</td>
-                <td v-if="(index_max > index) && (index >= index_min)" style="column-width: 85%">{{board.title}}</td>
-                <td v-if="(index_max > index) && (index >= index_min)" style="column-width: 5%">{{board.created}}</td>
-                </tr>
-            </table>
+            <div style="height: 500px;">
+                <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
+                    <thead>
+                        <tr style="background-color: #e7dcdc">
+                            <th style="column-width: 5%;">글 번호</th>
+                            <th style="column-width: 85%">제목</th>
+                            <th style="column-width: 5%">작성자</th>
+                            <th style="column-width: 5%">날짜</th>
+                        </tr>
+                    </thead>
+                    <tr v-for="(board, index) in board_list" @click="viewBoardOne(index)" style="cursor: pointer;">
+                    <td style="column-width: 5%">{{board.boardIdx}}</td>
+                    <td style="column-width: 85%">{{board.title}} <span style="color: cadetblue;">[{{board.comment_length}}]</span></td>
+                    <td style="column-width: 5%">{{board.writerId}}</td>
+                    <td style="column-width: 5%">{{board.created}}</td>
+                    </tr>
+                </table>
+            </div>
             <div style="display: inline-block; padding-top: 3%;">
-                <div v-for="(index) in board_list" style="float:left">
-                    <<a v-on:click="index_min, index_max += 10">{{page_number}}</a>>
+                <div v-for="(page, index) in total_pages" style="float:left">
+                    <a v-if="index == page_now" style="font-weight: bold; cursor:default"> <span style="text-decoration: underline;">{{page}}</span> &nbsp; </a>
+                    <a v-else @click=selectPage(index)> {{page}} &nbsp; </a>
                 </div>  
             </div>
         </div>
@@ -67,31 +70,121 @@
         data: function() {
             return {
                 board_list: [],
-                index_min: 0,
-                index_max: 10,
-                page_list: []
+                comment_list: [],
+                total_pages: 1,
+                page_now: 0,
+                write_button: false
             }
         },
         created: function() {
+            //================ 게시글 목록 불러오기 =================
             axios({
-                    method: "get",
-                    url: "http://localhost/board/", 
-                }).then(resData => {  
-                    this.board_list = resData.data;
-                }).catch(errorData => {
-                    alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
-                });
+                method: "get",
+                url: "board", 
+                params: {
+                    size: 10,
+                    sort: "boardIdx,desc",
+                    page: 0
+                }
+            }).then(resData => {  
+                for(b of resData.data.content) {
+                    if(b.title.length > 8) {
+                        b.title = b.title.substring(0,8) + "...";
+                    }
+                    this.board_list.push({
+                            boardIdx: b.boardIdx,
+                            writerId: b.writer.userId,
+                            title: b.title,
+                            created: b.created,
+                            updated: b.updated,
+                            comment_length: 0})
+                }
+                for(b2 of this.board_list) {
+                    //================ 코멘트 리스트 불러와서 갯수만 가져오기 ========
+                    axios({
+                        method: "get",
+                        url: "board/" + b2.boardIdx + "/comment",
+                    }).then(resData => {
+                        for(b3 of this.board_list) {
+                            if(b3.boardIdx == resData.data.boardIdx) {
+                                b3.comment_length = resData.data.commentsList.length;
+                            }
+                        }
+                    }).catch(errorData => {
+                        alert("게시글을 불러오는데 실패했습니다. 잠시 후에 다시 시도해주세요 - error 01");
+                    })
+                    //===========================================================
+
+                }
+                this.total_pages = resData.data.totalPages;
+            }).catch(errorData => {
+                alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요 - error 02")
+            });
+            console.log(this.comment_list);
         },
         methods: {
             viewBoardOne: function(index) {
-                if(index != null){
-                    location.href = "03_01_view.html?id=" + this.board_list[index].id;
+                if(index != null){  
+                    location.href = "03_01_boardOne.html?boardIdx=" + this.board_list[index].boardIdx;
                 }
                 else{
-                    alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+                    alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요 - error 03")
+                }
+            },
+            selectPage: function(page_index) {
+                this.page_now = page_index;
+                axios({
+                    method: "get",
+                    url: "board", 
+                    params: {
+                        size: 10,
+                        sort: "boardIdx,desc",
+                        page: page_index
+                    }
+                }).then(resData => {  
+                    this.board_list = [];
+                    for(b of resData.data.content) {
+                        if(b.title.length > 8) {
+                            b.title = b.title.substring(0,8) + "...";
+                        }
+                        this.board_list.push({
+                            boardIdx: b.boardIdx,
+                            writerId: b.writer.userId,
+                            title: b.title,
+                            created: b.created,
+                            updated: b.updated,
+                            comment_length: 0})
+                    }
+                    for(b2 of this.board_list) {
+                        //================ 코멘트 리스트 불러와서 갯수만 가져오기 ========
+                        axios({
+                            method: "get",
+                            url: "board/" + b2.boardIdx + "/comment",
+                        }).then(resData => {
+                            for(b3 of this.board_list) {
+                                if(b3.boardIdx == resData.data.boardIdx) {
+                                    b3.comment_length = resData.data.commentsList.length;
+                                }
+                            }
+                        }).catch(errorData => {
+                            alert("게시글을 불러오는데 실패했습니다. 잠시 후에 다시 시도해주세요 - error 01");
+                        })
+                        //===========================================================
+
+                    }
+                }).catch(errorData => {
+                    alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요 - error 04")
+                });
+            },
+            writeBoard: function() {
+                if(sessionStorage.getItem("token") == null) {
+                    alert("로그인이 필요합니다");
+                }
+                else {
+                    location.href="03_03_write.html";
                 }
             }
-        }
+        },
     })
     Vue.component('page-control', {
         template: "#page-control-temp",
@@ -116,12 +209,14 @@
                 }
             },
         methods: {
-            ClickLogout: function(){
-                sessionStorage.clear("token");
-                this.login = false;
-                this.logout = true;
-                alert("로그아웃 했습니다");
-                location.href="00_index.html";
+            ClickLogout: function() {
+                const result = confirm("로그아웃 하시겠습니까?");
+                if(result) {
+                    sessionStorage.clear();
+                    this.login = false;
+                    this.logout = true;
+                    location.href="00_index.html";
+                }
             }
         }
     })
@@ -131,13 +226,7 @@
 
     new Vue({
         el: "#body-div",
-        data: {
-            model: {
-                showIndex: true,
-                showLogin: false
-            }
-        }
-    })
+        })
 
 </script>
 

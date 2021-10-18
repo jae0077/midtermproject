@@ -16,7 +16,7 @@
 
         <!-- 메인 -->
         <div class="main-container">
-            <view-board></view-board>
+            <view-allnotice></view-allnotice>
 
 
 
@@ -25,56 +25,120 @@
         </div>
     </div>
 
-<template id="viewBoard">
+<template id="view-allnotice-temp">
     <div class="sub-container">
         <h1>공지사항</h1><hr>
         <div style="width: 70%; display: inline-block;">
-            <div style="float:right;">
-                <button class="w3-button  w3-card-4" onclick="location.href='03_02_write.html'" style="background-color: #ecdbdb; width: 100px;">글쓰기</button> <br><br>
+            <div style="height: 380px;">
+                <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
+                    <thead>
+                        <tr style="background-color: #e7dcdc">
+                            <th style="column-width: 5%;">글 번호</th>
+                            <th style="column-width: 85%">제목</th>
+                            <th style="column-width: 5%">작성자</th>
+                            <th style="column-width: 5%">날짜</th>
+                        </tr>
+                    </thead>
+                    <tr v-for="(notice, index) in notice_list" @click="viewNoticeOne(index)" style="cursor:pointer">
+                        <td style="column-width: 5%">{{notice.noticeIdx}}</td>
+                        <td style="column-width: 85%">{{notice.title}}</td>
+                        <td style="column-width: 5%">관리자</td>
+                        <td style="column-width: 5%">{{notice.created}}</td>
+                    </tr>
+                </table>
             </div>
-            <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
-                <thead>
-                <tr style="background-color: #e7dcdc">
-                    <th style="column-width: 5%;">글 번호</th>
-                    <th style="column-width: 5%">작성자</th>
-                    <th style="column-width: 85%">제목</th>
-                    <th style="column-width: 5%">날짜</th>
-                </tr>
-                </thead>
-                <tr v-for="board in boardModel">
-                <td style="column-width: 5%">{{board.boardNumber}}</td>
-                <td style="column-width: 5%">{{board.boardWriter}}</td>
-                <td style="column-width: 85%">
-                <a href="03_01_view.html">{{board.boardTitle}}</a>
-                </td>
-                <td style="column-width: 5%">{{board.boardDay}}</td>
-            </table>
+
+            <div style="display: inline-block; padding-top: 3%;">
+                <div v-for="(page, index) in total_pages" style="float:left">
+                    <a v-if="index == page_now" style="font-weight: bold; cursor:default"> <span style="text-decoration: underline;">{{page}}</span> &nbsp; </a>
+                    <a v-else @click=selectPage(index)> {{page}} &nbsp; </a>
+                </div>  
+            </div>
         </div>
     </div>
 </template>
 <!-- ========================================스크립트======================================== -->
 <script>
-    Vue.component('view-board', {
-        template: "#viewBoard",
+    Vue.component('view-allnotice', {
+        template: "#view-allnotice-temp",
         data: function() {
             return {
-                boardModel: [
-                    {"boardNumber": "1",
-                    "boardTitle": "이거보여주려고 어그로끌었다",
-                    "boardWriter": "king4525",
-                    "boardPw": "1234",
-                    "boardDay": "1013",
-                    "boardContents": "안녕하세요 게시글 테스트중입니다안녕하세요 게시글 테스트중입니다안녕하세요 게시글 테스트중입니다안녕하세요 게시글 테스트중입니다안녕하세요 게시글 테스트중입니다안녕하세요 게시글 테스트중입니다"},
-                    {"boardNumber": "2",
-                    "boardTitle": "테스트222222",
-                    "boardWriter": "test",
-                    "boardPw": "1234",
-                    "boardDay": "1013",
-                    "boardContents": "안녕하세요 게시글2222 테스트중입니다안녕하세요 게시글 테스트중입니다안녕하세요 게시글 테스트중입니다안녕하세요 게시글 테스트중입니다안녕하세요 게시글 테스트중입니다안녕하세요 게시글 테스트중입니다"},
-                ]
+                notice_list: [],
+                message: "",
+                total_pages: 1,
+                page_now: 0
+            }
+        },
+        created: function() {
+            axios({
+                method: "get",
+                url: "notice",
+                params: {
+                    size: 10,
+                    sort: "noticeIdx,desc",
+                    page: 0
+                } 
+            }).then(resData => { 
+                if(resData.data.content.length == 0) {
+                    this.message = "공지사항이 없습니다";
+                }
+                else {
+                    for(n of resData.data.content) {
+                        if(n.title.length > 8) {
+                            n.title = n.title.substring(0,8) + "...";
+                        }
+                        this.notice_list.push({
+                            noticeIdx: n.noticeIdx,
+                            title: n.title,
+                            created: n.created
+                        })
+                    }
+                    this.total_pages = resData.data.totalPages;
+                }
+            }).catch(errorData => {
+                alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+            });
+        },
+        methods: {
+            viewNoticeOne: function(index) {
+                if(index != null) {  
+                    location.href = "03_02_noticeOne.html?noticeIdx=" + this.notice_list[index].noticeIdx;
+                }
+                else {
+                    alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+                }
+            },
+            selectPage: function(page_index) {
+                this.page_now = page_index;
+                axios({
+                    method: "get",
+                    url: "notice", 
+                    params: {
+                        size: 10,
+                        sort: "noticeIdx,desc",
+                        page: page_index
+                    }
+                }).then(resData => {  
+                    this.notice_list = [];
+                    for(n of resData.data.content) {
+                        if(n.title.length > 8) {
+                            n.title = n.title.substring(0,8) + "...";
+                        }
+                        this.notice_list.push({
+                            noticeIdx: n.noticeIdx,
+                            title: n.title,
+                            created: n.created
+                        })
+                    }
+                }).catch(errorData => {
+                    alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+                });
             }
         }
     })
+
+
+
 
     // ========================================공통 스크립트========================================
 
@@ -91,11 +155,13 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.clear("token");
-                this.login = false;
-                this.logout = true;
-                alert("로그아웃 했습니다");
-                location.href="00_index.html";
+                const result = confirm("로그아웃 하시겠습니까?");
+                if(result) {
+                    sessionStorage.clear();
+                    this.login = false;
+                    this.logout = true;
+                    location.href="00_index.html";
+                }
             }
         }
     })

@@ -1,10 +1,10 @@
 package kr.pe.midtermproject.model;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import kr.pe.midtermproject.dao.BoardRepository;
@@ -50,10 +50,10 @@ public class BoardService {
 	}
 	
 	// 게시글 전체 조회
-	public List<Board> getBoardList() {
-		List<Board>result = null;
+	public Page<Board> getBoardList(Pageable pageable) {
+		Page<Board> result = null;
 		try {
-			result = boardDao.findAllByOrderByBoardIdxDesc();
+			result = boardDao.findAll(pageable);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

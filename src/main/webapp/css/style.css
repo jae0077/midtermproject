@@ -4,6 +4,7 @@
 }
 
 .sub-container{
+  min-height: 74vh;
 	width: 80%;
 	display: inline-block;
   padding-bottom: 10%;
@@ -76,7 +77,7 @@
 
 /* footer ================================================ */
 .footer{
-  position: fixed;
+  /* position: fixed; */
 	bottom: 0px;
 	height: 100px;
 	width: 100%;
@@ -104,7 +105,7 @@
 
 /* ================================================ */
 .body{
-	background-color: #ffffff
+	background-color: #ffffff;
 }
 
 .w3-bar{
@@ -141,14 +142,15 @@ table {
 	background: rgb(57, 196, 103);
     width: 100px; /* 원하는 너비 */
     height: 100px;
+    color: #15171a;
 }
-
+/* 
 .square:before {
     content: "";
     display: block;
     padding-top: 100px; /* 1:1 비율 */
 }
- 
+  */
 .content {
     position: absolute;
     top: 0;

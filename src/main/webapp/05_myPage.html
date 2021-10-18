@@ -30,31 +30,34 @@
             <h1>나의 정보</h1><hr>
             <div><p>이름 : {{model.name}}</p></div>
             <div><p>이용권 종료일 : {{end_day}}</p></div>
-            <div><p>현재 좌석 : {{model.seat}}</p></div>
+            <div><p>현재 좌석 : {{model.seat.seatIdx}}</p></div>
             
             <div class="w3-row">
                 <div class="w3-col w3-container" style="width:5%;"></div>
                 
                 <div class="w3-col w3-container" style="width:25%">
                     <p>내 정보 수정</p>
-                    <img src="./img/mainPicture.jpg" style="width:80%" @click="openCheck('modifying')">
+                    <img src="./img/mainPicture.jpg" style="width:80%; cursor: pointer;" @click="openCheck('modifying')">
                 </div>
 
                 <div class="w3-col w3-container" style="width:7%;"></div>
 
                 <div class="w3-col w3-container" style="width:25%">
                     <p>좌석 변경</p>
-                    <img src="./img/mainPicture.jpg" style="width:80%" @click="openCheck('seating')">
+                    <img src="./img/mainPicture.jpg" style="width:80%; cursor: pointer;" @click="openCheck('seating')">
                 </div>
 
                 <div class="w3-col w3-container" style="width:7%;"></div>
                 
                 <div class="w3-col w3-container" style="width:25%">
                     <p>퇴실</p>
-                    <img src="./img/mainPicture.jpg" style="width:80%" @click="openCheck('exiting')">
+                    <img src="./img/mainPicture.jpg" style="width:80%; cursor: pointer;" @click="openCheck('exiting')">
                 </div>
                 
                 <div class="w3-col w3-container" style="width:5%;"></div>
+            </div>
+            <div style="margin-top: 5%; width: 8%; display: inline-block;">
+                <button @click="openCheck('memberout')" style="background-color: brown;">회원탈퇴</button>
             </div>
         
 
@@ -107,18 +110,33 @@
                 </form>
             </div>
 
-                                 <!-- =====================시트정보 변경 모달======================= -->
+                                 <!-- =====================좌석정보 변경 모달======================= -->
 
             <div id="modalSeat" class="modal">
-                <form class="modal-content">
-                    <div class="container" style="text-align: left;">
+                <form class="modal-content" style="width: 70%;">
+                    <div class="container" style="text-align: center;">
                         <h1>현재 좌석</h1>
-                        <div></div>
                         <h1>좌석을 선택하세요</h1>
-                        <div></div>
+
+                        <div style="border-style: groove; width: 100%; height: 90%; margin-top: 2%;">
+                            <div style="padding: 1%; display:flex; width: 100%;">
+                                <div v-for="(seat, index) in seat_list1" style="padding: 1%;">
+                                    <button v-if="seat.seatIdx == using" type="button" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
+                                    <button v-else-if="seat.isUsed == 0" type="button" @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
+                                    <button v-else class="square" type="button" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
+                                </div>
+                            </div>
+                            <div style="padding: 1%; display:flex; width: 100%;">
+                                <div v-for="(seat, index) in seat_list2" style="padding: 1%;">
+                                    <button v-if="seat.seatIdx == using" type="button" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
+                                    <button v-else-if="seat.isUsed == 0" type="button" @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
+                                    <button v-else class="square" type="button" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="clearfix">
-                            <button @click="changeSeat" type="button" class="signup" style="width:50%">확인</button>
-                            <button @click="modalClose" type="button" class="cancelbtn">취소</button>
+                            <button @click="modalClose" type="button" class="cancelbtn" style="width: 100%; margin-top: 2%;">취소</button>
                         </div>
                     </div>
                 </form>
@@ -129,17 +147,23 @@
             <div id="modalExit" class="modal">
                 <form class="modal-content">
                     <div class="container">
-                        <div style="text-align: left;">
+                        <div v-show="now == 'exiting'" style="text-align: left;">
                             <h3>퇴실 확인</h3>
                             <h1>퇴실하시겠습니까?</h1>
                         </div>
+                        <div v-show="now == 'memberout'" style="text-align: left;">
+                            <h3>회원탈퇴 확인</h3>
+                            <h1>정말 탈퇴하시겠어요?</h1>
+                        </div>
                         <div class="clearfix">
-                            <button @click="exit" type="button" class="signup" style="width:50%">확인</button>
+                            <button v-show="now == 'exiting'" @click="exit" type="button" class="signup" style="width:50%">확인</button>
+                            <button v-show="now == 'memberout'" @click="memberOut" type="button" class="signup" style="width:50%">확인</button>
                             <button @click="modalClose" type="button" class="cancelbtn">취소</button>
                         </div>
                     </div>
                 </form>
             </div>
+
         </div>
     </template>
 
@@ -151,17 +175,20 @@
     Vue.component('my-page', {
         template: "#myPageTemp",
         data: function() {
-            return{
+            return {
                 now : "",
-                end_day : "",
+                end_day : 0,
                 model: {
                     userIdx: "",
                     userId: "",
                     userPw: "",
-                    name: "default",
+                    name: "",
                     phone: "",
                     isAdmin: "",
-                    seat: ""
+                    seat: {
+                        seatIdx: "이용중인 좌석 없음",
+                        isUsed: ""
+                    }
                 },
                 modify_model: {
                     userPw: "",
@@ -172,7 +199,12 @@
                 messagePw : "※ 비밀번호를 입력해주세요",
                 messagePw2 : "※ 비밀번호를 한 번 더 입력해주세요",
                 messageName : "※ 이름을 입력해주세요",
-                messagePhone : "※ 전화번호를 입력해주세요"
+                messagePhone : "※ 전화번호를 입력해주세요",
+
+                seat_list1: [],
+                seat_list2: [],
+                remain_seat: 0,
+                using: false,
             }
         },
         created() {
@@ -187,30 +219,30 @@
                     location.href="00_index.html";
                 }
                 else{
-                    this.model = resData.data;
-                    if(this.model.seat == null) {
-                        this.model.seat = "이용중인 좌석 없음";
+                    if(resData.data.seat == null) {
+                        resData.data.seat = {seatIdx: "이용중인 좌석 없음", isUsed: ""}
                     }
+                    this.model = resData.data;
                 }
             }).catch(errorData => {
                 alert("정보 불러오기를 실패했습니다. 잠시 후에 다시 시도해주세요")
                 location.href="00_index.html";
             });
-            // =========ticket limit 불러오는 부분========
+            // ========= 종료일 불러오는 부분========
             axios({
                 method: "get",
-                url: "http://localhost/ticket/" + sessionStorage.getItem("userIdx"),
-                headers: {"Authorization" : `Bearer' ${sessionStorage.getItem("token")}`}
+                url: "ticket/" + sessionStorage.getItem("userIdx"),
+                headers: {authorization : `bearer' ${sessionStorage.getItem("token")}`}
             }).then(resData => {  
-                if(resData.data == null || resData.data == "") {
+                if(resData.data.length == 0) {
                     this.end_day = "구매한 이용권이 없습니다"
                 }
                 else{
-                    console.log(resData.data);
+                    this.end_day = resData.data;
                 }
             }).catch(errorData => {
                 alert("정보 불러오기를 실패했습니다. 잠시 후에 다시 시도해주세요")
-                // location.href="00_index.html";
+                location.href="00_index.html";
             });
         },
         computed: {
@@ -311,14 +343,16 @@
         },
         methods: {
             openCheck: function(v){
+                this.now = v;
                 if(v == "seating" || v == "exiting") {
-                    if(this.model.seat == "이용중인 좌석 없음") {
-                        console.log("=====")
+                    if(this.model.seat.seatIdx == "이용중인 좌석 없음") {
                         alert("현재 이용중인 좌석이 없습니다");
+                    }
+                    else {
+                        document.getElementById('modalCheck').style.display='block';
                     }
                 }
                 else {
-                    this.now = v;
                     document.getElementById('modalCheck').style.display='block';
                 }
             },
@@ -327,38 +361,83 @@
             },
             // =========비밀번호 체크 모달 띄우는 메소드=========
             check: function() {  
-                if(document.getElementById("pw_check_input").value){
-                    let input_pw = document.getElementById("pw_check_input").value;
+                if(document.getElementById("pw_check_input").value) {
+                    const input_pw = document.getElementById("pw_check_input").value;
                     const check_model = {userId: this.model.userId, userPw: input_pw};
                     axios({
-                    method: "post",
-                    url: "http://localhost/login", 
-                    data: check_model
-                }).then(resData => {  
-                    if(resData.data == null || resData.data == "") {
-                        alert("비밀번호가 다릅니다")
-                    }
-                    else{
-                        document.getElementById('modalCheck').style.display='none';
-                        if(this.now == "modifying") {
-                            document.getElementById('modalModify').style.display='block';
+                        method: "post",
+                        url: "http://localhost/login", 
+                        data: check_model
+                    }).then(resData => {  
+                        if(resData.data == null || resData.data == "") {
+                            alert("비밀번호가 다릅니다")
                         }
-                        else if(this.now == "seating") {
-                            document.getElementById('modalSeat').style.display='block';
+                        else{
+                            document.getElementById('modalCheck').style.display='none';
+                            if(this.now == "memberout") {
+                                document.getElementById('modalExit').style.display='block';
+                            }
+                            else if(this.now == "modifying") {
+                                document.getElementById('modalModify').style.display='block';
+                            }
+                            //=================좌석변경을 선택했을 때 실행 ===================
+                            else if(this.now == "seating") {
+                                const get_token = sessionStorage.getItem("token");
+                                // ======================= 1.좌석정보 불러오기 =====================
+                                axios({
+                                    method: "get",
+                                    url: "seat", 
+                                    headers: {authorization : `bearer ${get_token}`}
+                                }).then(resData => {  
+                                    this.seat_list1 = resData.data.slice(undefined, 10);
+                                    this.seat_list2 = resData.data.slice(10, 20);
+                                    // ====================== 2. 잔여 좌석 불러오기 =================
+                                    axios({
+                                        method: "get",
+                                        url: "seat/remain", 
+                                        headers: {authorization : `bearer ${get_token}`}
+                                    }).then(resData => {  
+                                        this.remain_seat = resData.data;
+                                        // =============== 3. 회원정보 불러오기 - 선택한 좌석 체크 ===========
+                                        axios({
+                                            method: "get",
+                                            url: "user/" + sessionStorage.getItem("userIdx"), 
+                                            headers: {authorization : `bearer ${get_token}`}
+                                        }).then(resData => {  
+                                            if(resData.data.seat != null) {
+                                                this.using = resData.data.seat.seatIdx;
+                                            }
+                                        }).catch(errorData => {
+                                            alert("좌석정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
+                                            location.href="00_index.html";
+                                        });
+                                        // ======================= 3. 끝  ==================
+
+                                    }).catch(errorData => {
+                                        alert("좌석정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
+                                        location.href="00_index.html";
+                                    });
+                                    // ======================= 2. 끝  ==================
+                                }).catch(errorData => {
+                                    alert("좌석정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
+                                    location.href="00_index.html";
+                                });
+                                // ======================= 1. 끝  ==================
+                                document.getElementById('modalSeat').style.display='block';
+                            }
+                            else if(this.now == "exiting") {
+                                document.getElementById('modalExit').style.display='block';
+                            }else {
+                                alert("에러가 발생했습니다");
+                                window.location.reload();
+                            }
                         }
-                        else if(this.now == "exiting") {
-                            document.getElementById('modalExit').style.display='block';
-                        }else {
-                            alert("에러가 발생했습니다");
-                            location.href="05_myPage.html";
-                        }
-                    }
                 }).catch(errorData => {
                     alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요")
                     window.location.reload();
                 });
                 }
-                else{
+                else {
                     alert("비밀번호를 입력해주세요")
                 }
                 document.getElementById("pw_check_input").value = null;
@@ -381,13 +460,32 @@
                     alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
                 });
             },
-            changeSeat: function(){
+            selectSeat: function(v) {
+                const result = confirm(v + "번 좌석으로 바꾸시겠습니까?");
+                if(result) {
+                    axios({
+                    method: "post",
+                    url: "seat",
+                    data: {seatIdx: v},
+                    headers: {authorization: `bearer ${sessionStorage.getItem("token")}`}
+                    }).then(resData => {
+                        if(resData.data) {
+                            alert("좌석변경 완료");
+                            window.location.reload();
+                        }
+                        else {
+                            alert("좌석변경 실패. 잠시 후에 다시 시도해주세요");
+                        }
+                    }).catch(errorData => {
+                        alert("좌석변경 실패. 잠시 후에 다시 시도해주세요");
+                    });
+                }
             },
             exit: function(){
                 axios({
-                    method: "put",
-                    url: "http://localhost/seat/checkout", 
-                    headers: {"Authorization" : `Bearer' ${sessionStorage.getItem("token")}`}
+                    method: "post",
+                    url: "seat/checkout", 
+                    headers: {authorization : `bearer' ${sessionStorage.getItem("token")}`}
                 }).then(resData => {  
                     if(resData.data){
                         alert("퇴실 완료")
@@ -400,12 +498,28 @@
                     alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
                 });
             },
-
-
-
+            memberOut: function() {  
+                axios({
+                    method: "delete",
+                    url: "user/" + sessionStorage.getItem("userIdx"), 
+                    headers: {authorization : `bearer' ${sessionStorage.getItem("token")}`},
+                }).then(resData => { 
+                    if(resData.data){
+                        sessionStorage.clear();
+                        alert("탈퇴 완료")
+                        location.href = "00_index.html";
+                    }
+                    else{
+                        alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                    }
+                }).catch(errorData => {
+                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                });
+            }   
         }
     })
-      // =================================================공통 스크립트================================================
+
+      // ====================================공통 스크립트=====================================
       
     navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
     footer();    
@@ -420,18 +534,19 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.clear("token");
-                this.login = false;
-                this.logout = true;
-                alert("로그아웃 했습니다");
-                location.href="00_index.html";
+                const result = confirm("로그아웃 하시겠습니까?");
+                if(result) {
+                    sessionStorage.clear();
+                    this.login = false;
+                    this.logout = true;
+                    location.href="00_index.html";
+                }
             }
         }
     })
     Vue.component('foot', {
         template: footerScript,
     })
-
     new Vue({
         el: "#body-div",
     })
