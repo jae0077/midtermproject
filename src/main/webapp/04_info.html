@@ -15,16 +15,24 @@
         <nav-bar></nav-bar>
 
         <!-- 메인 -->
-        <div class="main-container">
+        <info></info>
 
+        <foot></foot>
+    </div>
+
+<!-- ==================================템플릿====================================== -->
+
+<template id="info-temp">
+    <div class="main-container">
         <div class="sub-container"> 
-            <div class="w3-display-container">
+            <h1>이용 안내</h1><hr>
+            <div class="w3-display-container">  
                 <img src="./img/info.png" width="60%" height="1200vh">
                 <div class="w3-display-topmiddle w3-container" style="margin-top: 18%;">
                     <p>
                     <h2 style="font-weight: 800;">당신의 하루가 가볍게 맞닿아<br>환한 미래가 되길 바라는<br>사락사락 스터디 카페</h2>
                     <br>
-                    <h3>[이용 안내]</h3>
+                    <h3>[안내]</h3>
                     사락사락 스터디 카페는 365일 연중무휴 무인 시스템으로 운영됩니다.<br>
                     무인 시스템으로 인건비를 최소화 할 수 있어 스터디 카페를 이용하시는 분들께<br>부담 없는 비용으로 쾌적한 공간을 제공 해 드립니다. 
                     <br>
@@ -48,30 +56,24 @@
                     좌석 확인 및 선택 <i class="fa fa-arrow-right" aria-hidden="true"></i>
                     입실 <i class="fa fa-arrow-right" aria-hidden="true"></i>
                     퇴실
-                    
-                    
-                    
-                    
-                    
-                    
                 </p>
-
                 </div>
-              </div>
-                
-
             </div>
-            
-            
-        </div>
-
-
-
-
-            <foot></foot>
         </div>
     </div>
+</template>
+
+    <!-- ========================================스크립트======================================== -->
+
 <script>
+    Vue.component('info', {
+        template: "#info-temp",
+    })
+
+
+
+    // ========================================공통 스크립트========================================
+
     navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
     footer();    
 
@@ -98,11 +100,9 @@
     Vue.component('foot', {
         template: footerScript,
     })
-
     new Vue({
         el: "#body-div",
     })
-
 </script>
 </body>
 </html>

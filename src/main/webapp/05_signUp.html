@@ -20,9 +20,8 @@
                 <sign-up v-show="showSignUp" v-on:signup-emit="viewSignUp"></sign-up>
                 <sign-up-check v-show="showCheck" v-on:check-emit="viewCheck"></sign-up-check>
 
-
-                <foot></foot>
             </div>
+            <foot></foot>
         </div>
 
 <!-- ================================================템플릿================================================ -->
@@ -69,7 +68,6 @@
         </div>
     </template>
 
-
 <!-- ========================================== 스크립트 ==================================================== -->
 <script>
     eventBus = new Vue();
@@ -102,7 +100,7 @@
                     }).then(resData => {  
                         if(resData.data){
                             alert("회원가입 성공");
-                            location.href="http://localhost";
+                            location.href="http://localhost/06_logIn.html";
                         }
                         else{
                             alert("회원가입 실패 - 잠시 후에 다시 시도해주세요");
@@ -283,7 +281,7 @@
                 else {
                     axios({
                             method: "post",
-                            url: "http://localhost/user/verifyid",
+                            url: "user/verifyid",
                             data: {"userId": this.model.userId}
                         }).then(resData => {  
                             if(resData.data){
@@ -331,8 +329,6 @@
     Vue.component('foot', {
         template: footerScript,
     })
-
-
 
             // ==============공통에서 수정한 부분===========
     new Vue({
