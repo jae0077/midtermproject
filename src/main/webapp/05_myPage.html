@@ -216,7 +216,7 @@
             }).then(resData => {  
                 if(resData.data == null || resData.data == "") {
                     alert("정보 불러오기를 실패했습니다. 잠시 후에 다시 시도해주세요")
-                    location.href="00_index.html";
+                    location.href="http://localhost";
                 }
                 else{
                     if(resData.data.seat == null) {
@@ -226,7 +226,7 @@
                 }
             }).catch(errorData => {
                 alert("정보 불러오기를 실패했습니다. 잠시 후에 다시 시도해주세요")
-                location.href="00_index.html";
+                location.href="http://localhost";
             });
             // ========= 종료일 불러오는 부분========
             axios({
@@ -242,7 +242,7 @@
                 }
             }).catch(errorData => {
                 alert("정보 불러오기를 실패했습니다. 잠시 후에 다시 시도해주세요")
-                location.href="00_index.html";
+                location.href="http://localhost";
             });
         },
         computed: {
@@ -409,18 +409,18 @@
                                             }
                                         }).catch(errorData => {
                                             alert("좌석정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
-                                            location.href="00_index.html";
+                                            location.href="http://localhost";
                                         });
                                         // ======================= 3. 끝  ==================
 
                                     }).catch(errorData => {
                                         alert("좌석정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
-                                        location.href="00_index.html";
+                                        location.href="http://localhost";
                                     });
                                     // ======================= 2. 끝  ==================
                                 }).catch(errorData => {
                                     alert("좌석정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
-                                    location.href="00_index.html";
+                                    location.href="http://localhost";
                                 });
                                 // ======================= 1. 끝  ==================
                                 document.getElementById('modalSeat').style.display='block';
@@ -507,7 +507,7 @@
                     if(resData.data){
                         sessionStorage.clear();
                         alert("탈퇴 완료")
-                        location.href = "00_index.html";
+                        location.href = "http://localhost";
                     }
                     else{
                         alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
@@ -539,7 +539,7 @@
                     sessionStorage.clear();
                     this.login = false;
                     this.logout = true;
-                    location.href="00_index.html";
+                    location.href="http://localhost";
                 }
             }
         }
