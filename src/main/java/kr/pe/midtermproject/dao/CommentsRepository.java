@@ -11,6 +11,4 @@ public interface CommentsRepository extends CrudRepository<Comments, Long> {
 	// 코멘트 역순 정렬
 	List<Comments> findByBoardOrderByCommentIdxAsc(Board board);
 	
-	
-//	OrderByCommentIdxDesc(Long boardIdx);
 }
