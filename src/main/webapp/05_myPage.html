@@ -15,18 +15,16 @@
         <nav-bar></nav-bar>
 
         <!-- 메인 -->
-        <div class="main-container">
-            <my-page></my-page>
+        <my-page></my-page>
 
-
-            <foot></foot>
-        </div>
+        <foot></foot>
     </div>
 
 <!-- ========================================템플릿======================================== -->
 
-    <template id="myPageTemp">
-        <div class="sub-container"> 
+<template id="myPageTemp">
+    <div class="main-container">
+        <div class="sub-container" style="min-height:84vh;"> 
             <h1>나의 정보</h1><hr>
             <div><p>이름 : {{model.name}}</p></div>
             <div><p>이용권 종료일 : {{end_day}}</p></div>
@@ -163,9 +161,10 @@
                     </div>
                 </form>
             </div>
-
+            
         </div>
-    </template>
+    </div>
+</template>
 
  <!-- =========================================================스크립트============================================================================= -->
 

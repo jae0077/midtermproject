@@ -15,19 +15,15 @@
         <nav-bar></nav-bar>
 
         <!-- 메인 -->
-        <div class="main-container">
-            <login></login>
-
-
-            <foot></foot>
-        </div>
+        <login></login>
+    
+        <foot></foot>
     </div>
 
-
-
-                        <!-- ==================== 로그인 템플릿 ====================== -->
-    <template id="logInTemp">
-        <div class="sub-container">
+<!-- ==================== 로그인 템플릿 ====================== -->
+<template id="logInTemp">
+    <div class="main-container">
+        <div class="sub-container" style="min-height:84vh;">
             <h1> 로그인 </h1> <hr>
             <div style="width: 30%; margin-top: 5%;  margin-left: 35%;">
                 <input v-model="model.userId" tyep="text" autofocus required maxlength="16" spellcheck="false" placeholder="아이디"> <br><br>
@@ -36,8 +32,8 @@
                 {{message}}
             </div>
         </div>
-    </template>
-
+    </div>
+</template>
 
     <!--   =================================================스크립트 ====================================================================  -->
 <script>
@@ -77,7 +73,6 @@
             }
         }
     })
-
     
                 // ========================공통 스크립트===========================
 
@@ -107,7 +102,6 @@
     Vue.component('foot', {
         template: footerScript,
     })
-
     new Vue({
         el: "#body-div"
     })

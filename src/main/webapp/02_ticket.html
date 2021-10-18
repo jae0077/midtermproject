@@ -15,51 +15,49 @@
         <nav-bar></nav-bar>
 
         <!-- 메인 -->
-        <div class="main-container">
             <ticket></ticket>
 
-
-            <foot></foot>
-        </div>
+        <foot></foot>
     </div>
   <!-- ========================================= 템플릿 ===================================== -->
     <template id="ticket_temp">
-        <div class="sub-container" style="height: 80%; margin-bottom: 5%;">
-            <h1>이용권 구매</h1><hr>
-            <p>모든 이용권의 일수는 당일을 포함하여 계산됩니다</p> <br>
-            <p>1일권의 경우 당일 23시59분에 만료됩니다</p> <br>
-            <div class="w3-row">
-                <div class="w3-col w3-center" style="width:30%;">
-                    <img class="ticket-img" src="./img/ticket1day.png" @click="clickTicket('1')">
-                </div>
-
-                <div class="w3-col w3-container" style="width:5%;"></div>
-
-                <div class="w3-col s4 w3-center" style="width:30%;">
-                    <img class="ticket-img" src="./img/ticket7day.png" @click="clickTicket('7')">
-                </div>
-
-                <div class="w3-col w3-container" style="width:5%;"></div>
-                
-                <div class="w3-col s4 w3-center" style="width:30%;">
-                    <img class="ticket-img" src="./img/ticket30day.png" @click="clickTicket('30')">
-                </div>
-            </div>
-        <!-- ==========================모달=========================== -->
-            <div id="modal01" class="modal">
-                <form class="modal-content">
-                    <div class="container">
-                        <p>기존 종료일 : {{end_day}}</p>
-                        <h1>+ {{select_day}}일권</h1>
-                        <p>해당 이용권을 구매하시겠습니까?</p>
-                        <div class="clearfix">
-                            <button @click="buyTicket" type="button" class="signup" style="width:50%">{{select_day}}일권 구매</button>
-                            <button @click="modalClose" type="button" class="cancelbtn">취소</button>
-                        </div>
+        <div class="main-container">
+            <div class="sub-container" style="height: 80%; margin-bottom: 5%;">
+                <h1>이용권 구매</h1><hr>
+                <p>모든 이용권의 일수는 당일을 포함하여 계산됩니다</p> <br>
+                <p>1일권의 경우 당일 23시59분에 만료됩니다</p> <br>
+                <div class="w3-row">
+                    <div class="w3-col w3-center" style="width:30%;">
+                        <img class="ticket-img" src="./img/ticket1day.png" @click="clickTicket('1')">
                     </div>
-                </form>
-            </div>
 
+                    <div class="w3-col w3-container" style="width:5%;"></div>
+
+                    <div class="w3-col s4 w3-center" style="width:30%;">
+                        <img class="ticket-img" src="./img/ticket7day.png" @click="clickTicket('7')">
+                    </div>
+
+                    <div class="w3-col w3-container" style="width:5%;"></div>
+                    
+                    <div class="w3-col s4 w3-center" style="width:30%;">
+                        <img class="ticket-img" src="./img/ticket30day.png" @click="clickTicket('30')">
+                    </div>
+                </div>
+            <!-- ==========================모달=========================== -->
+                <div id="modal01" class="modal">
+                    <form class="modal-content">
+                        <div class="container">
+                            <p>기존 종료일 : {{end_day}}</p>
+                            <h1>+ {{select_day}}일권</h1>
+                            <p>해당 이용권을 구매하시겠습니까?</p>
+                            <div class="clearfix">
+                                <button @click="buyTicket" type="button" class="signup" style="width:50%">{{select_day}}일권 구매</button>
+                                <button @click="modalClose" type="button" class="cancelbtn">취소</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     </template>
 <!-- ============================================ 스크립트 ====================================== -->
@@ -144,7 +142,7 @@
                     sessionStorage.clear();
                     this.login = false;
                     this.logout = true;
-                    location.href="00_index.html";
+                    location.href="http://localhost";
                 }
             }
         }

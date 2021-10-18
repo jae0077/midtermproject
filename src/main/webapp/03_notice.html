@@ -15,44 +15,43 @@
         <nav-bar></nav-bar>
 
         <!-- 메인 -->
-        <div class="main-container">
             <view-allnotice></view-allnotice>
-
-
-
-
-                <foot></foot>
-        </div>
+        
+        <foot></foot>
     </div>
 
-<template id="view-allnotice-temp">
-    <div class="sub-container">
-        <h1>공지사항</h1><hr>
-        <div style="width: 70%; display: inline-block;">
-            <div style="height: 380px;">
-                <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
-                    <thead>
-                        <tr style="background-color: #e7dcdc">
-                            <th style="column-width: 5%;">글 번호</th>
-                            <th style="column-width: 85%">제목</th>
-                            <th style="column-width: 5%">작성자</th>
-                            <th style="column-width: 5%">날짜</th>
-                        </tr>
-                    </thead>
-                    <tr v-for="(notice, index) in notice_list" @click="viewNoticeOne(index)" style="cursor:pointer">
-                        <td style="column-width: 5%">{{notice.noticeIdx}}</td>
-                        <td style="column-width: 85%">{{notice.title}}</td>
-                        <td style="column-width: 5%">관리자</td>
-                        <td style="column-width: 5%">{{notice.created}}</td>
-                    </tr>
-                </table>
-            </div>
+<!-- ==================================템플릿====================================== -->
 
-            <div style="display: inline-block; padding-top: 3%;">
-                <div v-for="(page, index) in total_pages" style="float:left">
-                    <a v-if="index == page_now" style="font-weight: bold; cursor:default"> <span style="text-decoration: underline;">{{page}}</span> &nbsp; </a>
-                    <a v-else @click=selectPage(index)> {{page}} &nbsp; </a>
-                </div>  
+<template id="view-allnotice-temp">
+    <div class="main-container">
+        <div class="sub-container">
+            <h1>공지사항</h1><hr>
+            <div style="width: 70%; display: inline-block;">
+                <div style="height: 500px;">
+                    <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
+                        <thead>
+                            <tr style="background-color: #e7dcdc">
+                                <th style="column-width: 5%;">글 번호</th>
+                                <th style="column-width: 85%">제목</th>
+                                <th style="column-width: 5%">작성자</th>
+                                <th style="column-width: 5%">날짜</th>
+                            </tr>
+                        </thead>
+                        <tr v-for="(notice, index) in notice_list" @click="viewNoticeOne(index)" style="cursor:pointer">
+                            <td style="column-width: 5%">{{notice.noticeIdx}}</td>
+                            <td style="column-width: 85%">{{notice.title}}</td>
+                            <td style="column-width: 5%">관리자</td>
+                            <td style="column-width: 5%">{{notice.created}}</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="display: inline-block; padding-top: 3%;">
+                    <div v-for="(page, index) in total_pages" style="float:left">
+                        <a v-if="index == page_now" style="font-weight: bold; cursor:default"> <span style="text-decoration: underline;">{{page}}</span> &nbsp; </a>
+                        <a v-else @click=selectPage(index)> {{page}} &nbsp; </a>
+                    </div>  
+                </div>
             </div>
         </div>
     </div>
@@ -84,8 +83,8 @@
                 }
                 else {
                     for(n of resData.data.content) {
-                        if(n.title.length > 8) {
-                            n.title = n.title.substring(0,8) + "...";
+                        if(n.title.length > 16) {
+                            n.title = n.title.substring(0,16) + "...";
                         }
                         this.notice_list.push({
                             noticeIdx: n.noticeIdx,
@@ -121,8 +120,8 @@
                 }).then(resData => {  
                     this.notice_list = [];
                     for(n of resData.data.content) {
-                        if(n.title.length > 8) {
-                            n.title = n.title.substring(0,8) + "...";
+                        if(n.title.length > 16) {
+                            n.title = n.title.substring(0,16) + "...";
                         }
                         this.notice_list.push({
                             noticeIdx: n.noticeIdx,
@@ -136,9 +135,6 @@
             }
         }
     })
-
-
-
 
     // ========================================공통 스크립트========================================
 
@@ -160,7 +156,7 @@
                     sessionStorage.clear();
                     this.login = false;
                     this.logout = true;
-                    location.href="00_index.html";
+                    location.href="http://localhost";
                 }
             }
         }
@@ -168,11 +164,9 @@
     Vue.component('foot', {
         template: footerScript,
     })
-
     new Vue({
         el: "#body-div",
     })
-
 </script>
 
 </body>
