@@ -17,14 +17,15 @@
         <!-- 메인 -->
         <div class="main-container">
             <div class="sub-container" style="width: 50%;">
+                <h1>자유게시판</h1><hr>
 
                 <board-one v-show="showBoard" v-on:board-emit="viewModify"></board-one>
-                <comment v-show="showComment"></comment>
+                <comment v-show="showBoard"></comment>
                 <modify-board v-show="showModify" v-on:modify-emit="viewBoard"></modify-board>
 
             </div>
-            <foot></foot>
         </div>
+        <foot></foot>
     </div>
 
 <!-- ========================================템플릿======================================== -->
@@ -164,7 +165,7 @@
                             this.board_one3.title = modifyed_title;
                             this.board_one3.content = modifyed_content;
                             alert("수정 완료");
-                            this.$emit('modify-emit');
+                            window.location.reload();
                         }
                         else{
                             alert("게시글 수정 실패. 잠시 후에 다시 시도해주세요")
@@ -308,13 +309,6 @@
                 },
                 set: function(inputComment) {
                     this.new_comment_content = inputComment;
-                    // this.new_comment_content = document.getElementById("test").value;
-                    // console.log(document.getElementById("test").value);
-                    // this.new_comment_content2 = inputComment;
-                    // if(inputComment.substring(inputComment.length-1, inputComment.length) == "\n") {
-                        // this.new_comment_content2 = inputComment.substring(0, inputComment.length-1) + "<br>";
-                        // inputComment = inputComment.substring(0, inputComment.length-1) + "<br>";
-                    // }
                 }
             },
         },
@@ -422,21 +416,17 @@
         el: "#body-div",
         data: {
             showBoard: true,
-            showComment: true,
             showModify: false,
         },
         methods: {
             viewModify: function(v) {
                 this.showBoard = false;
-                this.showComment = false;
                 this.showModify = true;
             },
             viewBoard: function(v) {
                 this.showBoard = true;
-                this.showComment = true;
                 this.showModify = false;
             },
- 
         },
     })
 

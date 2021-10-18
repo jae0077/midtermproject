@@ -17,12 +17,13 @@
         <!-- 메인 -->
         <div class="main-container">
             <div class="sub-container" style="width: 50%;">
+                <h1>공지사항</h1><hr>
 
-                <notice-one v-show="showBoard" v-on:board-emit="viewModify"></notice-one>
+                <notice-one></notice-one>
 
             </div>
-            <foot></foot>
         </div>
+        <foot></foot>
     </div>
 
 <!-- ========================================템플릿======================================== -->
@@ -36,7 +37,8 @@
                 <div><h3>{{notice_one.title}}</h3></div>
                 <div>작성자 : <a style="padding-right: 2%;">관리자</a>마지막으로 수정한 날짜 : <a>{{notice_one.created}}</a></div>
                 <hr>
-                {{notice_one.content}}
+                <p>{{notice_one.content}}</p>
+                
             </div>
         </div>
         <div style="padding-top: 1%;">
@@ -116,26 +118,7 @@
             // ===============공통에서 수정===============
     new Vue({
         el: "#body-div",
-        data: {
-            showBoard: true,
-            showComment: true,
-            showModify: false,
-        },
-        methods: {
-            viewModify: function(v) {
-                this.showBoard = false;
-                this.showComment = false;
-                this.showModify = true;
-            },
-            viewBoard: function(v) {
-                this.showBoard = true;
-                this.showComment = true;
-                this.showModify = false;
-            },
- 
-        },
     })
-
 </script>
 
 </body>
