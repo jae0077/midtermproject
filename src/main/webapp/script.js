@@ -1,11 +1,11 @@
 function navBar(){
     navBarScript =
     `
-    <div style="height:150px">
-        <div id="nav" class="nav-bar w3-black">
-            <img class="navbar-logo" src="./img/logo.jpg">
+    <div style="height:auto">
+        <div id="nav" class="nav-bar">
+            <img class="navbar-logo" src="./img/logo2.png" onclick="location.href='http://localhost'">
             <div class="navbar-contents"> 
-                <a href="00_index.html" class="w3-bar-item w3-button w3-mobile">Home</a>
+                <a href="http://localhost" class="w3-bar-item w3-button w3-mobile">Home</a>
                 <a v-if="login" href="01_seat.html" class="nav-display-member w3-bar-item w3-button w3-mobile">좌석선택</a>
                 <a v-if="login" href="02_ticket.html" class="nav-display-member w3-bar-item w3-button w3-mobile">이용권구매</a>
                 <a class="dropdown w3-bar-item w3-button w3-mobile">커뮤니티
@@ -30,12 +30,19 @@ function navBar(){
     if(get_token != null){  
         logRecord();
     }
+    
+    // console에 글씨찍기
+    var cssRule= "font-size:2em;"
+    var cssLogo1 ="color:#FBEDE1;" +"font-size: 60px;" +"font-weight: bold;" +"letter-space:-1px;" +"font-family:Tahoma,Arial,sans-serif";
+    if(window.console!=undefined) {
+        setTimeout(console.log.bind(console,"%cSARAK", cssLogo1),0);setTimeout(console.log.bind(console,"%cTHE PREMIUM LIBRARY",cssRule),0);
+    }
 }
 
 function footer(){
     footerScript =
     `
-    <div class="w3-container w3-teal footer">
+    <div class="w3-container footer">
         <div class="footer-left">
             <ul class="footer-ul">
                 <li> 상호명: (주)사락사락스터디카페	</li>

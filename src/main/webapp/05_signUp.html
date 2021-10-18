@@ -33,7 +33,7 @@
                 <h1 style="text-align: center;"> 회원가입 </h1> <hr>
                 <div style="width: 30%; margin-left: 35%;">
                     <div class="sign-up">
-                        <input type="text" v-model="CheckId" style="width: 64%;" autofocus required  maxlength="16" spellcheck="false" placeholder="아이디, 최소 6글자">
+                        <input type="text" v-model="CheckId" style="width: 64%;" autofocus required  maxlength="16" spellcheck="false" placeholder="아이디, 최소 4글자">
                         <button @click="existCheck" style="width: 34%; padding: 4px; height: 40px;">중복확인</button>
                     </div>
                     <div id="inputId" style="color: brown;">{{messageId}}<hr></div>
@@ -102,7 +102,7 @@
                     }).then(resData => {  
                         if(resData.data){
                             alert("회원가입 성공");
-                            location.href="00_index.html";
+                            location.href="http://localhost";
                         }
                         else{
                             alert("회원가입 실패 - 잠시 후에 다시 시도해주세요");
@@ -147,19 +147,22 @@
                             this.messageId = "※ 아이디를 입력해주세요";
                     }
                     else if(/[^a-zA-Z0-9]/g.test(inputId)) {
-                        this.messageId = "※ 알파벳과 숫자 조합만 가능합니다";
+                        this.messageId = "※ 영문과 숫자 조합만 가능합니다";
                     }
                     else{
-                        if(0 < inputId.length && inputId.length < 6) {
-                            this.messageId = "※ 6글자 이상 입력해주세요";
+                        if(0 < inputId.length && inputId.length < 4) {
+                            this.messageId = "※ 4글자 이상 입력해주세요";
                         }
-                        else if(6 < inputId.length) {
+                        else if(3 < inputId.length) {
                             if(/[^a-zA-Z]/g.test(inputId)) {
-                                if(/[a-zA-z]/g.test(inputId) && /[0-9]/g.test(inputId)) {
+                                if(/[^a-zA-Z]/g.test(inputId.substring(0,1))) {
+                                    this.messageId = "※ 아이디는 영문으로 시작해야 합니다";
+                                }
+                                else if(/[a-zA-z]/g.test(inputId) && /[0-9]/g.test(inputId)) {
                                     this.messageId = "※ 오른쪽에서 중복체크를 해주세요";
                                 }
                                 else {
-                                    this.messageId = "※ 아이디는 알파벳을 포함해야 합니다";
+                                    this.messageId = "※ 아이디는 영문을 포함해야 합니다";
                                 }
                             }
                             else {
@@ -180,7 +183,6 @@
                     this.pw2 = "";
                     document.getElementById("inputPw2").style.color="brown";
                     this.messagePw2 = "※ 비밀번호를 한 번 더 입력해주세요";
-
                     if(inputPw.length == 0){
                         this.messagePw = "※ 비밀번호를 입력해주세요";
                     }
@@ -321,7 +323,7 @@
                     sessionStorage.clear();
                     this.login = false;
                     this.logout = true;
-                    location.href="00_index.html";
+                    location.href="http://localhost";
                 }
             }
         }

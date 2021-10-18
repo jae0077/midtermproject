@@ -81,7 +81,7 @@
 	bottom: 0px;
 	height: 100px;
 	width: 100%;
-	background-color: #54cbe0;
+	background-color: #92a8d1;
 	z-index: 1;
 	overflow: auto;
   /* font-size: 0.9rem; */
@@ -130,10 +130,12 @@ a{
 textarea{
   text-decoration:none;
   resize: none;
-  
 }
 table {
 	table-layout: fixed;
+}
+p {
+  white-space: pre-line;
 }
 
 /* =========================================================== */
