@@ -17,18 +17,18 @@
         <nav-bar></nav-bar>
 
         <!-- 메인 -->
-        <div class="main-container">
             <view-allnotice></view-allnotice>
-            <foot></foot>
-        </div>
+        <foot></foot>
     </div>
 
-    <template id="view-allnotice-temp">
+<!-- ==================================템플릿====================================== -->
+
+<template id="view-allnotice-temp">
+    <div class="main-container">
         <div class="sub-container">
-            <h1>공지사항</h1>
-            <hr>
+            <h1>공지사항</h1><hr>
             <div style="width: 70%; display: inline-block;">
-                <div style="height: 380px;">
+                <div style="height: 500px;">
                     <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
                         <thead>
                             <tr style="background-color: #e7dcdc">
@@ -49,24 +49,63 @@
 
                 <div style="display: inline-block; padding-top: 3%;">
                     <div v-for="(page, index) in total_pages" style="float:left">
-                        <a v-if="index == page_now" style="font-weight: bold; cursor:default"> <span
-                                style="text-decoration: underline;">{{page}}</span> &nbsp; </a>
+                        <a v-if="index == page_now" style="font-weight: bold; cursor:default"> <span style="text-decoration: underline;">{{page}}</span> &nbsp; </a>
                         <a v-else @click=selectPage(index)> {{page}} &nbsp; </a>
-                    </div>
+                    </div>  
                 </div>
             </div>
         </div>
-    </template>
-    <!-- ========================================스크립트======================================== -->
-    <script>
-        Vue.component('view-allnotice', {
-            template: "#view-allnotice-temp",
-            data: function () {
-                return {
-                    notice_list: [],
-                    message: "",
-                    total_pages: 1,
-                    page_now: 0
+    </div>
+</template>
+<!-- ========================================스크립트======================================== -->
+<script>
+    Vue.component('view-allnotice', {
+        template: "#view-allnotice-temp",
+        data: function() {
+            return {
+                notice_list: [],
+                message: "",
+                total_pages: 1,
+                page_now: 0
+            }
+        },
+        created: function() {
+            axios({
+                method: "get",
+                url: "notice",
+                params: {
+                    size: 10,
+                    sort: "noticeIdx,desc",
+                    page: 0
+                } 
+            }).then(resData => { 
+                if(resData.data.content.length == 0) {
+                    this.message = "공지사항이 없습니다";
+                }
+                else {
+                    for(n of resData.data.content) {
+                        if(n.title.length > 16) {
+                            n.title = n.title.substring(0,16) + "...";
+                        }
+                        this.notice_list.push({
+                            noticeIdx: n.noticeIdx,
+                            title: n.title,
+                            created: n.created
+                        })
+                    }
+                    this.total_pages = resData.data.totalPages;
+                }
+            }).catch(errorData => {
+                alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+            });
+        },
+        methods: {
+            viewNoticeOne: function(index) {
+                if(index != null) {  
+                    location.href = "03_02_noticeOne.html?noticeIdx=" + this.notice_list[index].noticeIdx;
+                }
+                else {
+                    alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
                 }
             },
             created: function () {
@@ -78,20 +117,11 @@
                         sort: "noticeIdx,desc",
                         page: 0
                     }
-                }).then(resData => {
-                    if (resData.data.content.length == 0) {
-                        this.message = "공지사항이 없습니다";
-                    }
-                    else {
-                        for (n of resData.data.content) {
-                            if (n.title.length > 8) {
-                                n.title = n.title.substring(0, 8) + "...";
-                            }
-                            this.notice_list.push({
-                                noticeIdx: n.noticeIdx,
-                                title: n.title,
-                                created: n.created
-                            })
+                }).then(resData => {  
+                    this.notice_list = [];
+                    for(n of resData.data.content) {
+                        if(n.title.length > 16) {
+                            n.title = n.title.substring(0,16) + "...";
                         }
                         this.total_pages = resData.data.totalPages;
                     }
@@ -137,10 +167,7 @@
             }
         })
 
-
-
-
-        // ========================================공통 스크립트========================================
+    // ========================================공통 스크립트========================================
 
         navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
         footer();
@@ -153,27 +180,25 @@
                     logout,
                 }
             },
-            methods: {
-                ClickLogout: function () {
-                    const result = confirm("로그아웃 하시겠습니까?");
-                    if (result) {
-                        sessionStorage.clear();
-                        this.login = false;
-                        this.logout = true;
-                        location.href = "http://localhost";
-                    }
+        methods: {
+            ClickLogout: function(){
+                const result = confirm("로그아웃 하시겠습니까?");
+                if(result) {
+                    sessionStorage.clear();
+                    this.login = false;
+                    this.logout = true;
+                    location.href="http://localhost";
                 }
             }
-        })
-        Vue.component('foot', {
-            template: footerScript,
-        })
-
-        new Vue({
-            el: "#body-div",
-        })
-
-    </script>
+        }
+    })
+    Vue.component('foot', {
+        template: footerScript,
+    })
+    new Vue({
+        el: "#body-div",
+    })
+</script>
 
 </body>
 

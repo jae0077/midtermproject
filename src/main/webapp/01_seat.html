@@ -15,47 +15,46 @@
         <nav-bar></nav-bar>
         
         <!-- 메인 -->
-        <div class="main-container">
             <seat-select></seat-select>
 
-
-            <foot></foot>
-        </div>
+        <foot></foot>
     </div>
 
     <!-- ========================================== 템플릿 ================================================ -->
 <template id="seat-select-temp">
-    <div class="sub-container">
-        <h1>좌석 선택</h1><hr>
-        <div>
-            남은 좌석 : {{remain_seat}} / {{seat_list1.length + seat_list2.length}}<br>
-            선택 가능한 좌석은 초록색으로 표시됩니다 
-        </div>
-        <div style="display:flex;justify-content: center;">
-            <div style="border-style: groove; width: 85%; height: 90%; margin-top: 2%;">
-                <div style="padding: 1%; display:flex; width: 100%;">
-                    <div v-for="(seat, index) in seat_list1" style="padding: 1%;">
-                        <button v-if="seat.seatIdx == selected_now" class="square" style="background-color: rgb(93, 182, 224); cursor:not-allowed;">{{seat.seatIdx}}</button>
-                        <button v-else-if="seat.seatIdx == using" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
-                        <button v-else-if="seat.isUsed == 1" class="square" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
-                        <button v-else-if="(using != '') && (change_mode == false)" class="square" style="cursor: not-allowed;">{{seat.seatIdx}}</button>
-                        <button v-else @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
-                    </div>
-                </div>
-                <div style="padding: 1%; display:flex; width: 100%;">
-                    <div v-for="(seat, index) in seat_list2" style="padding: 1%;">
-                        <button v-if="seat.seatIdx == selected_now" class="square" style="background-color: rgb(93, 182, 224); cursor:not-allowed;">{{seat.seatIdx}}</button>
-                        <button v-else-if="seat.seatIdx == using" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
-                        <button v-else-if="seat.isUsed == 1" class="square" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
-                        <button v-else-if="(using != '') && (change_mode == false)" class="square" style="cursor: not-allowed;">{{seat.seatIdx}}</button>
-                        <button v-else @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
-                    </div>
-                </div>
+    <div class="main-container">
+	    <div class="sub-container">
+	        <h1>좌석 선택</h1><hr>
+	        <div>
+	            남은 좌석 : {{remain_seat}} / {{seat_list1.length + seat_list2.length}}<br>
+	            선택 가능한 좌석은 초록색으로 표시됩니다 
+	        </div>
+	        <div style="display:flex;justify-content: center;">
+	            <div style="border-style: groove; width: 85%; height: 90%; margin-top: 2%;">
+	                <div style="padding: 1%; display:flex; width: 100%;">
+	                    <div v-for="(seat, index) in seat_list1" style="padding: 1%;">
+	                        <button v-if="seat.seatIdx == selected_now" class="square" style="background-color: rgb(93, 182, 224); cursor:not-allowed;">{{seat.seatIdx}}</button>
+	                        <button v-else-if="seat.seatIdx == using" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
+	                        <button v-else-if="seat.isUsed == 1" class="square" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
+	                        <button v-else-if="(using != '') && (change_mode == false)" class="square" style="cursor: not-allowed;">{{seat.seatIdx}}</button>
+	                        <button v-else @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
+	                    </div>
+	                </div>
+	                <div style="padding: 1%; display:flex; width: 100%;">
+	                    <div v-for="(seat, index) in seat_list2" style="padding: 1%;">
+	                        <button v-if="seat.seatIdx == selected_now" class="square" style="background-color: rgb(93, 182, 224); cursor:not-allowed;">{{seat.seatIdx}}</button>
+	                        <button v-else-if="seat.seatIdx == using" class="square" style="background-color: rgb(224, 216, 93); cursor:not-allowed;">{{seat.seatIdx}}</button>
+	                        <button v-else-if="seat.isUsed == 1" class="square" style="background-color: brown; cursor:not-allowed;">{{seat.seatIdx}}</button>
+	                        <button v-else-if="(using != '') && (change_mode == false)" class="square" style="cursor: not-allowed;">{{seat.seatIdx}}</button>
+	                        <button v-else @click="selectSeat(seat.seatIdx)" class="square">{{seat.seatIdx}}</button>
+	                    </div>
+	                </div>
+	            </div>
             </div>
+            <button v-show="!change_mode" @click="changeSeat" style="margin-top: 2%; width: 10%;">좌석 변경하기</button>
+            <button v-show="change_mode" @click="changeSeat" style="margin-top: 2%; width: 10%; background-color: rgb(93, 165, 224);">변경 완료</button>
+            <button v-show="change_mode" @click="cancel" style="margin-top: 2%; width: 10%; background-color: rgb(224, 93, 93);">취소</button>
         </div>
-        <button v-show="!change_mode" @click="changeSeat" style="margin-top: 2%; width: 10%;">좌석 변경하기</button>
-        <button v-show="change_mode" @click="changeSeat" style="margin-top: 2%; width: 10%; background-color: rgb(93, 165, 224);">변경 완료</button>
-        <button v-show="change_mode" @click="cancel" style="margin-top: 2%; width: 10%; background-color: rgb(224, 93, 93);">취소</button>
     </div>
 </template>
 
@@ -129,9 +128,15 @@
                             location.href="02_ticket.html";
                         }
                         else {
-                            this.selectSeatFinal(i);
+                            const result = confirm(i + "번 좌석을 선택하시겠습니까?");
+                            if(result) {
+                                this.selectSeatFinal(i);
+                            }
                         }
-                    })
+                    }).catch(errorData => {
+                        alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요 - error 04");
+                        window.location.reload();
+                    });
                 }
                 else if(this.change_mode) {
                     this.selected_now = i;
@@ -182,11 +187,11 @@
                     headers: {authorization: `bearer ${sessionStorage.getItem("token")}`}
                 }).then(resData => {
                     if(!resData.data) {
-                        alert("좌석선택 실패. 잠시 후에 다시 시도해주세요 - error3");
+                        alert("좌석선택 실패. 잠시 후에 다시 시도해주세요 - error5");
                     }
                     window.location.reload();
                 }).catch(errorData => {
-                    alert("좌석선택 실패. 잠시 후에 다시 시도해주세요 - error3");
+                    alert("좌석선택 실패. 잠시 후에 다시 시도해주세요 - error6");
                     window.location.reload();
                 });
             },
@@ -196,8 +201,6 @@
             }
         }
     })
-
-
 
 //                  ======================공통 스크립트====================
     navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
@@ -226,11 +229,9 @@
     Vue.component('foot', {
         template: footerScript,
     })
-
     new Vue({
         el: "#body-div",
     });
-
 </script>
 </body>
 </html>

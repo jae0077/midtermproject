@@ -22,63 +22,63 @@
         <nav-bar></nav-bar>
 
         <!-- 메인 -->
-        <div class="main-container">
-            <write-board></write-board>
+        <write-board></write-board>
                     
-                <foot></foot>
-        </div>
+        <foot></foot>
     </div>
 
 <!-- ========================================템플릿======================================== -->
 <template id="write-board-temp">
-    <div class="sub-container" style="width: 50%;">
-        <div style="margin-bottom: 100px;">
-            <div style="padding-left: 1%; text-align: left; border-style: groove;">
-                <a><h6>자유게시판</h6></a>
-                <div style="padding-left: 0.5%; padding-top: 1%;">
-                    <textarea v-model="write_title" style="resize: none;" rows="1" cols="99" maxlength="50" spellcheck="false" autofocus required maxlength="130" placeholder="제목을 입력해주세요"></textarea>
+    <div class="main-container">
+        <div class="sub-container" style="width: 50%;">
+            <h1>자유게시판</h1><hr>
+            <div style="margin-bottom: 100px;">
+                <div style="padding-left: 1%; text-align: left; border-style: groove;">
+                    <a><h6>자유게시판</h6></a>
+                    <div style="padding-left: 0.5%; padding-top: 1%;">
+                        <textarea v-model="write_title" style="resize: none;" rows="1" cols="99" maxlength="50" spellcheck="false" autofocus required maxlength="130" placeholder="제목을 입력해주세요"></textarea>
+                    </div>
+                    <hr>
+                    <div style="padding-left: 0.5%; padding-bottom: 1%;">
+                        <textarea v-model="write_content" style="resize: none;" rows="15" cols="99" maxlength="4000" spellcheck="false" required placeholder="내용을 입력해주세요"></textarea>
+                    </div>
                 </div>
-                <hr>
-                <div style="padding-left: 0.5%; padding-bottom: 1%;">
-                    <textarea v-model="write_content" style="resize: none;" rows="15" cols="99" maxlength="4000" spellcheck="false" required placeholder="내용을 입력해주세요"></textarea>
+
+                <div style="padding-top: 1%;">
+                    <div style="display: inline; float:left;">
+                        <button @click="writeCancel" class="w3-button" style="background-color: #ecdbdb; width: 100px;">취소</button> <br><br>
+                    </div>
+                    <div style="display:flex; float:right;">
+                        <button @click="writeCheck('preview')" class="w3-button" style="background-color: #ecdbdb; width: 110px; margin-right: 10%;">미리보기</button> 
+                        <button @click="writeCheck('final')" class="w3-button" style="background-color: #ecdbdb; width: 100px;">작성 완료</button> <br><br>
+                    </div>
                 </div>
             </div>
+                <!-- ================모달================== -->
 
-            <div style="padding-top: 1%;">
-                <div style="display: inline; float:left;">
-                    <button @click="writeCancel" class="w3-button" style="background-color: #ecdbdb; width: 100px;">취소</button> <br><br>
-                </div>
-                <div style="display:flex; float:right;">
-                    <button @click="writeCheck('preview')" class="w3-button" style="background-color: #ecdbdb; width: 110px; margin-right: 10%;">미리보기</button> 
-                    <button @click="writeCheck('final')" class="w3-button" style="background-color: #ecdbdb; width: 100px;">작성 완료</button> <br><br>
-                </div>
-            </div>
-        </div>
-            <!-- ================모달================== -->
+            <div id="modalWrite" class="modal">
+                <form class="modal-content" style="width: 50%;">
+                    <div class="container" style="text-align: left;">
 
-        <div id="modalWrite" class="modal">
-            <form class="modal-content" style="width: 50%;">
-                <div class="container" style="text-align: left;">
-
-                    <div style="text-align: left; border-style: groove;">
-                        <div style="padding-left: 1%;"><a href='03_board.html'><h6>자유게시판</h6></a></div>
-                        <div style="padding-left: 3%; padding-bottom: 3%; padding-right: 3%;">
-                            <div><h3>{{write_title}}</h3></div>
-                            <div>작성자 : <a style="padding-right: 2%;">{{writer}}</a></div>
-                            <hr>
-                            <p>{{write_content}}</p>
+                        <div style="text-align: left; border-style: groove;">
+                            <div style="padding-left: 1%;"><a href='03_board.html'><h6>자유게시판</h6></a></div>
+                            <div style="padding-left: 3%; padding-bottom: 3%; padding-right: 3%;">
+                                <div><h3>{{write_title}}</h3></div>
+                                <div>작성자 : <a style="padding-right: 2%;">{{writer}}</a></div>
+                                <hr>
+                                <p>{{write_content}}</p>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="clearfix">
-                        <button @click="writeFinal" type="button" class="signup" style="width:50%">확인</button>
-                        <button @click="modalClose" type="button" class="cancelbtn">취소</button>
-                    </div>
+                        
+                        <div class="clearfix">
+                            <button @click="writeFinal" type="button" class="signup" style="width:50%">확인</button>
+                            <button @click="modalClose" type="button" class="cancelbtn">취소</button>
+                        </div>
 
-                </div>
-            </form>
+                    </div>
+                </form>
+            </div>
         </div>
-
     </div>
 </template>
 
@@ -201,11 +201,9 @@
     Vue.component('foot', {
         template: footerScript,
     })
-
     new Vue({
         el: "#body-div",
     })
-
 </script>
 
 </body>
