@@ -1,108 +1,92 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="./script.js"></script>
-<title>Infomation</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./script.js"></script>
+    <title>Infomation</title>
 </head>
+
 <body class="body">
     <div id="body-div">
         <nav-bar></nav-bar>
 
         <!-- 메인 -->
         <info></info>
-
-        <foot></foot>
-    </div>
-
-<!-- ==================================템플릿====================================== -->
-
-<template id="info-temp">
-    <div class="main-container">
-        <div class="sub-container"> 
-            <h1>이용 안내</h1><hr>
-            <div class="w3-display-container">  
-                <img src="./img/info.png" width="60%" height="1200vh">
-                <div class="w3-display-topmiddle w3-container" style="margin-top: 18%;">
-                    <p>
-                    <h2 style="font-weight: 800;">당신의 하루가 가볍게 맞닿아<br>환한 미래가 되길 바라는<br>사락사락 스터디 카페</h2>
-                    <br>
-                    <h3>[안내]</h3>
-                    사락사락 스터디 카페는 365일 연중무휴 무인 시스템으로 운영됩니다.<br>
-                    무인 시스템으로 인건비를 최소화 할 수 있어 스터디 카페를 이용하시는 분들께<br>부담 없는 비용으로 쾌적한 공간을 제공 해 드립니다. 
-                    <br>
-                    <h3>[이용 수칙]</h3>
-                    <ol style="text-align: left;">
-                        <li style="margin: 20px 0px;">스터디 카페 내 음주 및 흡연은 금지합니다.</li>
-                        <li style="margin: 20px 0px;">핸드폰은 ‘진동’이나 ‘무음’으로, 통화는 외부에서 해 주시기를 바랍니다.</li>
-                        <li style="margin: 20px 0px;">정해진 좌석 외에는 임의로 자리 이동이 불가합니다. 좌석 이동은 홈페이지를 이용해주세요.</li>
-                        <li style="margin: 20px 0px;">개인 소지품 분실에 주의 해 주시길 바랍니다. 개인 물품 분실 시 책임지지 않습니다.</li>
-                        <li style="margin: 20px 0px;">좌석에서 음료 섭취는 가능하나 그 이외의 외부 음식은 반입 금지입니다.</li>
-                        <li style="margin: 20px 0px;">모든 결제는 환불이 불가하오니 신중하게 구매해 주시길 바랍니다.</li>
-                        <li style="margin: 20px 0px;">기물 파손 등의 물의를 일으킬 시 보상 규정에 의거하여 해당 책임자에게 비용을 청구할 수 있습니다.</li>
-                        <li style="margin: 20px 0px;">분위기 조성에 문제를 지속적으로 발생시키는 고객이 있는 경우, 말소 조치할 수 있습니다.</li>
-                        <li style="margin: 20px 0px;">이용 시간이 종료되면, 사용한 좌석은 깔끔하게 정돈 한 후 퇴실하는것을 원칙으로 합니다.</li>
-                    </ol>
-                    <br>
-                    <h3>[이용 방법 및 절차 안내]</h3>
-                    <br>
-                    웹에서 홈페이지 접속 <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                    회원 가입 후 회원권 구입 <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                    좌석 확인 및 선택 <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                    입실 <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                    퇴실
+            <div class="sub-container">
+                <h1>이용 안내</h1>
+                <hr>
+                <p>
+                <h2 style="font-weight: 800;">당신의 하루가 가볍게 맞닿아<br>환한 미래가 되길 바라는<br>‘사락사락’ 스터디 카페</h2>
+                <br>
+                <h3>[이용 안내]</h3>
+                사락사락 스터디 카페는 365일 연중무휴 무인 시스템으로 운영됩니다.<br>
+                무인 시스템으로 인건비를 최소화 할 수 있어 스터디 카페를 이용하시는 분들께<br>부담 없는 비용으로 쾌적한 공간을 제공 해 드립니다.
+                <br>
+                <h3>[이용 수칙]</h3>
+                <ol style="text-align: left; padding-left: 30%;">
+                    <li style="margin: 20px 0px;">스터디 카페 내 음주 및 흡연은 금지합니다.</li>
+                    <li style="margin: 20px 0px;">핸드폰은 ‘진동’이나 ‘무음’으로, 통화는 외부에서 해 주시기를 바랍니다.</li>
+                    <li style="margin: 20px 0px;">정해진 좌석 외에는 임의로 자리 이동이 불가합니다. 좌석 이동은 홈페이지를 이용해주세요.</li>
+                    <li style="margin: 20px 0px;">개인 소지품 분실에 주의 해 주시길 바랍니다. 개인 물품 분실 시 책임지지 않습니다.</li>
+                    <li style="margin: 20px 0px;">좌석에서 음료 섭취는 가능하나 그 이외의 외부 음식은 반입 금지입니다.</li>
+                    <li style="margin: 20px 0px;">모든 결제는 환불이 불가하오니 신중하게 구매해 주시길 바랍니다.</li>
+                    <li style="margin: 20px 0px;">기물 파손 등의 물의를 일으킬 시 보상 규정에 의거하여 해당 책임자에게 비용을 청구할 수 있습니다.</li>
+                    <li style="margin: 20px 0px;">분위기 조성에 문제를 지속적으로 발생시키는 고객이 있는 경우, 말소 조치할 수 있습니다.</li>
+                    <li style="margin: 20px 0px;">이용 시간이 종료되면, 사용한 좌석은 깔끔하게 정돈 한 후 퇴실하는것을 원칙으로 합니다.</li>
+                </ol>
+                <br>
+                <h3>[이용 방법 및 절차 안내]</h3>
+                <br>
+                웹에서 홈페이지 접속 <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                회원 가입 후 회원권 구입 <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                좌석 확인 및 선택 <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                입실 <i class="fa fa-arrow-right" aria-hidden="true"></i>
+                퇴실
                 </p>
-                </div>
             </div>
         </div>
+        <foot></foot>
     </div>
-</template>
+    </div>
+    <script>
+        navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
+        footer();
 
-    <!-- ========================================스크립트======================================== -->
-
-<script>
-    Vue.component('info', {
-        template: "#info-temp",
-    })
-
-
-
-    // ========================================공통 스크립트========================================
-
-    navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
-    footer();    
-
-    Vue.component('nav-bar', {
-        template: navBarScript,
-        data: function() {
+        Vue.component('nav-bar', {
+            template: navBarScript,
+            data: function () {
                 return {
                     login,
                     logout,
                 }
             },
-        methods: {
-            ClickLogout: function(){
-                const result = confirm("로그아웃 하시겠습니까?");
-                if(result) {
-                    sessionStorage.clear();
-                    this.login = false;
-                    this.logout = true;
-                    location.href="http://localhost";
+            methods: {
+                ClickLogout: function () {
+                    const result = confirm("로그아웃 하시겠습니까?");
+                    if (result) {
+                        sessionStorage.clear();
+                        this.login = false;
+                        this.logout = true;
+                        location.href = "http://localhost";
+                    }
                 }
             }
-        }
-    })
-    Vue.component('foot', {
-        template: footerScript,
-    })
-    new Vue({
-        el: "#body-div",
-    })
-</script>
+        })
+        Vue.component('foot', {
+            template: footerScript,
+        })
+
+        new Vue({
+            el: "#body-div",
+        })
+
+    </script>
 </body>
+
 </html>

@@ -53,7 +53,7 @@ function footer(){
 
         <div class="footer-right">   
             <ul class="footer-ul">
-                <li> 사업자등록정보: 이거 보여줄려고 어그로 끌었다</li>
+                <li onclick="window.open('http://localhost/img/logo3.png')"> 사업자등록정보: 이거 보여줄려고 어그로 끌었다</li>
                 <li> 가맹점문의: 재훈님께 문의 ㄱㄱ	</li>
                 <li><a href=" https://github.com/jae0077/midtermproject">GIT Hub 바로가기 </a></li>
             </ul>
@@ -65,4 +65,8 @@ function footer(){
 function logRecord(){
     login = !login;
     logout = !logout;
+}
+
+function 사락() {
+    
 }

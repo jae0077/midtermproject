@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="./script.js"></script>
-<title>Community-notice</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./script.js"></script>
+    <title>Community-notice</title>
 </head>
+
 <body class="body">
     <div id="body-div">
         <nav-bar></nav-bar>
 
         <!-- 메인 -->
             <view-allnotice></view-allnotice>
-        
         <foot></foot>
     </div>
 
@@ -107,15 +108,14 @@
                     alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
                 }
             },
-            selectPage: function(page_index) {
-                this.page_now = page_index;
+            created: function () {
                 axios({
                     method: "get",
-                    url: "notice", 
+                    url: "notice",
                     params: {
                         size: 10,
                         sort: "noticeIdx,desc",
-                        page: page_index
+                        page: 0
                     }
                 }).then(resData => {  
                     this.notice_list = [];
@@ -123,27 +123,58 @@
                         if(n.title.length > 16) {
                             n.title = n.title.substring(0,16) + "...";
                         }
-                        this.notice_list.push({
-                            noticeIdx: n.noticeIdx,
-                            title: n.title,
-                            created: n.created
-                        })
+                        this.total_pages = resData.data.totalPages;
                     }
                 }).catch(errorData => {
                     alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
                 });
+            },
+            methods: {
+                viewNoticeOne: function (index) {
+                    if (index != null) {
+                        location.href = "03_02_noticeOne.html?noticeIdx=" + this.notice_list[index].noticeIdx;
+                    }
+                    else {
+                        alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+                    }
+                },
+                selectPage: function (page_index) {
+                    this.page_now = page_index;
+                    axios({
+                        method: "get",
+                        url: "notice",
+                        params: {
+                            size: 10,
+                            sort: "noticeIdx,desc",
+                            page: page_index
+                        }
+                    }).then(resData => {
+                        this.notice_list = [];
+                        for (n of resData.data.content) {
+                            if (n.title.length > 8) {
+                                n.title = n.title.substring(0, 8) + "...";
+                            }
+                            this.notice_list.push({
+                                noticeIdx: n.noticeIdx,
+                                title: n.title,
+                                created: n.created
+                            })
+                        }
+                    }).catch(errorData => {
+                        alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+                    });
+                }
             }
-        }
-    })
+        })
 
     // ========================================공통 스크립트========================================
 
-    navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
-    footer();    
+        navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
+        footer();
 
-    Vue.component('nav-bar', {
-        template: navBarScript,
-        data: function() {
+        Vue.component('nav-bar', {
+            template: navBarScript,
+            data: function () {
                 return {
                     login,
                     logout,
@@ -170,4 +201,5 @@
 </script>
 
 </body>
+
 </html>
