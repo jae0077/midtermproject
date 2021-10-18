@@ -226,7 +226,10 @@
                 },
                 set : function(inputName){
                     document.getElementById("inputName").style.color="brown";
-                    if(/[a-zA-Z]/g.test(inputName)) {
+                    if(inputName.length == 0) {
+                        this.messageName = "※ 이름를 입력해주세요";
+                    }
+                    else if(/[a-zA-Z]/g.test(inputName)) {
                         this.messageName = "※ 한글 이름를 입력해주세요";
                     }
                     else if(/[^가-힣]/g.test(inputName) || /[ㄱ-ㅎㅏ-ㅣ]/g.test(inputName)) {

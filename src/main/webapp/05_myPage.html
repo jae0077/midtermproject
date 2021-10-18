@@ -215,7 +215,7 @@
                 headers: {"Authorization" : `Bearer ${sessionStorage.getItem("token")}`}
             }).then(resData => {  
                 if(resData.data == null || resData.data == "") {
-                    alert("정보 불러오기를 실패했습니다. 잠시 후에 다시 시도해주세요")
+                    alert("정보 불러오기를 실패했습니다. 잠시 후에 다시 시도해주세요 - error 01")
                     location.href="http://localhost";
                 }
                 else{
@@ -225,7 +225,7 @@
                     this.model = resData.data;
                 }
             }).catch(errorData => {
-                alert("정보 불러오기를 실패했습니다. 잠시 후에 다시 시도해주세요")
+                alert("정보 불러오기를 실패했습니다. 잠시 후에 다시 시도해주세요 - error 02")
                 location.href="http://localhost";
             });
             // ========= 종료일 불러오는 부분========
@@ -241,7 +241,7 @@
                     this.end_day = resData.data;
                 }
             }).catch(errorData => {
-                alert("정보 불러오기를 실패했습니다. 잠시 후에 다시 시도해주세요")
+                alert("정보 불러오기를 실패했습니다. 잠시 후에 다시 시도해주세요 - error 03")
                 location.href="http://localhost";
             });
         },
@@ -303,7 +303,10 @@
                 },
                 set : function(inputName){
                     document.getElementById("inputNameId").style.color="brown";
-                    if(/[a-zA-Z]/g.test(inputName)) {
+                    if(inputName.length == 0) {
+                        this.messageName = "※ 이름를 입력해주세요";
+                    }
+                    else if(/[a-zA-Z]/g.test(inputName)) {
                         this.messageName = "※ 한글 이름를 입력해주세요";
                     }
                     else if(/[^가-힣]/g.test(inputName) || /[ㄱ-ㅎㅏ-ㅣ]/g.test(inputName)) {
@@ -414,18 +417,18 @@
                                                 this.using = resData.data.seat.seatIdx;
                                             }
                                         }).catch(errorData => {
-                                            alert("좌석정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
+                                            alert("좌석정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요 - error 04");
                                             location.href="http://localhost";
                                         });
                                         // ======================= 3. 끝  ==================
 
                                     }).catch(errorData => {
-                                        alert("좌석정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
+                                        alert("좌석정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요 - error 05");
                                         location.href="http://localhost";
                                     });
                                     // ======================= 2. 끝  ==================
                                 }).catch(errorData => {
-                                    alert("좌석정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요");
+                                    alert("좌석정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요 - error 06");
                                     location.href="http://localhost";
                                 });
                                 // ======================= 1. 끝  ==================
@@ -434,12 +437,12 @@
                             else if(this.now == "exiting") {
                                 document.getElementById('modalExit').style.display='block';
                             }else {
-                                alert("에러가 발생했습니다");
+                                alert("에러가 발생했습니다 - error 07");
                                 window.location.reload();
                             }
                         }
                 }).catch(errorData => {
-                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요")
+                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요 - error 08")
                     window.location.reload();
                 });
                 }
@@ -449,22 +452,27 @@
                 document.getElementById("pw_check_input").value = null;
             },
             modify: function(){
-                axios({
-                    method: "put",
-                    url: "http://localhost/user/" + sessionStorage.getItem("userIdx"), 
-                    data: this.modify_model,
-                    headers: {"Authorization" : `Bearer' ${sessionStorage.getItem("token")}`}
-                }).then(resData => {  
-                    if(resData.data){
-                        alert("정보 수정 성공했습니다")
-                        window.location.reload();
-                    }
-                    else{
-                        alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
-                    }
-                }).catch(errorData => {
-                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
-                });
+                if(this.messagePw == "OK" && this.messagePw2 == "OK" && this.messageName == "OK" && this.messagePhone == "OK") {
+                    axios({
+                        method: "put",
+                        url: "http://localhost/user/" + sessionStorage.getItem("userIdx"), 
+                        data: this.modify_model,
+                        headers: {"Authorization" : `Bearer' ${sessionStorage.getItem("token")}`}
+                    }).then(resData => {  
+                        if(resData.data){
+                            alert("정보 수정 성공했습니다")
+                            window.location.reload();
+                        }
+                        else{
+                            alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요 - error 09");
+                        }
+                    }).catch(errorData => {
+                        alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요 - error 10");
+                    });
+                }
+                else{
+                    alert("입력한 정보를 다시 확인해주세요");
+                }
             },
             selectSeat: function(v) {
                 const result = confirm(v + "번 좌석으로 바꾸시겠습니까?");
@@ -480,10 +488,10 @@
                             window.location.reload();
                         }
                         else {
-                            alert("좌석변경 실패. 잠시 후에 다시 시도해주세요");
+                            alert("좌석변경 실패. 잠시 후에 다시 시도해주세요 - error 11");
                         }
                     }).catch(errorData => {
-                        alert("좌석변경 실패. 잠시 후에 다시 시도해주세요");
+                        alert("좌석변경 실패. 잠시 후에 다시 시도해주세요 - error 12");
                     });
                 }
             },
@@ -498,10 +506,10 @@
                         window.location.reload();
                     }
                     else{
-                        alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                        alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요 - error 13");
                     }
                 }).catch(errorData => {
-                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요 - error 14");
                 });
             },
             memberOut: function() {  
@@ -516,10 +524,10 @@
                         location.href = "http://localhost";
                     }
                     else{
-                        alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                        alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요 - error 15");
                     }
                 }).catch(errorData => {
-                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요");
+                    alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요 - error 16");
                 });
             }   
         }
