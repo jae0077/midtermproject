@@ -130,10 +130,12 @@ a{
 textarea{
   text-decoration:none;
   resize: none;
-  
 }
 table {
 	table-layout: fixed;
+}
+p {
+  white-space: pre-line;
 }
 
 /* =========================================================== */
