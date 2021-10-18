@@ -43,8 +43,7 @@
                 </div>
                 <div style="display:flex; float:right;">
                     <button @click="writeCheck('preview')" class="w3-button" style="background-color: #ecdbdb; width: 110px; margin-right: 10%;">미리보기</button> 
-                    <!-- <button @click="writeCheck('final')" class="w3-button" style="background-color: #ecdbdb; width: 100px;">작성 완료</button> <br><br> -->
-                    <button @click="test" class="w3-button" style="background-color: #ecdbdb; width: 100px;">작성 완료</button> <br><br>
+                    <button @click="writeCheck('final')" class="w3-button" style="background-color: #ecdbdb; width: 100px;">작성 완료</button> <br><br>
                 </div>
             </div>
         </div>
@@ -58,9 +57,9 @@
                         <div style="padding-left: 1%;"><a href='03_board.html'><h6>자유게시판</h6></a></div>
                         <div style="padding-left: 3%; padding-bottom: 3%; padding-right: 3%;">
                             <div><h3>{{write_title}}</h3></div>
-                            <div>작성자 : <a style="padding-right: 2%;">test</a></div>
+                            <div>작성자 : <a style="padding-right: 2%;">{{writer}}</a></div>
                             <hr>
-                            {{write_content}}
+                            <p>{{write_content}}</p>
                         </div>
                     </div>
                     
@@ -85,6 +84,7 @@
         template: "#write-board-temp",
         data: function() {
             return {
+                writer: "",
                 write_title: "",
                 write_content: "",
             }
@@ -94,21 +94,17 @@
             this.write_content = ""
         },
         methods: {
-            test: function() {
-                console.log(this.write_content);
-            },
             writeCancel: function() {
                 if(this.write_title != "" || this.write_content != "") {
                     var result = confirm("작성중인 내용이 있습니다. 취소하시겠습니까?");
-                    if(result){
-                        this.write_title = "",
-                        this.write_content = ""
-                        location.href="03_board.html";
+                    if(!result){
+                        return
                     }
                 }
-                else { 
-                    location.href="03_board.html";
-                }
+                this.writer = "";
+                this.write_title = "";
+                this.write_content = "";
+                location.href="03_board.html";
             },
             writeFinal: function() {      
                 const result = confirm("등록하시겠습니까?");
@@ -134,6 +130,18 @@
                 }
             },
             writeCheck: function(v) {
+                axios({
+                    method: "get",
+                    url: "user/" + sessionStorage.getItem("userIdx"), 
+                    headers: {authorization : `bearer ${sessionStorage.getItem("token")}`}
+                }).then(resData => {  
+                    console.log(resData.data);
+                    this.writer = resData.data.userId;
+                }).catch(errorData => {
+                    alert("로그인 정보를 불러오지 못했습니다. 잠시 후에 다시 시도해주세요 - error 01");
+                    this.modalClose();
+                });
+
                 if(this.write_title.length == 0) {
                     alert("제목을 입력해주세요")
                 }
@@ -148,7 +156,7 @@
                         document.getElementById('modalWrite').style.display="block";
                     }
                     else{
-                        alert("에러가 발생했습니다. 다시 시도해주세요");
+                        alert("에러가 발생했습니다. 다시 시도해주세요 - error 02");
                     }
                 }
             },

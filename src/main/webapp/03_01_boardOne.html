@@ -36,9 +36,9 @@
             <div style="padding-left: 1%;"><a href='03_board.html'><h6>자유게시판</h6></a></div>
             <div v-bind="board_one" style="padding-left: 3%; padding-bottom: 3%; padding-right: 3%;">
                 <div><h3>{{board_one.title}}</h3></div>
-                <div>작성자 : <a style="padding-right: 2%;">{{board_one.userId}}</a>마지막으로 수정한 날짜 : <a>{{board_one.created}}</a></div>
+                <div>작성자 : <a style="padding-right: 2%;">{{board_one.userId}}</a>마지막으로 수정한 날짜 : <a>{{board_one.updated}}</a></div>
                 <hr>
-                {{board_one.content}}
+                <p>{{board_one.content}}</p>
             </div>
         </div>
         <div style="padding-top: 1%;">
@@ -75,7 +75,8 @@
                         id="modify_comment_id"
                         v-bind:value="comment.content" 
                         v-if="(comment.commentIdx == comment_modify_index) && (comment.userIdx == session_userIdx) && (comment_modify_mode == true)" 
-                        type="text" rows="5" cols="100" maxlength="500" spellcheck="false" required placeholder="최대 500자까지 입력 가능"></textarea>
+                        type="text" rows="5" cols="100" maxlength="500" spellcheck="false" required placeholder="최대 500자까지 입력 가능">
+                    </textarea>
                     <button 
                         v-if="(comment.commentIdx == comment_modify_index) && (comment.userIdx == session_userIdx) && (comment_modify_mode == true)" 
                         @click="modifyComment(comment.commentIdx)" 
@@ -88,13 +89,13 @@
                         class="w3-button" style="width: 8%; background-color: #ecdbdb;">
                         취소
                     </button>
-                    <div v-else>{{comment.content}}</div>
+                    <div v-else><p>{{comment.content}}</p></div>
                 </td>
             </tr>
             <hr>
         </div>
         <div style="padding-top: 2%;">
-            <textarea v-model="writeComment" type="text" rows="5" cols="100" maxlength="500" spellcheck="false" required placeholder="최대 500자까지 입력 가능"></textarea>
+            <textarea id="test" v-model="writeComment" type="text" rows="5" cols="100" maxlength="500" spellcheck="false" required placeholder="최대 500자까지 입력 가능"></textarea>
         </div>
         <div style="display:inline-block; padding-top: 2%;">
             <button @click="addComment" class="w3-button" style="background-color: #ecdbdb;">댓글달기</button> 
@@ -269,6 +270,7 @@
                 boardIdx2: "",
                 comment_list: [],
                 new_comment_content: "",
+                new_comment_content2: "",
                 show_comment_del: false,
                 comment_modify_mode: false,
                 comment_modify_index: ""
@@ -306,6 +308,13 @@
                 },
                 set: function(inputComment) {
                     this.new_comment_content = inputComment;
+                    // this.new_comment_content = document.getElementById("test").value;
+                    // console.log(document.getElementById("test").value);
+                    // this.new_comment_content2 = inputComment;
+                    // if(inputComment.substring(inputComment.length-1, inputComment.length) == "\n") {
+                        // this.new_comment_content2 = inputComment.substring(0, inputComment.length-1) + "<br>";
+                        // inputComment = inputComment.substring(0, inputComment.length-1) + "<br>";
+                    // }
                 }
             },
         },
