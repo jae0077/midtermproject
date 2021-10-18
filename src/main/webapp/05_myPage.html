@@ -5,6 +5,7 @@
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="css/style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" integrity="sha384-DyZ88mC6Up2uqS4h/KRgHuoeGwBcD4Ng9SiP4dIRy0EXTlnuz47vAwmeGwVChigm" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script src="./script.js"></script>
@@ -35,21 +36,21 @@
                 
                 <div class="w3-col w3-container" style="width:25%">
                     <p>내 정보 수정</p>
-                    <img src="./img/mainPicture.jpg" style="width:80%; cursor: pointer;" @click="openCheck('modifying')">
+                    <i class="fas fa-user-circle" @click="openCheck('modifying')" style="font-size: 150px; cursor: pointer; color: #656565;"></i>
                 </div>
 
                 <div class="w3-col w3-container" style="width:7%;"></div>
 
                 <div class="w3-col w3-container" style="width:25%">
                     <p>좌석 변경</p>
-                    <img src="./img/mainPicture.jpg" style="width:80%; cursor: pointer;" @click="openCheck('seating')">
+                    <i class="fas fa-chair" @click="openCheck('seating')" style="font-size: 150px; cursor: pointer; color: #42291A;"></i>
                 </div>
 
                 <div class="w3-col w3-container" style="width:7%;"></div>
                 
                 <div class="w3-col w3-container" style="width:25%">
                     <p>퇴실</p>
-                    <img src="./img/mainPicture.jpg" style="width:80%; cursor: pointer;" @click="openCheck('exiting')">
+                    <i class="fas fa-sign-out-alt" @click="openCheck('exiting')" style="font-size: 150px; cursor: pointer; color: darkolivegreen;"></i>
                 </div>
                 
                 <div class="w3-col w3-container" style="width:5%;"></div>
