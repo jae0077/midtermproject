@@ -42,7 +42,7 @@ function navBar(){
 function footer(){
     footerScript =
     `
-    <div class="w3-container footer">
+    <div class="w3-container footer w3-black">
         <div class="footer-left">
             <ul class="footer-ul">
                 <li> 상호명: (주)사락사락스터디카페	</li>
@@ -53,7 +53,7 @@ function footer(){
 
         <div class="footer-right">   
             <ul class="footer-ul">
-                <li> 사업자등록정보: 이거 보여줄려고 어그로 끌었다</li>
+                <li onclick="window.open('http://localhost/img/logo3.png')"> 사업자등록정보: 이거 보여줄려고 어그로 끌었다</li>
                 <li> 가맹점문의: 재훈님께 문의 ㄱㄱ	</li>
                 <li><a href=" https://github.com/jae0077/midtermproject">GIT Hub 바로가기 </a></li>
             </ul>
