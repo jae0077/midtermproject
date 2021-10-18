@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -56,13 +57,12 @@ public class Board {
 	
 	@CreationTimestamp
 	@Column(nullable=false)
-	@JsonFormat(pattern = "yyyy-MM-dd hh:mm")
-//	private LocalDate created;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:MM", timezone = "Asia/Seoul")
 	private Date created;
 
 	@UpdateTimestamp
 	@Column(nullable=false)
-//	private LocalDate updated;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:MM", timezone = "Asia/Seoul")
 	private Date updated;
 	
 	@JsonIgnore
