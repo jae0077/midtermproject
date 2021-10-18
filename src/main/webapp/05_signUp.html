@@ -33,7 +33,7 @@
                 <h1 style="text-align: center;"> 회원가입 </h1> <hr>
                 <div style="width: 30%; margin-left: 35%;">
                     <div class="sign-up">
-                        <input type="text" v-model="CheckId" style="width: 64%;" autofocus required  maxlength="12" spellcheck="false" placeholder="아이디, 최소 3글자">
+                        <input type="text" v-model="CheckId" style="width: 64%;" autofocus required  maxlength="16" spellcheck="false" placeholder="아이디, 최소 4글자">
                         <button @click="existCheck" style="width: 34%; padding: 4px; height: 40px;">중복확인</button>
                     </div>
                     <div id="inputId" style="color: brown;">{{messageId}}<hr></div>
@@ -44,7 +44,7 @@
                         <input type="password" v-model="CheckPw2" style="width: 100%;" required maxlength="16" spellcheck="false" placeholder="비밀번호 확인"></div>
                     <div id="inputPw2" style="color: brown;">{{messagePw2}}<hr></div>
                     <div class="sign-up">
-                        <input type="text" v-model="CheckName" style="width: 100%;" required maxlength="6" spellcheck="false" placeholder="이름, 최소 2글자"></div>
+                        <input type="text" v-model="CheckName" style="width: 100%;" required maxlength="15" spellcheck="false" placeholder="이름, 최소 2글자"></div>
                     <div id="inputName"  style="color: brown;">{{messageName}}<hr></div>
                     <div class="sign-up">
                         <input type="text" v-model="CheckPhone" style="width: 100%;" required maxlength="11" spellcheck="false" placeholder="'-' 없이 입력해주세요"></div>
@@ -132,7 +132,7 @@
                 messageId : "※ 아이디를 입력해주세요",
                 messagePw : "※ 비밀번호를 입력해주세요",
                 messagePw2 : "※ 비밀번호를 한 번 더 입력해주세요",
-                messageName : "※ 이름을 입력해주세요",
+                messageName : "※ 한글 이름을 입력해주세요",
                 messagePhone : "※ 전화번호를 입력해주세요"
             }
         },
@@ -141,23 +141,33 @@
                 get: function(){
                     return this.model.userId;
                 },
-                set: function(inputId){
+                set: function(inputId) {
                     document.getElementById("inputId").style.color="brown";
-                    if(inputId.length == 0){
+                    if(inputId.length == 0) {
                             this.messageId = "※ 아이디를 입력해주세요";
                     }
-                    else if(/[^a-zA-Z]/g.test(inputId)){
-                        this.messageId = "※ 알파벳만 가능합니다";
+                    else if(/[^a-zA-Z0-9]/g.test(inputId)) {
+                        this.messageId = "※ 영문과 숫자 조합만 가능합니다";
                     }
                     else{
-                        if(0 < inputId.length && inputId.length < 3){
-                            this.messageId = "※ 3글자 이상 입력해주세요";
+                        if(0 < inputId.length && inputId.length < 4) {
+                            this.messageId = "※ 4글자 이상 입력해주세요";
                         }
-                        else if(10 < inputId.length){
-                            this.messageId = "※ 아이디가 너무 깁니다";
-                        }
-                        else if(2 < inputId.length){
-                            this.messageId = "※ 오른쪽에서 중복체크를 해주세요";
+                        else if(3 < inputId.length) {
+                            if(/[^a-zA-Z]/g.test(inputId)) {
+                                if(/[^a-zA-Z]/g.test(inputId.substring(0,1))) {
+                                    this.messageId = "※ 아이디는 영문으로 시작해야 합니다";
+                                }
+                                else if(/[a-zA-z]/g.test(inputId) && /[0-9]/g.test(inputId)) {
+                                    this.messageId = "※ 오른쪽에서 중복체크를 해주세요";
+                                }
+                                else {
+                                    this.messageId = "※ 아이디는 영문을 포함해야 합니다";
+                                }
+                            }
+                            else {
+                                this.messageId = "※ 오른쪽에서 중복체크를 해주세요";
+                            }
                         }
                     }
                     this.model.userId = inputId;
@@ -173,15 +183,11 @@
                     this.pw2 = "";
                     document.getElementById("inputPw2").style.color="brown";
                     this.messagePw2 = "※ 비밀번호를 한 번 더 입력해주세요";
-
                     if(inputPw.length == 0){
                         this.messagePw = "※ 비밀번호를 입력해주세요";
                     }
                     else if(0 < inputPw.length && inputPw.length < 4){
                         this.messagePw = "※ 4글자 이상 입력해주세요";
-                    }
-                    else if(12 < inputPw.length){
-                        this.messagePw = "※ 비밀번호가 너무 깁니다";
                     }
                     else if(3 < inputPw.length){
                         this.messagePw = "OK";
@@ -216,11 +222,11 @@
                 },
                 set : function(inputName){
                     document.getElementById("inputName").style.color="brown";
-                    if(/[0-9]/g.test(inputName)){
-                        this.messageName = "※ 올바르지 않은 정보입니다";
+                    if(/[a-zA-Z]/g.test(inputName)) {
+                        this.messageName = "※ 한글 이름를 입력해주세요";
                     }
-                    else if(inputName.length == 0){
-                        this.messageName = "※ 이름를 입력해주세요";
+                    else if(/[^가-힣]/g.test(inputName) || /[ㄱ-ㅎㅏ-ㅣ]/g.test(inputName)) {
+                        this.messageName = "※ 올바르지 않은 정보입니다";
                     }
                     else if(0 < inputName.length && inputName.length < 2){
                         this.messageName = "※ 2글자 이상 입력해주세요";
@@ -239,19 +245,21 @@
                 set : function(inputPhone){
                     document.getElementById("inputPhone").style.color="brown";
 
-                    if(/[^0-9]/g.test(inputPhone)){   // ^는 부정을 의미 => 숫자가 아닌 것이 들어오면 TRUE
+                    if(/[^0-9]/g.test(inputPhone)) {   // ^는 부정을 의미 => 숫자가 아닌 것이 들어오면 TRUE
                         this.messagePhone = "※ 숫자를 입력해주세요";
                     }
                     else if(0 <= inputPhone){
-                        if(inputPhone.length < 10){
-                        this.messagePhone = "※ 전화번호를 입력해주세요";
+                        if(inputPhone.length < 10) {
+                            this.messagePhone = "※ 전화번호를 입력해주세요";
                         }
-                        else if(11 < inputPhone.length){
-                            this.messagePhone = "※ 전화번호가 너무 깁니다";
-                        }    
-                        else if(9 < inputPhone.length){
-                            this.messagePhone = "OK";
-                            document.getElementById("inputPhone").style.color="green";
+                        else if(9 < inputPhone.length) {
+                            if(!inputPhone.startsWith("010")) {
+                                this.messagePhone = "※ 올바르지 않은 번호입니다";
+                            }
+                            else {
+                                this.messagePhone = "OK";
+                                document.getElementById("inputPhone").style.color="green";
+                            }
                         }    
                     }
                     this.model.phone = inputPhone;
@@ -269,22 +277,27 @@
                 }
             },
             existCheck: function() {
-                axios({
-                        method: "post",
-                        url: "http://localhost/user/verifyid",
-                        data: {"userId": this.model.userId}
-                    }).then(resData => {  
-                        if(resData.data){
-                            alert("사용가능한 아이디입니다");
-                            this.messageId = "OK";
-                            document.getElementById("inputId").style.color="green";
-                        }
-                        else{
-                            this.messageId = "※ 이미 존재하는 아이디입니다";
-                        }
-                    }).catch(errorData => {
-                        alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요")
-                    });
+                if(this.messageId != "※ 오른쪽에서 중복체크를 해주세요") {
+                    alert("올바르지 않은 아이디입니다");
+                }
+                else {
+                    axios({
+                            method: "post",
+                            url: "http://localhost/user/verifyid",
+                            data: {"userId": this.model.userId}
+                        }).then(resData => {  
+                            if(resData.data){
+                                alert("사용가능한 아이디입니다");
+                                this.messageId = "OK";
+                                document.getElementById("inputId").style.color="green";
+                            }
+                            else{
+                                this.messageId = "※ 이미 존재하는 아이디입니다";
+                            }
+                        }).catch(errorData => {
+                            alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요")
+                        });
+                }
             }
         }
     })

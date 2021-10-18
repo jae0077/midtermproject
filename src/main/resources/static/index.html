@@ -58,7 +58,7 @@
                 <div class="w3-col w3-container" style="width:10%;"></div>
                 <div class="w3-col w3-container" style="width:35%">
                     <div class="w3-panel w3-black" style="width:75%; float: left">공지사항</div>
-                    <div style="margin-top: 6%;"><a href="03_notice.html"><h5>더 보기</h5></a></div>
+                    <div style="margin-top: 6%;"><a href="03_notice.html"><h5>+더 보기</h5></a></div>
                     <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
                         <thead>
                         <tr style="background-color: #e7dcdc">
@@ -79,7 +79,7 @@
                 <div class="w3-col w3-container" style="width:10%"></div>
                 <div class="w3-col w3-container" style="width:35%">
                     <div class="w3-panel w3-black" style="width:75%; float: left;">자유게시판</div>
-                    <div style="margin-top: 6%;"><a href="03_board.html"><h5>더 보기</h5></a></div>
+                    <div style="margin-top: 6%;"><a href="03_board.html"><h5>+더 보기</h5></a></div>
                     <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
                         <thead>
                         <tr style="background-color: #e7dcdc">
@@ -91,7 +91,7 @@
                         </thead>
                         <tr v-for="(board, index) in board_list" @click="viewBoardOne(index)" style="cursor: pointer;">
                             <td style="column-width: 5%">{{board.boardIdx}}</td>
-                            <td style="column-width: 85%">{{board.title}}</td>
+                            <td style="column-width: 85%">{{board.title}} <span style="color: cadetblue;">[{{board.comment_length}}]</span></td>
                             <td style="column-width: 5%">{{board.writerId}}</td>
                             <td style="column-width: 5%">{{board.created}}</td>
                         </tr>
@@ -164,7 +164,25 @@
                         writerId: b.writer.userId,
                         title: b.title,
                         created: b.created,
-                        updated: b.updated});
+                        updated: b.updated,
+                        comment_length: 0});
+                }
+                for(b2 of this.board_list) {
+                    //================ 코멘트 리스트 불러와서 갯수만 가져오기 ========
+                    axios({
+                        method: "get",
+                        url: "board/" + b2.boardIdx + "/comment",
+                    }).then(resData => {
+                        for(b3 of this.board_list) {
+                            if(b3.boardIdx == resData.data.boardIdx) {
+                                b3.comment_length = resData.data.commentsList.length;
+                            }
+                        }
+                    }).catch(errorData => {
+                        alert("게시글을 불러오는데 실패했습니다. 잠시 후에 다시 시도해주세요 - error 01");
+                    })
+                    //===========================================================
+
                 }
                 this.total_pages = resData.data.totalPages;
             }).catch(errorData => {
