@@ -255,15 +255,11 @@
                     this.pw2 = "";
                     document.getElementById("inputPw2Id").style.color="brown";
                     this.messagePw2 = "※ 비밀번호를 한 번 더 입력해주세요";
-
                     if(inputPw.length == 0){
                         this.messagePw = "※ 비밀번호를 입력해주세요";
                     }
                     else if(0 < inputPw.length && inputPw.length < 4){
                         this.messagePw = "※ 4글자 이상 입력해주세요";
-                    }
-                    else if(12 < inputPw.length){
-                        this.messagePw = "※ 비밀번호가 너무 깁니다";
                     }
                     else if(3 < inputPw.length){
                         this.messagePw = "OK";
@@ -278,31 +274,39 @@
                 },
                 set : function(inputPw2){
                     document.getElementById("inputPw2Id").style.color="brown";
-                    if(inputPw2.length == 0){
-                        this.messagePw2 = "※ 비밀번호를 한 번 더 입력해주세요";
+                    if(inputPw2 == this.modify_model.userPw) {
+                        if(inputPw2.length > 3) {
+                            this.messagePw2 = "OK";
+                            document.getElementById("inputPw2Id").style.color="green";
+                        }
+                        else {
+                            this.messagePw2 = "※ 4글자 이상 입력해주세요";
+                        }
                     }
-                    else if(inputPw2 == this.modify_model.userPw){
-                        this.messagePw2 = "OK";
-                        document.getElementById("inputPw2Id").style.color="green";
-                        
-                    }
-                    else{
-                        this.messagePw2 = "※ 비밀번호가 다릅니다";
+                    else {
+                        if(inputPw2.length >= this.modify_model.userPw.length) {
+                            this.messagePw2 = "※ 비밀번호가 다릅니다";
+                        }
+                        else {
+                            this.messagePw2 = "※ 비밀번호를 한 번 더 입력해주세요";
+                        }
                     }
                     this.pw2 = inputPw2;
                 }
             },
+
+
             CheckName : {
                 get : function(){
                     return this.modify_model.name;
                 },
                 set : function(inputName){
                     document.getElementById("inputNameId").style.color="brown";
-                    if(/[0-9]/g.test(inputName)){
-                        this.messageName = "※ 올바르지 않은 정보입니다";
+                    if(/[a-zA-Z]/g.test(inputName)) {
+                        this.messageName = "※ 한글 이름를 입력해주세요";
                     }
-                    else if(inputName.length == 0){
-                        this.messageName = "※ 이름를 입력해주세요";
+                    else if(/[^가-힣]/g.test(inputName) || /[ㄱ-ㅎㅏ-ㅣ]/g.test(inputName)) {
+                        this.messageName = "※ 올바르지 않은 정보입니다";
                     }
                     else if(0 < inputName.length && inputName.length < 2){
                         this.messageName = "※ 2글자 이상 입력해주세요";
@@ -326,14 +330,16 @@
                     }
                     else if(0 <= inputPhone){
                         if(inputPhone.length < 10){
-                        this.messagePhone = "※ 전화번호를 입력해주세요";
+                            this.messagePhone = "※ 전화번호를 입력해주세요";
                         }
-                        else if(11 < inputPhone.length){
-                            this.messagePhone = "※ 전화번호가 너무 깁니다";
-                        }    
-                        else if(9 < inputPhone.length){
-                            this.messagePhone = "OK";
-                            document.getElementById("inputPhoneId").style.color="green";
+                        else if(9 < inputPhone.length) {
+                            if(!inputPhone.startsWith("010")) {
+                                this.messagePhone = "※ 올바르지 않은 번호입니다";
+                            }
+                            else {
+                                this.messagePhone = "OK";
+                                document.getElementById("inputPhoneId").style.color="green";
+                            }
                         }    
                     }
                     this.modify_model.phone = inputPhone;

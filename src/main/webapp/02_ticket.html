@@ -78,7 +78,6 @@
                     url: "ticket/" + sessionStorage.getItem("userIdx"),
                     headers: {authorization: `bearer ${sessionStorage.getItem("token")}`}
                 }).then(resData => {
-                    // if(resData.data != null || resData.data != "") {   // 데이터가 없는데 왜 조건에 걸리는지? 
                     if(resData.data.length != 0) {
                         const result = confirm("기존 이용권이 존재합니다. 기한을 연장하시겠습니까?")
                         if(result) {
