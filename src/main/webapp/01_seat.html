@@ -15,20 +15,22 @@
         <nav-bar></nav-bar>
         
         <!-- 메인 -->
+        <div class="main-container">
             <seat-select></seat-select>
 
-        <foot></foot>
+          <foot></foot>
+        </div>
     </div>
 
     <!-- ========================================== 템플릿 ================================================ -->
 <template id="seat-select-temp">
-    <div class="main-container">
-        <div class="sub-container">
-            <h1>좌석 선택</h1><hr>
-            <div>
-                남은 좌석 : {{remain_seat}} / {{seat_list1.length + seat_list2.length}}<br>
-                선택 가능한 좌석은 초록색으로 표시됩니다 
-            </div>
+    <div class="sub-container">
+        <h1>좌석 선택</h1><hr>
+        <div>
+            남은 좌석 : {{remain_seat}} / {{seat_list1.length + seat_list2.length}}<br>
+            선택 가능한 좌석은 초록색으로 표시됩니다 
+        </div>
+        <div style="display:flex; justify-content: center;">
             <div style="border-style: groove; width: 85%; height: 90%; margin-top: 2%;">
                 <div style="padding: 1%; display:flex; width: 100%;">
                     <div v-for="(seat, index) in seat_list1" style="padding: 1%;">

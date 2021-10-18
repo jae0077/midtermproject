@@ -42,8 +42,8 @@ function navBar(){
 function footer(){
     footerScript =
     `
-    <div class="w3-container footer">
-        <div class="footer-left">
+    <div class="w3-container footer w3-black">
+        <div class="footer-left ">
             <ul class="footer-ul">
                 <li> 상호명: (주)사락사락스터디카페	</li>
                 <li> 사업장소재지: 335 효령로 서초1동 서초구 서울특별시 </li>	
