@@ -1,15 +1,17 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
-<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-<script src="./script.js"></script>
-<title>Community-notice</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./script.js"></script>
+    <title>Community-notice</title>
 </head>
+
 <body class="body">
     <div id="body-div">
         <nav-bar></nav-bar>
@@ -17,163 +19,162 @@
         <!-- 메인 -->
         <div class="main-container">
             <view-allnotice></view-allnotice>
-
-
-
-
-                <foot></foot>
+            <foot></foot>
         </div>
     </div>
 
-<template id="view-allnotice-temp">
-    <div class="sub-container">
-        <h1>공지사항</h1><hr>
-        <div style="width: 70%; display: inline-block;">
-            <div style="height: 380px;">
-                <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
-                    <thead>
-                        <tr style="background-color: #e7dcdc">
-                            <th style="column-width: 5%;">글 번호</th>
-                            <th style="column-width: 85%">제목</th>
-                            <th style="column-width: 5%">작성자</th>
-                            <th style="column-width: 5%">날짜</th>
+    <template id="view-allnotice-temp">
+        <div class="sub-container">
+            <h1>공지사항</h1>
+            <hr>
+            <div style="width: 70%; display: inline-block;">
+                <div style="height: 380px;">
+                    <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
+                        <thead>
+                            <tr style="background-color: #e7dcdc">
+                                <th style="column-width: 5%;">글 번호</th>
+                                <th style="column-width: 85%">제목</th>
+                                <th style="column-width: 5%">작성자</th>
+                                <th style="column-width: 5%">날짜</th>
+                            </tr>
+                        </thead>
+                        <tr v-for="(notice, index) in notice_list" @click="viewNoticeOne(index)" style="cursor:pointer">
+                            <td style="column-width: 5%">{{notice.noticeIdx}}</td>
+                            <td style="column-width: 85%">{{notice.title}}</td>
+                            <td style="column-width: 5%">관리자</td>
+                            <td style="column-width: 5%">{{notice.created}}</td>
                         </tr>
-                    </thead>
-                    <tr v-for="(notice, index) in notice_list" @click="viewNoticeOne(index)" style="cursor:pointer">
-                        <td style="column-width: 5%">{{notice.noticeIdx}}</td>
-                        <td style="column-width: 85%">{{notice.title}}</td>
-                        <td style="column-width: 5%">관리자</td>
-                        <td style="column-width: 5%">{{notice.created}}</td>
-                    </tr>
-                </table>
-            </div>
+                    </table>
+                </div>
 
-            <div style="display: inline-block; padding-top: 3%;">
-                <div v-for="(page, index) in total_pages" style="float:left">
-                    <a v-if="index == page_now" style="font-weight: bold; cursor:default"> <span style="text-decoration: underline;">{{page}}</span> &nbsp; </a>
-                    <a v-else @click=selectPage(index)> {{page}} &nbsp; </a>
-                </div>  
+                <div style="display: inline-block; padding-top: 3%;">
+                    <div v-for="(page, index) in total_pages" style="float:left">
+                        <a v-if="index == page_now" style="font-weight: bold; cursor:default"> <span
+                                style="text-decoration: underline;">{{page}}</span> &nbsp; </a>
+                        <a v-else @click=selectPage(index)> {{page}} &nbsp; </a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</template>
-<!-- ========================================스크립트======================================== -->
-<script>
-    Vue.component('view-allnotice', {
-        template: "#view-allnotice-temp",
-        data: function() {
-            return {
-                notice_list: [],
-                message: "",
-                total_pages: 1,
-                page_now: 0
-            }
-        },
-        created: function() {
-            axios({
-                method: "get",
-                url: "notice",
-                params: {
-                    size: 10,
-                    sort: "noticeIdx,desc",
-                    page: 0
-                } 
-            }).then(resData => { 
-                if(resData.data.content.length == 0) {
-                    this.message = "공지사항이 없습니다";
-                }
-                else {
-                    for(n of resData.data.content) {
-                        if(n.title.length > 8) {
-                            n.title = n.title.substring(0,8) + "...";
-                        }
-                        this.notice_list.push({
-                            noticeIdx: n.noticeIdx,
-                            title: n.title,
-                            created: n.created
-                        })
-                    }
-                    this.total_pages = resData.data.totalPages;
-                }
-            }).catch(errorData => {
-                alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
-            });
-        },
-        methods: {
-            viewNoticeOne: function(index) {
-                if(index != null) {  
-                    location.href = "03_02_noticeOne.html?noticeIdx=" + this.notice_list[index].noticeIdx;
-                }
-                else {
-                    alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+    </template>
+    <!-- ========================================스크립트======================================== -->
+    <script>
+        Vue.component('view-allnotice', {
+            template: "#view-allnotice-temp",
+            data: function () {
+                return {
+                    notice_list: [],
+                    message: "",
+                    total_pages: 1,
+                    page_now: 0
                 }
             },
-            selectPage: function(page_index) {
-                this.page_now = page_index;
+            created: function () {
                 axios({
                     method: "get",
-                    url: "notice", 
+                    url: "notice",
                     params: {
                         size: 10,
                         sort: "noticeIdx,desc",
-                        page: page_index
+                        page: 0
                     }
-                }).then(resData => {  
-                    this.notice_list = [];
-                    for(n of resData.data.content) {
-                        if(n.title.length > 8) {
-                            n.title = n.title.substring(0,8) + "...";
+                }).then(resData => {
+                    if (resData.data.content.length == 0) {
+                        this.message = "공지사항이 없습니다";
+                    }
+                    else {
+                        for (n of resData.data.content) {
+                            if (n.title.length > 8) {
+                                n.title = n.title.substring(0, 8) + "...";
+                            }
+                            this.notice_list.push({
+                                noticeIdx: n.noticeIdx,
+                                title: n.title,
+                                created: n.created
+                            })
                         }
-                        this.notice_list.push({
-                            noticeIdx: n.noticeIdx,
-                            title: n.title,
-                            created: n.created
-                        })
+                        this.total_pages = resData.data.totalPages;
                     }
                 }).catch(errorData => {
                     alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
                 });
+            },
+            methods: {
+                viewNoticeOne: function (index) {
+                    if (index != null) {
+                        location.href = "03_02_noticeOne.html?noticeIdx=" + this.notice_list[index].noticeIdx;
+                    }
+                    else {
+                        alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+                    }
+                },
+                selectPage: function (page_index) {
+                    this.page_now = page_index;
+                    axios({
+                        method: "get",
+                        url: "notice",
+                        params: {
+                            size: 10,
+                            sort: "noticeIdx,desc",
+                            page: page_index
+                        }
+                    }).then(resData => {
+                        this.notice_list = [];
+                        for (n of resData.data.content) {
+                            if (n.title.length > 8) {
+                                n.title = n.title.substring(0, 8) + "...";
+                            }
+                            this.notice_list.push({
+                                noticeIdx: n.noticeIdx,
+                                title: n.title,
+                                created: n.created
+                            })
+                        }
+                    }).catch(errorData => {
+                        alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+                    });
+                }
             }
-        }
-    })
+        })
 
 
 
 
-    // ========================================공통 스크립트========================================
+        // ========================================공통 스크립트========================================
 
-    navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
-    footer();    
+        navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
+        footer();
 
-    Vue.component('nav-bar', {
-        template: navBarScript,
-        data: function() {
+        Vue.component('nav-bar', {
+            template: navBarScript,
+            data: function () {
                 return {
                     login,
                     logout,
                 }
             },
-        methods: {
-            ClickLogout: function(){
-                const result = confirm("로그아웃 하시겠습니까?");
-                if(result) {
-                    sessionStorage.clear();
-                    this.login = false;
-                    this.logout = true;
-                    location.href="00_index.html";
+            methods: {
+                ClickLogout: function () {
+                    const result = confirm("로그아웃 하시겠습니까?");
+                    if (result) {
+                        sessionStorage.clear();
+                        this.login = false;
+                        this.logout = true;
+                        location.href = "http://localhost";
+                    }
                 }
             }
-        }
-    })
-    Vue.component('foot', {
-        template: footerScript,
-    })
+        })
+        Vue.component('foot', {
+            template: footerScript,
+        })
 
-    new Vue({
-        el: "#body-div",
-    })
+        new Vue({
+            el: "#body-div",
+        })
 
-</script>
+    </script>
 
 </body>
+
 </html>
