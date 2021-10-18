@@ -1,10 +1,11 @@
 package kr.pe.midtermproject.model.domain;
 
-import java.time.LocalDate;
+import java.sql.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -17,8 +18,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.AllArgsConstructor;
@@ -41,35 +45,33 @@ public class Board {
 	private Long boardIdx;
 	
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name="user_idx")  
+	@JoinColumn(name="user_idx")
 	private Users writer;
-	
+
 	@Column(nullable=false)
 	private String title;
-	
+
 	@Lob
 	@Column(nullable=false)
 	private String content;
 	
 	@CreationTimestamp
 	@Column(nullable=false)
-	private LocalDate created;
-	
+	@JsonFormat(pattern = "yyyy-MM-dd HH:MM", timezone = "Asia/Seoul")
+	private Date created;
+
 	@UpdateTimestamp
 	@Column(nullable=false)
-	private LocalDate updated;
+	@JsonFormat(pattern = "yyyy-MM-dd HH:MM", timezone = "Asia/Seoul")
+	private Date updated;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy="board",
 			fetch=FetchType.LAZY,
 			cascade=CascadeType.ALL)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private List<Comments> commentList;
 	
-//	public void update(String title, String content) {
-//        this.title = title;
-//        this.content = content;
-//    }
-
 	@Override
 	public String toString() {
 		return "Board [boardIdx=" + boardIdx + ", writer=" + writer.getUserId() + ", title=" + title + ", content=" + content

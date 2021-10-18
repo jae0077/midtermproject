@@ -80,8 +80,6 @@ public class CommentController {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		
-  		
   		return result;
   	}
     
@@ -99,7 +97,6 @@ public class CommentController {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-//    	commentsService.deleteComment(id);
     	return result;
     }
 }

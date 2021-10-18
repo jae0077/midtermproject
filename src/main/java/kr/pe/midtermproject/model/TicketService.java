@@ -20,16 +20,18 @@ public class TicketService {
 		boolean result = false;
 		LocalDate today = LocalDate.now();
 		Ticket ticket = ticketDao.findTicketByUser(user);
+
 		// 티켓 추가시 잔여시간 확인 로직
 		if (ticket != null && (ticket.getLimit().isAfter(today) || ticket.getLimit().isEqual(today))) {
 			// 잔여시간이 남아있을경우
 			ticket.setLimit(ticket.getLimit().plusDays(limit));
 		}else if (ticket == null) {
+			// 잔여시간이 없을경우(최초 구매)
 			ticket = new Ticket();
 			ticket.setUser(user);
 			ticket.setLimit(today.plusDays(limit).minusDays(1));
 		}else {
-			// 잔여시간이 없을경우
+			// 잔여시간이 없을경우(구매 후 기간이 지났을 경우)
 			ticket.setLimit(today.plusDays(limit).minusDays(1));
 		}
 		

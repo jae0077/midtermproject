@@ -1,10 +1,11 @@
 package kr.pe.midtermproject.controller;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -72,15 +73,15 @@ public class BoardController {
     public Board getBoardDetail(@PathVariable Long boardIdx) {
     	Board result = null;
     	result = boardService.getBoardDetail(boardIdx);
-    	
+    	System.out.println(result);
         return result;
     }
     
     // 게시글 리스트 조회(목록)
     @GetMapping("board")
-    public List<Board> getBoardList() {
-    	List<Board> result = null;
-    	result = boardService.getBoardList();
+    public Page<Board> getBoardList(Pageable pageable) {
+    	Page<Board> result = null;
+    	result = boardService.getBoardList(pageable);
     	
         return result;
     }

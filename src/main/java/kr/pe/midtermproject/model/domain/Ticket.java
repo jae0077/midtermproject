@@ -22,7 +22,6 @@ import lombok.ToString;
 @AllArgsConstructor
 @Setter
 @Getter
-@ToString
 
 @Entity(name="ticket")
 @SequenceGenerator(name="ticket_idx_seq", sequenceName="ticket_idx_seq", initialValue=1, allocationSize=1)

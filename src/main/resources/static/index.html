@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset=UTF-8>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="./script.js"></script>
+<title>Main</title>
+<!-- <script>
+    var cssRule= "font-size:2em;"
+    var cssLogo1 ="color:#FBEDE1;" +"font-size: 60px;" +"font-weight: bold;" +"letter-space:-1px;" +"font-family:Tahoma,Arial,sans-serif";
+    if(window.console!=undefined) {
+        setTimeout(console.log.bind(console,"%cSARAK", cssLogo1),0);setTimeout(console.log.bind(console,"%cTHE PREMIUM LIBRARY",cssRule),0);
+    }
+</script> -->
+</head>
+<body class="body">
+    <div id="body-div">
+       <nav-bar></nav-bar>
+    
+        <!-- 메인 -->
+        <div class="main-container">
+
+            <index></index>
+
+            <foot></foot>
+        </div>
+    </div>
+
+<!-- ========================================템플릿======================================== -->
+    <template id="indexTemp">
+        <div>
+            <div class="w3-row">
+                <div class="w3-display-container">
+                    <img src="./img/main01.jpg" width="100%">
+                    <div class="w3-display-topmiddle w3-container" style="margin-top: 25%; color: white; display: table;">
+                        <h3 style="font-weight: 300; font-size: 2em;">THE PREMIUM LIBRARY</h3>
+                        <h1 style="font-weight: 800; font-size: 5em;">사락사락</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="w3-row" style="margin-top: 10px; display: flex;">
+                <div class="w3-col s6 w3-container;" style="flex:1;">
+                    <img src="./img/main02.jpg" style="width:100%">
+                </div>
+                <div class="w3-col s6 w3-container" style="flex:1;">
+                    <h4>BRAND STORY</h4>
+                    <h3>THE PREMIUM LIBRARY</h3>
+                    프리미엄 스터디 카페 ‘사락사락’은 모든 이들의 첫 발자국을 응원하고자 만들어졌습니다.<br>
+                    당신의 귀중한 하루가 쌓여 꽃길을 만들기를 ‘사락사락’의 모든 이들이 응원합니다. 
+                </div>
+            </div>
+
+            <div class="w3-row" style="margin-top:50px; margin-bottom:100px;">
+                <div class="w3-col w3-container" style="width:10%;"></div>
+                <div class="w3-col w3-container" style="width:35%">
+                    <div class="w3-panel w3-black" style="width:75%; float: left">공지사항</div>
+                    <div style="margin-top: 6%;"><a href="03_notice.html"><h5>더 보기</h5></a></div>
+                    <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
+                        <thead>
+                        <tr style="background-color: #e7dcdc">
+                            <th style="column-width: 5%">No</th>
+                            <th style="column-width: 85%">제목</th>
+                            <th style="column-width: 5%">작성자</th>
+                            <th style="column-width: 5%">날짜</th>
+                        </tr>
+                        </thead>
+                        <tr v-for="(notice, index) in notice_list" @click="viewNoticeOne(index)" style="cursor: pointer;">  <!-- ======공지사항 연동하기 =====-->
+                            <td style="column-width: 5%">{{notice.noticeIdx}}</td>
+                            <td style="column-width: 85%">{{notice.title}}</td>
+                            <td style="column-width: 5%">관리자</td>
+                            <td style="column-width: 5%">{{notice.created}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="w3-col w3-container" style="width:10%"></div>
+                <div class="w3-col w3-container" style="width:35%">
+                    <div class="w3-panel w3-black" style="width:75%; float: left;">자유게시판</div>
+                    <div style="margin-top: 6%;"><a href="03_board.html"><h5>더 보기</h5></a></div>
+                    <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
+                        <thead>
+                        <tr style="background-color: #e7dcdc">
+                            <th style="column-width: 5%">No</th>
+                            <th style="column-width: 85%">제목</th>
+                            <th style="column-width: 5%">작성자</th>
+                            <th style="column-width: 5%">날짜</th>
+                        </tr>
+                        </thead>
+                        <tr v-for="(board, index) in board_list" @click="viewBoardOne(index)" style="cursor: pointer;">
+                            <td style="column-width: 5%">{{board.boardIdx}}</td>
+                            <td style="column-width: 85%">{{board.title}}</td>
+                            <td style="column-width: 5%">{{board.writerId}}</td>
+                            <td style="column-width: 5%">{{board.created}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="w3-col w3-container" style="width:10%"></div>
+            </div>
+        </div>
+    </template>
+
+<!-- ===================================== 스크립트 ===================================== -->
+<script>
+    Vue.component('index', {
+    template: "#indexTemp",
+    data: function() {
+            return {
+                notice_list: [],
+                board_list: [],
+                message: "",
+                board_list: [],
+                total_pages: 1,
+                page_now: 0
+            }
+        },
+    created: function() {
+            axios({
+                method: "get",
+                url: "notice", 
+                params: {
+                    size: 5,
+                    sort: "noticeIdx,desc",
+                    page: 0
+                }
+            }).then(resData => {  
+                if(resData.data.content.length == 0) {
+                    this.message = "공지사항이 없습니다";
+                }
+                else {
+                    for(n of resData.data.content) {
+                        if(n.title.length > 8) {
+                            n.title = n.title.substring(0,8) + "...";
+                        }
+                        this.notice_list.push({
+                            noticeIdx: n.noticeIdx,
+                            title: n.title,
+                            created: n.created
+                        })
+                    }
+                    this.total_pages = resData.data.totalPages;
+                }
+            }).catch(errorData => {
+                alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+            });
+
+            axios({
+                method: "get",
+                url: "board", 
+                params: {
+                    size: 5,
+                    sort: "boardIdx,desc",
+                    page: 0
+                }
+            }).then(resData => {  
+                for(b of resData.data.content) {
+                    if(b.title.length > 8) {
+                        b.title = b.title.substring(0,8) + "...";
+                    }
+                    this.board_list.push({
+                        boardIdx: b.boardIdx,
+                        writerId: b.writer.userId,
+                        title: b.title,
+                        created: b.created,
+                        updated: b.updated});
+                }
+                this.total_pages = resData.data.totalPages;
+            }).catch(errorData => {
+                alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+            });
+    },
+    methods: {
+            viewNoticeOne: function(index) {
+                if(index != null){
+                    location.href = "03_01_noticeOne.html?noticeIdx=" + this.notice_list[index].noticeIdx; 
+                }
+                else{
+                    alert("공지사항을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+                }
+            },
+            viewBoardOne: function(index) {
+                if(index != null) {
+                    location.href = "03_01_boardOne.html?boardIdx=" + this.board_list[index].boardIdx;
+                }
+                else{
+                    alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요")
+                }
+            },
+
+        }
+    })
+
+// ========================================공통 스크립트========================================
+
+navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
+footer();    
+
+    Vue.component('nav-bar', {
+        template: navBarScript,
+        data: function() {
+                return {
+                    login,
+                    logout
+                }
+            },
+        methods: {
+            ClickLogout: function(){
+                const result = confirm("로그아웃 하시겠습니까?");
+                if(result) {
+                    sessionStorage.clear();
+                    this.login = false;
+                    this.logout = true;
+                    location.href="00_index.html";
+                }
+            }
+        }
+    })
+    Vue.component('foot', {
+        template: footerScript,
+    })
+
+    new Vue({
+        el: "#body-div",
+        data: {
+            model: {
+                showIndex: true,
+                showLogin: false
+            }
+        }
+    })
+
+</script>
+
+    
+</body>
+</html>

@@ -17,67 +17,114 @@
 
         <!-- 메인 -->
             <div class="main-container">
-                <sign-up v-show="model2.showSignUp" v-on:view-signup="viewSignUp" v-bind:data1="model2"></sign-up>
-                <sign-up-check v-show="model2.showCheck" v-on:view-check="viewCheck" v-bind:data2="model2"></sign-up-check>
+                <sign-up v-show="showSignUp" v-on:signup-emit="viewSignUp"></sign-up>
+                <sign-up-check v-show="showCheck" v-on:check-emit="viewCheck"></sign-up-check>
 
 
                 <foot></foot>
             </div>
         </div>
 
-    <template id="signUpTemp">
+<!-- ================================================템플릿================================================ -->
+
+                <!-- ==========================회원가입 템플릿 ==================== -->
+    <template id="sign-up-temp">
             <div class="sub-container" style="text-align: left;">
                 <h1 style="text-align: center;"> 회원가입 </h1> <hr>
                 <div style="width: 30%; margin-left: 35%;">
                     <div class="sign-up">
-                        <input type="text" v-model="CheckId" style="width: 64%;" autofocus required placeholder="아이디, 최소 3글자">
-                        <button style="width: 34%; padding: 4px; height: 40px;">중복확인</button>
+                        <input type="text" v-model="CheckId" style="width: 64%;" autofocus required  maxlength="12" spellcheck="false" placeholder="아이디, 최소 3글자">
+                        <button @click="existCheck" style="width: 34%; padding: 4px; height: 40px;">중복확인</button>
                     </div>
                     <div id="inputId" style="color: brown;">{{messageId}}<hr></div>
                     <div class="sign-up">
-                        <input type="password" v-model="CheckPw" style="width: 100%;" required placeholder="비밀번호, 최소 4글자"></div>
+                        <input type="password" v-model="CheckPw" style="width: 100%;" required maxlength="16" spellcheck="false" placeholder="비밀번호, 최소 4글자"></div>
                     <div id="inputPw" style="color: brown;">{{messagePw}}<hr></div>
                     <div class="sign-up">
-                        <input type="password" v-model="CheckPw2" style="width: 100%;" required placeholder="비밀번호 확인"></div>
+                        <input type="password" v-model="CheckPw2" style="width: 100%;" required maxlength="16" spellcheck="false" placeholder="비밀번호 확인"></div>
                     <div id="inputPw2" style="color: brown;">{{messagePw2}}<hr></div>
                     <div class="sign-up">
-                        <input type="text" v-model="CheckName" style="width: 100%;" required placeholder="이름, 최소 2글자"></div>
+                        <input type="text" v-model="CheckName" style="width: 100%;" required maxlength="6" spellcheck="false" placeholder="이름, 최소 2글자"></div>
                     <div id="inputName"  style="color: brown;">{{messageName}}<hr></div>
                     <div class="sign-up">
-                        <input type="text" v-model="CheckPhone" style="width: 100%;" required placeholder="'-' 없이 입력해주세요"></div>
+                        <input type="text" v-model="CheckPhone" style="width: 100%;" required maxlength="11" spellcheck="false" placeholder="'-' 없이 입력해주세요"></div>
                     <div id="inputPhone"  style="color: brown;">{{messagePhone}}<hr></div>
                     <button @click="signUp"> 가입하기 </button>
                 </div>
             </div>
     </template>
-
-    <template id="signUpCheck">
+                <!-- ==================입력정보 확인 템플릿 ==================== -->
+    <template id="sign-up-check-temp">
         <div class="sub-container">
             <h1 style="text-align: center;"> 입력정보 확인 </h1> <hr>
             <div style="width: 30%; margin-left: 35%;">
                 <ul style="text-align: left; width:100%">
-                    <li>ID : {{data2.id}}</li> <hr>       
-                    <li>이름 : {{data2.name}}</li> <hr>                    
-                    <li>전화번호 : {{data2.phone}}</li> <hr>                    
+                    <li>ID : {{model2.userId}}</li> <hr>       
+                    <li>이름 : {{model2.name}}</li> <hr>                    
+                    <li>전화번호 : {{model2.phone}}</li> <hr>                    
                 </ul>
                 <button @click="signUpFinal" style="width: 40%; float: auto;"> 가입 </button>
-                <button @click="goBack" style="width: 40%; float: right; background-color: chocolate;"> 수정 </button>
+                <button @click="cancel" style="width: 40%; float: right; background-color: chocolate;"> 수정 </button>
             </div>
         </div>
     </template>
 
 
-    
+<!-- ========================================== 스크립트 ==================================================== -->
 <script>
+    eventBus = new Vue();
+
+            // ========================== 회원가입 체크 컴포넌트 ======================
+    Vue.component('sign-up-check', {
+        template: "#sign-up-check-temp",
+        data: function() {
+            return {
+                model2: {
+                    userId : "",
+                    userPw : "",    
+                    name : "",
+                    phone : "",     
+                },
+            }
+        },
+        created: function() {
+            eventBus.$on('sendModel', this.getBusData);
+        },
+        methods: {
+            cancel: function() {
+                this.$emit('check-emit')
+            },
+            signUpFinal: function() {
+                axios({
+                        method: "post",
+                        url: "http://localhost/user/join",
+                        data: this.model2
+                    }).then(resData => {  
+                        if(resData.data){
+                            alert("회원가입 성공");
+                            location.href="00_index.html";
+                        }
+                        else{
+                            alert("회원가입 실패 - 잠시 후에 다시 시도해주세요");
+                            location.href="05_signUp.html";
+                        }
+                    }).catch(errorData => {
+                        alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요")
+                    });
+            },
+            getBusData: function(v) {
+                this.model2 = v;
+            }
+        },
+    })
+                //============ 회원가입 컴포넌트 ==============
     Vue.component('sign-up',{
-        template: "#signUpTemp",
-        props: ['data1'],
+        template: "#sign-up-temp",
         data: function() {
             return {
                 model: {
-                    showSignUp: false,
-                    id : "",
-                    pw : "",    
+                    userId : "",
+                    userPw : "",    
                     name : "",
                     phone : "",     
                 },
@@ -89,32 +136,36 @@
                 messagePhone : "※ 전화번호를 입력해주세요"
             }
         },
-        computed : {
-            CheckId : {
-                get : function(){
-                    return this.model.id;
+        computed: {
+            CheckId: {
+                get: function(){
+                    return this.model.userId;
                 },
-                set : function(inputId){
+                set: function(inputId){
                     document.getElementById("inputId").style.color="brown";
                     if(inputId.length == 0){
-                        this.messageId = "※ 아이디를 입력해주세요";
+                            this.messageId = "※ 아이디를 입력해주세요";
                     }
-                    else if(0 < inputId.length && inputId.length < 3){
-                        this.messageId = "※ 3글자 이상 입력해주세요";
+                    else if(/[^a-zA-Z]/g.test(inputId)){
+                        this.messageId = "※ 알파벳만 가능합니다";
                     }
-                    else if(10 < inputId.length){
-                        this.messageId = "※ 아이디가 너무 깁니다";
+                    else{
+                        if(0 < inputId.length && inputId.length < 3){
+                            this.messageId = "※ 3글자 이상 입력해주세요";
+                        }
+                        else if(10 < inputId.length){
+                            this.messageId = "※ 아이디가 너무 깁니다";
+                        }
+                        else if(2 < inputId.length){
+                            this.messageId = "※ 오른쪽에서 중복체크를 해주세요";
+                        }
                     }
-                    else if(2 < inputId.length){
-                        this.messageId = "OK";
-                        document.getElementById("inputId").style.color="green";
-                    }
-                    this.model.id = inputId;
+                    this.model.userId = inputId;
                 }
             },
             CheckPw : {
                 get : function(){
-                    return this.model.pw;
+                    return this.model.userPw;
                 },
                 set : function(inputPw){
                     document.getElementById("inputPw").style.color="brown";
@@ -136,7 +187,7 @@
                         this.messagePw = "OK";
                         document.getElementById("inputPw").style.color="green";
                     }
-                    this.model.pw = inputPw;
+                    this.model.userPw = inputPw;
                 }
             },
             CheckPw2 : {
@@ -148,7 +199,7 @@
                     if(inputPw2.length == 0){
                         this.messagePw2 = "※ 비밀번호를 한 번 더 입력해주세요";
                     }
-                    else if(inputPw2 == this.model.pw){
+                    else if(inputPw2 == this.model.userPw){
                         this.messagePw2 = "OK";
                         document.getElementById("inputPw2").style.color="green";
                         
@@ -165,14 +216,14 @@
                 },
                 set : function(inputName){
                     document.getElementById("inputName").style.color="brown";
-                    if(inputName.length == 0){
+                    if(/[0-9]/g.test(inputName)){
+                        this.messageName = "※ 올바르지 않은 정보입니다";
+                    }
+                    else if(inputName.length == 0){
                         this.messageName = "※ 이름를 입력해주세요";
                     }
                     else if(0 < inputName.length && inputName.length < 2){
                         this.messageName = "※ 2글자 이상 입력해주세요";
-                    }
-                    else if(4 < inputName.length){
-                        this.messageName = "※ 이름이 너무 깁니다";
                     }
                     else if(1 < inputName.length){
                         this.messageName = "OK";
@@ -188,7 +239,7 @@
                 set : function(inputPhone){
                     document.getElementById("inputPhone").style.color="brown";
 
-                    if( /[^0-9]/g.test(inputPhone)){   // ^는 부정을 의미 => 숫자가 아닌 것이 들어오면 TRUE
+                    if(/[^0-9]/g.test(inputPhone)){   // ^는 부정을 의미 => 숫자가 아닌 것이 들어오면 TRUE
                         this.messagePhone = "※ 숫자를 입력해주세요";
                     }
                     else if(0 <= inputPhone){
@@ -209,31 +260,35 @@
         },
         methods: {
             signUp: function(){
-                if(this.messageId == "OK" || this.messagePw == "OK" || this.messagePw2 == "OK" || this.messageName == "OK" || this.messagePhone == "OK"){
-                    this.$emit('view-signup',this.model);
+                if(this.messageId == "OK" && this.messagePw == "OK" && this.messagePw2 == "OK" && this.messageName == "OK" && this.messagePhone == "OK"){
+                    this.$emit('signup-emit');
+                    eventBus.$emit('sendModel', this.model);
                 }
                 else{
                     alert("입력한 정보를 다시 확인해주세요");
                 }
+            },
+            existCheck: function() {
+                axios({
+                        method: "post",
+                        url: "http://localhost/user/verifyid",
+                        data: {"userId": this.model.userId}
+                    }).then(resData => {  
+                        if(resData.data){
+                            alert("사용가능한 아이디입니다");
+                            this.messageId = "OK";
+                            document.getElementById("inputId").style.color="green";
+                        }
+                        else{
+                            this.messageId = "※ 이미 존재하는 아이디입니다";
+                        }
+                    }).catch(errorData => {
+                        alert("에러가 발생했습니다. 잠시 후에 다시 시도해주세요")
+                    });
             }
         }
     })
 
-    Vue.component('sign-up-check', {
-        template: "#signUpCheck",
-        props: ['data2'],
-        data: function() {
-            return {
-            }
-        },
-        methods: {
-            goBack: function() {
-                this.$emit('view-check',false)
-            },
-            signUpFinal: function() {
-            }
-        },
-    })
 
     // ========================================공통========================================
 
@@ -250,36 +305,37 @@
             },
         methods: {
             ClickLogout: function(){
-                sessionStorage.setItem("session", null);
-                alert("로그아웃 했습니다");
-                location.href="00_index.html";
+                const result = confirm("로그아웃 하시겠습니까?");
+                if(result) {
+                    sessionStorage.clear();
+                    this.login = false;
+                    this.logout = true;
+                    location.href="00_index.html";
+                }
             }
         }
     })
     Vue.component('foot', {
         template: footerScript,
     })
+
+
+
+            // ==============공통에서 수정한 부분===========
     new Vue({
         el: "#body-div",
         data: {
-            model2: {
-                showSignUp: true,
-                showCheck: false,
-                id : "",
-                pw : "",
-                name : "",
-                phone : ""
-            }
+            showSignUp: true,
+            showCheck: false,
         },
         methods: {
-            viewSignUp: function(v){
-                this.model2 = v;
-                this.model2.showSignUp = false;
-                this.model2.showCheck = true;
+            viewSignUp: function(){
+                this.showSignUp = false;
+                this.showCheck = true;
             },
-            viewCheck: function(v){
-                this.model2.showSignUp = true;
-                this.model2.showCheck = false;
+            viewCheck: function(){
+                this.showSignUp = true;
+                this.showCheck = false;
             }
         }
     })

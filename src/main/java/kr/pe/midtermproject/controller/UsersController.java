@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.pe.midtermproject.model.JWT;
+import kr.pe.midtermproject.model.SeatService;
 import kr.pe.midtermproject.model.UsersService;
 import kr.pe.midtermproject.model.domain.Users;
+import kr.pe.midtermproject.model.dto.LoginResDTO;
 import kr.pe.midtermproject.model.dto.UsersDTO;
 
 @RestController
@@ -25,32 +27,39 @@ public class UsersController {
 	private UsersService userService;
 	
 	@Autowired
+	private SeatService seatService;
+	
+	@Autowired
 	private JWT JWT;
 	
 	//회원가입
 	@PostMapping("user/join")
 	public boolean createUser(@RequestBody Users user) {
-		boolean check = userService.verifyUserId(user.getUserId());
 		boolean result = false;
 		
-		if(!check) {
+		try {
 			result = userService.createUser(user);
-			result = true;
+					
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
-		
 		return result;
 	}
 
 	// 로그인
 	@PostMapping("/login")
-	public String login(@RequestBody Users reqUser) {
+	public LoginResDTO login(@RequestBody Users reqUser) {
 		Users user = userService.login(reqUser.getUserId(), reqUser.getUserPw());
-		String token = null; 
+		String token = null;
+		LoginResDTO response = null;
 		if (user != null) {
 			token = JWT.createToken(user);
+			response = new LoginResDTO();
+			response.setUserIdx(user.getUserIdx());
+			response.setName(user.getName());
+			response.setToken(token);
 		}
-		
-		return token;
+		return response;
 	}
 
 	// 유저 정보
@@ -64,6 +73,7 @@ public class UsersController {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+		System.out.println(result);
 		return result;
 	}
 	
@@ -92,12 +102,18 @@ public class UsersController {
 	public boolean deleteUser(@RequestHeader("Authorization") String token, @PathVariable Long userIdx) {
 		Map<String, Object> claimMap;
 		Users user = null;
+		boolean result = false;
 		try {
 			claimMap = JWT.verifyJWT(token);
 			user = userService.getUser(claimMap, userIdx);
+
+			if (user != null) {
+				seatService.checkoutSeat(user);
+				result = userService.deleteUser(user);					
+			}
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		return userService.deleteUser(user);
+		return result;
 	}
 }

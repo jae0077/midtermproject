@@ -24,7 +24,6 @@ public class SeatService {
 	public boolean selectSeat(Users user, SeatDTO seatDTO) {
 		boolean result = false;
 		Seat seat = null;
-		
 		try {
 			seat = seatDao.findById(seatDTO.getSeatIdx()).get();
 			
@@ -97,21 +96,21 @@ public class SeatService {
 //		return result;
 //	}
 //	
-//	//좌석번호로 사용중인지 확인
-//	public boolean checkSeat(Long seat_idx) {
-//		boolean result = false;
-//		Seat seat = new Seat();
-//		
-//		try {
-//			seat = seatDao.findById(seat_idx).get();
-//			
-//			if(seat.getIsUsed().equals("1")) {
-//				result = true;
-//			}
-//		}catch(Exception e) {
-//			
-//		}
-//		
-//		return result;
-//	}
+	//좌석번호로 사용중인지 확인
+	public boolean checkSeat(Long seat_idx) {
+		boolean result = false;
+		Seat seat = new Seat();
+		
+		try {
+			seat = seatDao.findById(seat_idx).get();
+			
+			if(seat.getIsUsed().equals("1")) {
+				result = true;
+			}
+		}catch(Exception e) {
+			
+		}
+		
+		return result;
+	}
 }

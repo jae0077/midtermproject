@@ -1,8 +1,8 @@
 package kr.pe.midtermproject.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,10 +27,10 @@ public class NoticeController {
   	
   	// 공지 전체 조회(목록)
   	@GetMapping("notice")
-    public List<Notice> searchAllNoticeDesc() {
-  		List<Notice> result = null;
-    	result = noticeService.getNoticeList();
-    	
-        return result;
-    }
+  	public Page<Notice> getNoticeList(Pageable pageable) {
+  		Page<Notice> result = null;
+  		result = noticeService.getNoticeList(pageable);
+  		
+  		return result;
+  	}
 }
