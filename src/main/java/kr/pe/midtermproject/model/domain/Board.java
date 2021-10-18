@@ -57,12 +57,12 @@ public class Board {
 	
 	@CreationTimestamp
 	@Column(nullable=false)
-	@JsonFormat(pattern = "yyyy-MM-dd HH:MM", timezone = "Asia/Seoul")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private Date created;
 
 	@UpdateTimestamp
 	@Column(nullable=false)
-	@JsonFormat(pattern = "yyyy-MM-dd HH:MM", timezone = "Asia/Seoul")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
 	private Date updated;
 	
 	@JsonIgnore
