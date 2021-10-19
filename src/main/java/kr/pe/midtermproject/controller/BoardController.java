@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiOperation;
 import kr.pe.midtermproject.model.BoardService;
 import kr.pe.midtermproject.model.JWT;
 import kr.pe.midtermproject.model.UsersService;
@@ -35,6 +36,7 @@ public class BoardController {
 	private JWT JWT;
 	
 	// 게시글 작성
+	@ApiOperation(value = "자유게시판 게시글 작성", notes = "자유게시판 게시글 작성 API")
 	@PostMapping("board")
 	public Board createPost(@RequestHeader("Authorization") String token, @RequestBody Board board) {		
 		Board result = null;
@@ -52,6 +54,7 @@ public class BoardController {
 	}
 	
 	// 게시글 수정
+	@ApiOperation(value = "자유게시판 게시글 수정", notes = "자유게시판 게시글 수정 API - 작성자에 한함")
 	@PutMapping("board/{boardIdx}")
 	public Board updatePost(@RequestHeader("Authorization") String token, @PathVariable Long boardIdx, @RequestBody BoardDTO board) {
 		Board result = null;
@@ -69,6 +72,7 @@ public class BoardController {
 	}
 	
 	// 게시글 상세 조회
+	@ApiOperation(value = "자유게시판 게시글 상세 조회", notes = "자유게시판 1개 게시글 조회 API")
     @GetMapping("board/{boardIdx}")
     public Board getBoardDetail(@PathVariable Long boardIdx) {
     	Board result = null;
@@ -78,6 +82,7 @@ public class BoardController {
     }
     
     // 게시글 리스트 조회(목록)
+	@ApiOperation(value = "자유게시판 게시글 리스트 조회", notes = "자유게시판 게시글 전체 리스트 조회 API")
     @GetMapping("board")
     public Page<Board> getBoardList(Pageable pageable) {
     	Page<Board> result = null;
@@ -87,6 +92,7 @@ public class BoardController {
     }
     
     // 게시글 삭제
+	@ApiOperation(value = "자유게시판 게시글 삭제", notes = "자유게시판 게시글 삭제 API - 작성자에 한함")
     @DeleteMapping("board/{boardIdx}")
     public boolean deleteBoard(@RequestHeader("Authorization") String token, @PathVariable Long boardIdx){
         boolean result = false;

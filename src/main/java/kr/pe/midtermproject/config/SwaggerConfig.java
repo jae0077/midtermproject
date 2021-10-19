@@ -25,9 +25,9 @@ public class SwaggerConfig {
     }
 
     private ApiInfo swaggerInfo() {
-        return new ApiInfoBuilder().title("API Doc 입니다")
-                .description("Swagger Doc 학습을 위한 기본 문서 작성중 ")
-                .license("license : playdata").licenseUrl("http://www.google.com")
+        return new ApiInfoBuilder().title("Saraksarak API Documentation")
+                .description("Saraksarak 홈페이지의 REST API 내용을 확인하실 수 있습니다.")
+                .license("license : Sarak Crew").licenseUrl("http://localhost")
                 .version("1").build();
     }
     
