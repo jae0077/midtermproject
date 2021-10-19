@@ -17,6 +17,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,6 +35,7 @@ public class Comments {
 	@Id
 	@Column(name="comment_idx")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="comment_idx_seq")
+	@ApiModelProperty(example="3")
 	private Long commentIdx;
 	
 	@JsonIgnore
@@ -47,10 +49,12 @@ public class Comments {
 	
 	@Lob
 	@Column(nullable=false)
+	@ApiModelProperty(example="댓글 Text")
 	private String content;
 	
 	@UpdateTimestamp
 	@Column(nullable=false)
+	@ApiModelProperty(example="2021-10-19 11:24")
 	private LocalDate created;
 	
 }

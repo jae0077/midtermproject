@@ -25,6 +25,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,6 +42,7 @@ public class Board {
 
 	@Id
 	@Column(name="board_idx")
+	@ApiModelProperty(example="10")
 	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="board_idx_seq")
 	private Long boardIdx;
 	
@@ -49,20 +51,24 @@ public class Board {
 	private Users writer;
 
 	@Column(nullable=false)
+	@ApiModelProperty(example="게시글 Title")
 	private String title;
 
 	@Lob
 	@Column(nullable=false)
+	@ApiModelProperty(example="게시글 Text")
 	private String content;
 	
 	@CreationTimestamp
 	@Column(nullable=false)
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+	@ApiModelProperty(example="2021-10-19 11:24", hidden=true)
 	private Date created;
 
 	@UpdateTimestamp
 	@Column(nullable=false)
 	@JsonFormat(pattern = "yyyy-MM-dd HH:mm", timezone = "Asia/Seoul")
+	@ApiModelProperty(example="2021-10-19 11:24", hidden=true)
 	private Date updated;
 	
 	@JsonIgnore
