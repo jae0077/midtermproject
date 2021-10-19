@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiOperation;
 import kr.pe.midtermproject.model.JWT;
 import kr.pe.midtermproject.model.SeatService;
 import kr.pe.midtermproject.model.UsersService;
@@ -32,7 +33,7 @@ public class UsersController {
 	@Autowired
 	private JWT JWT;
 	
-	//회원가입
+	@ApiOperation(value = "회원가입", notes = "회원가입 API")
 	@PostMapping("user/join")
 	public boolean createUser(@RequestBody Users user) {
 		boolean result = false;
@@ -46,7 +47,7 @@ public class UsersController {
 		return result;
 	}
 
-	// 로그인
+	@ApiOperation(value = "로그인", notes = "로그인 API")
 	@PostMapping("/login")
 	public LoginResDTO login(@RequestBody Users reqUser) {
 		Users user = userService.login(reqUser.getUserId(), reqUser.getUserPw());
@@ -62,7 +63,7 @@ public class UsersController {
 		return response;
 	}
 
-	// 유저 정보
+	@ApiOperation(value = "유저정보 출력", notes = "내 정보에서 출력하는 API")
 	@GetMapping("user/{userIdx}")
 	public Users getUserDetail(@RequestHeader("Authorization") String token, @PathVariable Long userIdx) {
 		Map<String, Object> claimMap;
@@ -77,13 +78,13 @@ public class UsersController {
 		return result;
 	}
 	
-	// userId중복확인
+	@ApiOperation(value = "ID중복 확인", notes = "회원가입 시 조건")
 	@PostMapping("user/verifyid")
 	public boolean verifyUserId(@RequestBody UsersDTO reqUser){
 		return userService.verifyUserId(reqUser.getUserId());
 	}
 	
-	//userId로 정보수정
+	@ApiOperation(value = "유저정보 UPDATE", notes = "내 정보 수정 API")
 	@PutMapping("user/{userIdx}")
 	public boolean updateUser(@RequestHeader("Authorization") String token, @PathVariable Long userIdx, @RequestBody UsersDTO reqUser) {
 		Map<String, Object> claimMap;
@@ -97,7 +98,7 @@ public class UsersController {
 		return userService.updateUser(user, reqUser);
 	}
 	
-	//userId로 삭제하기
+	@ApiOperation(value = "회원 탈퇴", notes = "내 정보에서 클릭 시 탈퇴 API")
 	@DeleteMapping("user/{userIdx}")
 	public boolean deleteUser(@RequestHeader("Authorization") String token, @PathVariable Long userIdx) {
 		Map<String, Object> claimMap;

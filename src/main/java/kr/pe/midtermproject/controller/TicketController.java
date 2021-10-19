@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiOperation;
 import kr.pe.midtermproject.model.JWT;
 import kr.pe.midtermproject.model.TicketService;
 import kr.pe.midtermproject.model.UsersService;
@@ -29,7 +30,7 @@ public class TicketController {
 	@Autowired
 	private JWT JWT;
 	
-    // 이용권 구매
+	@ApiOperation(value = "이용권 구매", notes = "클릭 시 기간 추가")
 	@PostMapping("ticket")
 	public boolean createTicket(@RequestHeader("Authorization") String token, @RequestBody TicketDTO ticket) {
 		boolean result = false;
@@ -46,7 +47,7 @@ public class TicketController {
 		return result;
 	}
 	
-	// 잔여시간
+	@ApiOperation(value = "이용권 종료일 확인", notes = "티켓구매 시, 내 정보 확인 시 출력")
 	@GetMapping("ticket/{user_idx}")
 	public LocalDate getTicketDetail(@RequestHeader("Authorization") String token) {
 		LocalDate result = null;

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiOperation;
 import kr.pe.midtermproject.model.JWT;
 import kr.pe.midtermproject.model.SeatService;
 import kr.pe.midtermproject.model.TicketService;
@@ -35,7 +36,7 @@ public class SeatController {
 	@Autowired
 	private JWT JWT;
 	
-	// 좌석선택 및 변경
+	@ApiOperation(value = "좌석선택 및 변경", notes = "좌석선택 및 변경 API, 'isUsed':null")
 	@PostMapping("seat")
 	public boolean selectSeat(@RequestHeader("Authorization") String token, @RequestBody SeatDTO seat) {
 		boolean result = false; 
@@ -53,7 +54,7 @@ public class SeatController {
 		return result;
 	}
 	
-	//퇴실
+	@ApiOperation(value = "좌석 퇴실", notes = "좌석 가지고 있을 때, 퇴실 API")
 	@PostMapping("seat/checkout")
 	public boolean checkoutSeat(@RequestHeader("Authorization") String token) {
 		boolean result = false; 
@@ -70,7 +71,7 @@ public class SeatController {
 		return result; 
 	}
 	
-	// 좌석 리스트
+	@ApiOperation(value = "좌석 전체목록 불러오기", notes = "좌석표 출력할 때 사용하는 API")
 	@GetMapping("seat")
 	public List<Seat> getSeatList(@RequestHeader("Authorization") String token){
 		List<Seat> result = null; 
@@ -94,19 +95,13 @@ public class SeatController {
 		return seatService.getSeatList();
 	}
 	
-	// 잔여 좌석 개수
+	@ApiOperation(value = "잔여 좌석 갯수 확인", notes = "좌석표 출력할 때 사용하는 API")
 	@GetMapping("seat/remain")
 	public int remainSeat() {
 		return seatService.getRemainSeat();
 	}
 	
-	//user가 좌석을 선택했는지
-//	@GetMapping("seat")
-//	public boolean checkSeatSelect(@RequestBody Users reqUser) {
-//		return seatService.checkSeatSelect(reqUser.getUserId());
-//	}
-	
-	//좌석번호로 사용중인지 확인
+	@ApiOperation(value = "잔여 좌석 갯수 확인", notes = "좌석표 출력할 때 사용하는 API")
 	@GetMapping("seat/check/{seat_idx}")
 	public boolean checkSeat(@PathVariable Long seat_idx) {
 		return seatService.checkSeat(seat_idx);
