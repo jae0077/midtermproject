@@ -15,56 +15,193 @@
         <nav-bar></nav-bar>
 
         <!-- 메인 -->
-        <div class="main-container">
-
-            <div class="sub-container">
-                <h1>자유게시판</h1><hr>
-                <div style="float:right;">
-                    <button class="w3-button  w3-card-4" onclick="location.href='03_02_write.html'" style="background-color: #ecdbdb; width: 100px;">글쓰기</button> <br><br>
-                </div>
-                <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
-                    <thead>
-                    <tr style="background-color: #e7dcdc">
-                        <th style="column-width: 50px">글 번호</th>
-                        <th style="column-width: 100px">작성자</th>
-                        <th style="column-width: 150px">제목</th>
-                        <th style="column-width: 50px">날짜</th>
-                    </tr>
-                    </thead>
-                    <tr>
-                    <td style="column-width: 50px">1</td>
-                    <td style="column-width: 100px">Jill</td>
-                    <td style="column-width: 150px">
-                    <a href="03_01_view.html">이거보여주려고 어그로끌었다</a>
-                    </td>
-                    <td style="column-width: 50px">50</td>
-                    </tr>
-                    <tr>
-                    <td style="column-width: 50px">1</td>
-                    <td style="column-width: 100px">Jill</td>
-                    <td style="column-width: 150px">Smith</td>
-                    <td style="column-width: 50px">50</td>
-                    </tr>
-                    <tr>
-                    <td style="column-width: 50px">1</td>
-                    <td style="column-width: 100px">Jill</td>
-                    <td style="column-width: 150px">Smith</td>
-                    <td style="column-width: 50px">50</td>
-                    </tr>
-                    <tr>
-                    <td style="column-width: 50px">1</td>
-                    <td style="column-width: 100px">Jill</td>
-                    <td style="column-width: 150px">Smith</td>
-                    <td style="column-width: 50px">50</td>
-                    </tr>
-                    
-                </table>
-            </div>
-                <foot></foot>
-        </div>
+        <view-allboard></view-allboard>
+        
+        <foot></foot>
     </div>
 
+<template id="view-allboard-temp">
+    <div class="main-container">
+        <div class="sub-container">
+            <h1>자유게시판</h1><hr>
+            <div style="width: 70%; display: inline-block;">
+                <div style="float:right;">
+                    <button @click="writeBoard" class="w3-button  w3-card-4" style="background-color: #ecdbdb; width: 100px;">글쓰기</button> <br><br>
+                </div>
+                <div style="height: 500px;">
+                    <table class="w3-table w3-bordered w3-hoverable w3-centered w3-card-4">
+                    	<colgroup>
+	                        <col style="width:10%;">
+	                        <col style="width:53%;">
+	                        <col style="width:20%;">
+	                        <col style="width:20%;">
+                        </colgroup>
+                        <thead>
+                            <tr style="background-color: #e7dcdc;">
+                                <th scope="col">글 번호</th>
+                                <th scope="col">제목</th>
+                                <th scope="col">작성자</th>
+                                <th scope="col">등록한 날짜</th>
+                            </tr>
+                        </thead>
+                        <tr v-for="(board, index) in board_list" @click="viewBoardOne(index)" style="cursor: pointer;">
+                        <td scope="col">{{board.boardIdx}}</td>
+                        <td scope="col" style="text-align: left; padding-left: 5%;">{{board.title}} <span style="color: cadetblue;">[{{board.comment_length}}]</span></td>
+                        <td scope="col">{{board.writerId}}</td>
+                        <td scope="col">{{board.created}}</td>
+                        </tr>
+                    </table>
+                </div>
+                <div style="display: inline-block; padding-top: 3%;">
+                    <div v-for="(page, index) in total_pages" style="float:left">
+                        <a v-if="index == page_now" style="font-weight: bold; cursor:default"> <span style="text-decoration: underline;">{{page}}</span> &nbsp; </a>
+                        <a v-else @click=selectPage(index)> {{page}} &nbsp; </a>
+                    </div>  
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+<!-- ========================================스크립트======================================== -->
+
 <script>
+    let enventBus = new Vue();
+
+    // ==============================view-allboard 컴포넌트===============================
+    Vue.component('view-allboard', {
+        template: "#view-allboard-temp",
+        data: function() {
+            return {
+                board_list: [],
+                comment_list: [],
+                total_pages: 1,
+                page_now: 0,
+                write_button: false
+            }
+        },
+        created: function() {
+            //================ 게시글 목록 불러오기 =================
+            axios({
+                method: "get",
+                url: "board", 
+                params: {
+                    size: 10,
+                    sort: "boardIdx,desc",
+                    page: 0
+                }
+            }).then(resData => {  
+                for(b of resData.data.content) {
+                    if(b.title.length > 35) {
+                        b.title = b.title.substring(0,35) + "...";
+                    }
+                    if(b.writer.userId > 8) {
+                        b.writer.userId = b.writer.userId.substring(0,8) + "...";
+                    }
+                    this.board_list.push({
+                            boardIdx: b.boardIdx,
+                            writerId: b.writer.userId,
+                            title: b.title,
+                            created: b.created,
+                            updated: b.updated,
+                            comment_length: 0})
+                }
+                for(b2 of this.board_list) {
+                    //================ 코멘트 리스트 불러와서 갯수만 가져오기 ========
+                    axios({
+                        method: "get",
+                        url: "board/" + b2.boardIdx + "/comment",
+                    }).then(resData => {
+                        for(b3 of this.board_list) {
+                            if(b3.boardIdx == resData.data.boardIdx) {
+                                b3.comment_length = resData.data.commentsList.length;
+                            }
+                        }
+                    }).catch(errorData => {
+                        alert("게시글을 불러오는데 실패했습니다. 잠시 후에 다시 시도해주세요 - error 01");
+                    })
+                    //===========================================================
+
+                }
+                this.total_pages = resData.data.totalPages;
+            }).catch(errorData => {
+                alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요 - error 02")
+            });
+        },
+        methods: {
+            viewBoardOne: function(index) {
+                if(index != null){  
+                    location.href = "03_01_boardOne.html?boardIdx=" + this.board_list[index].boardIdx;
+                }
+                else{
+                    alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요 - error 03")
+                }
+            },
+            selectPage: function(page_index) {
+                this.page_now = page_index;
+                axios({
+                    method: "get",
+                    url: "board", 
+                    params: {
+                        size: 10,
+                        sort: "boardIdx,desc",
+                        page: page_index
+                    }
+                }).then(resData => {  
+                    this.board_list = [];
+                    for(b of resData.data.content) {
+                        if(b.title.length > 35) {
+                            b.title = b.title.substring(0,35) + "...";
+                        }
+                        this.board_list.push({
+                            boardIdx: b.boardIdx,
+                            writerId: b.writer.userId,
+                            title: b.title,
+                            created: b.created,
+                            updated: b.updated,
+                            comment_length: 0})
+                    }
+                    for(b2 of this.board_list) {
+                        //================ 코멘트 리스트 불러와서 갯수만 가져오기 ========
+                        axios({
+                            method: "get",
+                            url: "board/" + b2.boardIdx + "/comment",
+                        }).then(resData => {
+                            for(b3 of this.board_list) {
+                                if(b3.boardIdx == resData.data.boardIdx) {
+                                    b3.comment_length = resData.data.commentsList.length;
+                                }
+                            }
+                        }).catch(errorData => {
+                            alert("게시글을 불러오는데 실패했습니다. 잠시 후에 다시 시도해주세요 - error 01");
+                        })
+                        //===========================================================
+
+                    }
+                }).catch(errorData => {
+                    alert("게시글을 불러오는데 실패했습니다. 잠시 후 다시 시도해주세요 - error 04")
+                });
+            },
+            writeBoard: function() {
+                if(sessionStorage.getItem("token") == null) {
+                    alert("로그인이 필요합니다");
+                }
+                else {
+                    location.href="03_03_write.html";
+                }
+            }
+        },
+    })
+    Vue.component('page-control', {
+        template: "#page-control-temp",
+        data: function() {
+            return {
+                limit : 10
+            }
+        }
+    })
+
+    // ========================================공통 스크립트========================================
+
     navBar(); // 컴포넌트 내부에서 실행하면 navBar 변수를 템플릿으로 가져오지 못함 (템플릿이 먼저 구성되고 created함수가 실행되는 원리인듯?)
     footer();    
 
@@ -77,27 +214,23 @@
                 }
             },
         methods: {
-            ClickLogout: function(){
-                sessionStorage.setItem("session", null);
-                alert("로그아웃 했습니다");
-                location.href="00_index.html";
+            ClickLogout: function() {
+                const result = confirm("로그아웃 하시겠습니까?");
+                if(result) {
+                    sessionStorage.clear();
+                    this.login = false;
+                    this.logout = true;
+                    location.href="http://localhost";
+                }
             }
         }
     })
     Vue.component('foot', {
         template: footerScript,
     })
-
     new Vue({
         el: "#body-div",
-        data: {
-            model: {
-                showIndex: true,
-                showLogin: false
-            }
-        }
-    })
-
+        })
 </script>
 
 </body>

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.swagger.annotations.ApiOperation;
 import kr.pe.midtermproject.model.BoardService;
 import kr.pe.midtermproject.model.CommentsService;
 import kr.pe.midtermproject.model.JWT;
@@ -22,6 +23,7 @@ import kr.pe.midtermproject.model.domain.Board;
 import kr.pe.midtermproject.model.domain.Comments;
 import kr.pe.midtermproject.model.domain.Users;
 import kr.pe.midtermproject.model.dto.CommentsDTO;
+import kr.pe.midtermproject.model.dto.CommentsLengthDTO;
 
 @RestController
 public class CommentController {
@@ -39,6 +41,7 @@ public class CommentController {
 	private JWT JWT;
 	
 	//코멘트 작성
+	@ApiOperation(value = "자유게시판 댓글 작성", notes = "자유게시판 댓글 작성 API")
     @PostMapping("board/{boardIdx}/comment")
   	public boolean createComment(@RequestHeader("Authorization") String token, @PathVariable Long boardIdx, @RequestBody Comments comment) {		
     	boolean result = false;
@@ -58,14 +61,21 @@ public class CommentController {
   	}
     
     // 게시글별 코멘트 전체 조회
+	@ApiOperation(value = "자유게시판 게시글별 댓글 전체 조회", notes = "자유게시판 게시글별 댓글 전체 리스트 조회 API")
     @GetMapping("board/{boardIdx}/comment")
-    public List<Comments> getCommentList(@PathVariable Long boardIdx) {
+    public CommentsLengthDTO getCommentList(@PathVariable Long boardIdx) {
     	List<Comments> result = null;
     	result = commentService.getCommentList(boardIdx);
-    	return result;
+    	
+    	CommentsLengthDTO result2 = new CommentsLengthDTO();
+    	result2.setBoardIdx(boardIdx);
+    	result2.setCommentsList(result);
+    	
+    	return result2;
     }
     
     // 코멘트 수정 
+    @ApiOperation(value = "자유게시판 댓글 수정", notes = "자유게시판 댓글 수정 API - 작성자에 한함")
   	@PutMapping("board/{boardIdx}/comment/{commentIdx}")
   	public boolean updateComment(@RequestHeader("Authorization") String token, @PathVariable Long commentIdx, @RequestBody CommentsDTO commentDTO) {
   		boolean result = false;
@@ -80,12 +90,11 @@ public class CommentController {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-		
-  		
   		return result;
   	}
     
     //코멘트 삭제
+  	@ApiOperation(value = "자유게시판 댓글 삭제", notes = "자유게시판 댓글 삭제 API - 작성자에 한함")
     @DeleteMapping("board/{boardIdx}/comment/{commentIdx}")
     public boolean deleteComment(@RequestHeader("Authorization") String token, @PathVariable Long commentIdx){
     	boolean result = false;
@@ -99,7 +108,6 @@ public class CommentController {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-//    	commentsService.deleteComment(id);
     	return result;
     }
 }

@@ -1,10 +1,10 @@
 package kr.pe.midtermproject.model;
 
-import java.util.List;
-
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import kr.pe.midtermproject.dao.NoticeRepository;
@@ -28,12 +28,11 @@ public class NoticeService {
 		return result;
 	}
 	
-	//공지 전체 조회
-	public List<Notice> getNoticeList() {
-		
-		List<Notice>result = null;
+	// 공지 전체 조회
+	public Page<Notice> getNoticeList(Pageable pageable) {
+		Page<Notice> result = null;
 		try {
-			result = noticeDao.findAllByOrderByNoticeIdxDesc();
+			result = noticeDao.findAll(pageable);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
